@@ -113,14 +113,84 @@ components:
           oneOf:
             - $ref: "#/components/schemas/testPlanReference"
             - $ref: "#/components/schemas/testPlan"
-          examples: [{eppTests:["foo", "bar"]}]
+
         testParameters:
           description: |
             The test parameters provided by the requester.
+          oneOf:
+            - $ref: "#/components/schemas/testParameter"
 
         testResults:
           description: |
             The result of the test run.
+
+    eppTestParameters:
+      type: object
+
+    rdapTestParameters:
+      type: object
+
+    rdeTestParameters:
+      type: object
+
+    idnTestParameters:
+      type: object
+
+    dnsTestParameters:
+      type: object
+
+    dnssecTestParameters:
+      type: object
+
+    proxytestParameters:
+      type: object
+
+    testParameter:
+      description: This object represents the parameters provided by the client which will be used to carry out tests.
+      type: object
+      properties:
+        eppTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/eppTestParameters"
+        rdapTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdapTestParameters"
+        rdeTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdeTestParameters"
+        idnTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/idnTestParameters"
+        dnsTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnsTestParameters"
+        dnssecTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnssecTestParameters"
+        proxytests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/proxyTestParameters"
 
     testPlanReference:
       description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
@@ -139,63 +209,63 @@ components:
       description:
       type: string
       enum:
-        - epp01
-        - epp02
-        - epp03
+        - eppTest01
+        - eppTest02
+        - eppTest03
         - etc
 
     rdapTestReference:
       description:
       type: string
       enum:
-        - rdap01
-        - rdap02
-        - rdap03
+        - rdapTest01
+        - rdapTest02
+        - rdapTest03
         - etc
 
     rdeTestReference:
       description:
       type: string
       enum:
-        - rde01
-        - rde02
-        - rde03
+        - rdeTest01
+        - rdeTest02
+        - rdeTest03
         - etc
 
     idnTestReference:
       description:
       type: string
       enum:
-        - rde01
-        - rde02
-        - rde03
+        - rdeTest01
+        - rdeTest02
+        - rdeTest03
         - etc
 
     dnsTestReference:
       description:
       type: string
       enum:
-        - dns01
-        - dns02
-        - dns03
+        - dnsTest01
+        - dnsTest02
+        - dnsTest03
         - etc
 
     dnssecTestReference:
       description:
       type: string
       enum:
-        - dnssec01
-        - dnssec02
-        - dnssec03
+        - dnssecTest01
+        - dnssecTest02
+        - dnssecTest03
         - etc
 
     proxyTestReference:
       description:
       type: string
       enum:
-        - proxy01
-        - proxy02
-        - proxy03
+        - proxyTest01
+        - proxyTest02
+        - proxyTest03
         - etc
 
     testPlan:
