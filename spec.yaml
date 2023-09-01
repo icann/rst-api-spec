@@ -22,9 +22,22 @@ paths:
         * normal users will see all requests they've submitted.
         * superusers will see all requests
       parameters:
-        
+        - name: client
+          in: query
+          required: false
+          schema:
+            type: string
+          description: limit results to specific client (superuser access only)
       responses:
         '200':
+          description: A successful response.
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/testRequest"
+
 components:
   schemas:
 
@@ -54,6 +67,7 @@ components:
             - string
             - "null"
           format: date-time
+          default: null
 
         dateCompleted:
           description: date/time when the test run finished (which may be null).
@@ -61,6 +75,7 @@ components:
             - string
             - "null"
           format: date-time
+          default: null
 
         status:
           description: |
@@ -69,11 +84,11 @@ components:
             2. The **in-progress** value indicates that the test run has started, but has not yet been completed.
             3. The **completed** value indicates that the test run has completed.
           type: string
-          default: requested
           enum:
             - requested
             - in-progress
             - completed
+          default: requested
 
         result:
           description: |
