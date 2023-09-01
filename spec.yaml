@@ -135,14 +135,98 @@ components:
         - all-dnssec-tests
         - all-proxy-tests
 
+    eppTestMnemonic:
+      description:
+      type: string
+      enum:
+        - epp01
+        - epp02
+        - epp03
+        - etc
+
+    rdapTestMnemonic:
+      description:
+      type: string
+      enum:
+        - rdap01
+        - rdap02
+        - rdap03
+        - etc
+
+    rdeTestMnemonic:
+      description:
+      type: string
+      enum:
+        - rde01
+        - rde02
+        - rde03
+        - etc
+
+    idnTestMnemonic:
+      description:
+      type: string
+      enum:
+        - rde01
+        - rde02
+        - rde03
+        - etc
+
+    dnsTestMnemonic:
+      description:
+      type: string
+      enum:
+        - dns01
+        - dns02
+        - dns03
+        - etc
+
+    dnssecTestMnemonic:
+      description:
+      type: string
+      enum:
+        - dnssec01
+        - dnssec02
+        - dnssec03
+        - etc
+
+    proxyTestMnemonic:
+      description:
+      type: string
+      enum:
+        - proxy01
+        - proxy02
+        - proxy03
+        - etc
+
     testPlan:
       description: An object representing a test plan. A test plan is a set of test cases, grouped by area.
       type: object
       properties:
         eppTests:
           type: array
+          items:
+            $ref: "#/components/schemas/eppTestMnemonic"
         rdapTests:
+          type: array
+          items:
+            $ref: "#/components/schemas/rdapTestMnemonic"
         rdeTests:
+          type: array
+          items:
+            $ref: "#/components/schemas/rdeTestMnemonic"
         idnTests:
+          type: array
+          items:
+            $ref: "#/components/schemas/idnTestMnemonic"
         dnsTests:
+          type: array
+          items:
+            $ref: "#/components/schemas/dnsTestMnemonic"
         dnssecTests:
+          type: array
+          items:
+            $ref: "#/components/schemas/dnssecTestMnemonic"
+        proxytests:
+          type: array
+          items:
+            $ref: "#/components/schemas/proxyTestMnemonic"
