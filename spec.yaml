@@ -5,10 +5,10 @@ info:
   description: |
     ICANN Registry System Testing (RST) API.
   version: 1.0.0
-  termsOfService: https://icann.org/rst
+  termsOfService: https://www.icann.org/resources/registry-system-testing
   contact:
     name: Internet Corporation for Assigned Names and Numbers (ICANN)
-    url: https://icann.org/rst
+    url: https://www.icann.org/resources/registry-system-testing
     email: rst@icann.org
 
 servers:
@@ -101,25 +101,36 @@ components:
             The result of the test run.
 
     eppTestParameters:
+      description: Input parameters for EPP tests.
       type: object
+      properties:
+        xml:
+          description: XML input file.
+          type: string
 
     rdapTestParameters:
+      description: Input parameters for RDAP tests.
       type: object
+      properties:
 
     rdeTestParameters:
+      description: Input parameters for RDE tests.
       type: object
+      properties:
 
     idnTestParameters:
+      description: Input parameters for IDN tests.
       type: object
+      properties:
 
     dnsTestParameters:
+      description: Input parameters for DNS tests.
       type: object
+      properties:
 
     dnssecTestParameters:
-      type: object
 
     proxytestParameters:
-      type: object
 
     testParameter:
       description: This object represents the parameters provided by the client which will be used to carry out tests.
