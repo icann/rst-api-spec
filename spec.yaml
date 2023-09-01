@@ -1,8 +1,24 @@
 openapi: 3.1.0
 
+info:
+  title: ICANN RST API
+  description: |
+    ICANN Registry System Testing (RST) API.
+  version: 1.0.0
+  termsOfService: https://icann.org/rst
+  contact:
+    name: Internet Corporation for Assigned Names and Numbers (ICANN)
+    url: https://icann.org/rst
+    email: rst@icann.org
+
+servers:
+  - url: https://api.rst.icann.org/
+
+paths:
+
 components:
   schemas:
-    request:
+    testRequest:
       description: A request for a test submitted by a client.
       type: object
       properties:
@@ -10,7 +26,7 @@ components:
           description: Unique ID for this test request.
           type: integer
           format: uint64
-          examples: 987654321
+          examples: [987654321]
 
         requester:
           description: Unique ID for the user that submitted this request.
@@ -37,7 +53,11 @@ components:
           format: date-time
 
         status:
-          description: status of this request.
+          description: |
+            The status of this request.
+            1. The **requested** value indicates that the request has been received but a test run has not yet started.
+            2. The **in-progress** value indicates that the test run has started but has not yet been completed.
+            3. The **completed** value indicates that the test run has completed.
           type: string
           default: requested
           enum:
@@ -46,7 +66,12 @@ components:
             - completed
 
         result:
-          description: the outcome of the test.
+          description: |
+            The outcome of the test run.
+            1. The **pass** value indicates that the test run completed with no errors.
+            2. The **fail** value indicates that at least one test failed.
+            3. The **error** value indicates that an internal issue prevented the test run from completing.
+            This value will be **null** unless the value of the **status** property is **completed**.
           type:
             - string
             - "null"
@@ -57,48 +82,19 @@ components:
           default: null
 
         testPlan:
-          description: The test plan used requested.
-          default: all
-          type:
-            - string
-            - array
-          enum:
-            - all
-            - all_rsp
-            - all_dns
-            - all_proxy
-          items:
-            type: "#/components/schemas/plan"
-
+          description: |
+            The test plan used requested.
+          oneOf:
+            - type: "#/components/schemas/testPlanMnemonic"
+            - type: "#/components/schemas/detailedTestPlan"
+  
         testParameters:
-          description: The test parameters provided by the requester.
-          type:
+          description: |
+            The test parameters provided by the requester.
+          type: "#/components/schemas/testParameters"
 
-    plan:
-      type: object
-      properties:
-        epp:
-          description: a list of test case mnemonics relating to EPP.
-          type: array
-          items:
-            type: "#/components/schemas/eppTestCase"
-        rdap:
-          description: a list of test case mnemonics relating to RDAP.
-          type: array
-          items:
-            type: "#/components/schemas/eppTestCase"
-        dns:
-          description: a list of test case mnemonics relating to DNS.
-          type: array
-          items:
-            type: "#/components/schemas/eppTestCase"
-        dnssec:
-          description: a list of test case mnemonics relating to EPP.
-          type: array
-          items:
-            type: "#/components/schemas/eppTestCase"
-        epp:
-          description: a list of test case mnemonics relating to EPP.
-          type: array
-          items:
-            type: "#/components/schemas/eppTestCase"
+        testResults:
+          description: |
+            The result of the test run.
+          oneOf:
+            - null
