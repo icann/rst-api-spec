@@ -113,7 +113,7 @@ components:
           oneOf:
             - $ref: "#/components/schemas/testPlanReference"
             - $ref: "#/components/schemas/testPlan"
-  
+          examples: [{eppTests:["foo", "bar"]}]
         testParameters:
           description: |
             The test parameters provided by the requester.
@@ -203,30 +203,44 @@ components:
       type: object
       properties:
         eppTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/eppTestReference"
         rdapTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/rdapTestReference"
         rdeTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/rdeTestReference"
         idnTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/idnTestReference"
         dnsTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/dnsTestReference"
         dnssecTests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/dnssecTestReference"
         proxytests:
-          type: array
+          type:
+            - array
+            - "null"
           items:
             $ref: "#/components/schemas/proxyTestReference"
