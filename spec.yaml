@@ -111,7 +111,7 @@ components:
           description: |
             The test plan used requested.
           oneOf:
-            - $ref: "#/components/schemas/testPlanMnemonic"
+            - $ref: "#/components/schemas/testPlanReference"
             - $ref: "#/components/schemas/testPlan"
   
         testParameters:
@@ -122,8 +122,8 @@ components:
           description: |
             The result of the test run.
 
-    testPlanMnemonic:
-      description: Instead of providing a detailed test plan, one of the following mnemonic codes may be used instead.
+    testPlanReference:
+      description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
       type: string
       enum:
         - all-tests
@@ -135,7 +135,7 @@ components:
         - all-dnssec-tests
         - all-proxy-tests
 
-    eppTestMnemonic:
+    eppTestReference:
       description:
       type: string
       enum:
@@ -144,7 +144,7 @@ components:
         - epp03
         - etc
 
-    rdapTestMnemonic:
+    rdapTestReference:
       description:
       type: string
       enum:
@@ -153,7 +153,7 @@ components:
         - rdap03
         - etc
 
-    rdeTestMnemonic:
+    rdeTestReference:
       description:
       type: string
       enum:
@@ -162,7 +162,7 @@ components:
         - rde03
         - etc
 
-    idnTestMnemonic:
+    idnTestReference:
       description:
       type: string
       enum:
@@ -171,7 +171,7 @@ components:
         - rde03
         - etc
 
-    dnsTestMnemonic:
+    dnsTestReference:
       description:
       type: string
       enum:
@@ -180,7 +180,7 @@ components:
         - dns03
         - etc
 
-    dnssecTestMnemonic:
+    dnssecTestReference:
       description:
       type: string
       enum:
@@ -189,7 +189,7 @@ components:
         - dnssec03
         - etc
 
-    proxyTestMnemonic:
+    proxyTestReference:
       description:
       type: string
       enum:
@@ -205,28 +205,28 @@ components:
         eppTests:
           type: array
           items:
-            $ref: "#/components/schemas/eppTestMnemonic"
+            $ref: "#/components/schemas/eppTestReference"
         rdapTests:
           type: array
           items:
-            $ref: "#/components/schemas/rdapTestMnemonic"
+            $ref: "#/components/schemas/rdapTestReference"
         rdeTests:
           type: array
           items:
-            $ref: "#/components/schemas/rdeTestMnemonic"
+            $ref: "#/components/schemas/rdeTestReference"
         idnTests:
           type: array
           items:
-            $ref: "#/components/schemas/idnTestMnemonic"
+            $ref: "#/components/schemas/idnTestReference"
         dnsTests:
           type: array
           items:
-            $ref: "#/components/schemas/dnsTestMnemonic"
+            $ref: "#/components/schemas/dnsTestReference"
         dnssecTests:
           type: array
           items:
-            $ref: "#/components/schemas/dnssecTestMnemonic"
+            $ref: "#/components/schemas/dnssecTestReference"
         proxytests:
           type: array
           items:
-            $ref: "#/components/schemas/proxyTestMnemonic"
+            $ref: "#/components/schemas/proxyTestReference"
