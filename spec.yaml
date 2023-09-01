@@ -17,6 +17,216 @@ servers:
 components:
   schemas:
 
+    eppTestParameters:
+      description: Input parameters for EPP tests.
+      type: object
+      properties:
+        input:
+          description: Name of the XML input file which must be uploaded along with the JSON object.
+          type: string
+          examples: [pdtepp.xml]
+
+    rdapTestParameters:
+      description: Input parameters for RDAP tests.
+      type: object
+      properties:
+
+    rdeTestParameters:
+      description: Input parameters for RDE tests.
+      type: object
+      properties:
+
+    idnTestParameters:
+      description: Input parameters for IDN tests.
+      type: object
+      properties:
+
+    dnsTestParameters:
+      description: Input parameters for DNS tests.
+      type: object
+      properties:
+
+    dnssecTestParameters:
+      description: Input parameters for DNSSEC tests.
+      type: object
+      properties:
+
+    proxytestParameters:
+      description: Input parameters for SRS Gateway tests.
+      type: object
+      properties:
+
+    testPlanReference:
+      description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
+      type: string
+      enum:
+        - all-tests
+        - all-epp-tests
+        - all-rdap-tests
+        - all-rde-tests
+        - all-idn-tests
+        - all-dns-tests
+        - all-dnssec-tests
+        - all-proxy-tests
+
+    eppTestReference:
+      description: Reference codes for EPP test plans.
+      type: string
+      enum:
+        - eppTest01
+        - eppTest02
+        - eppTest03
+        - etc
+
+    rdapTestReference:
+      description: Reference codes for RDAP test plans.
+      type: string
+      enum:
+        - rdapTest01
+        - rdapTest02
+        - rdapTest03
+        - etc
+
+    rdeTestReference:
+      description: Reference codes for RDE test plans.
+      type: string
+      enum:
+        - rdeTest01
+        - rdeTest02
+        - rdeTest03
+        - etc
+
+    idnTestReference:
+      description: Reference codes for IDN test plans.
+      type: string
+      enum:
+        - rdeTest01
+        - rdeTest02
+        - rdeTest03
+        - etc
+
+    dnsTestReference:
+      description: Reference codes for DNS test plans.
+      type: string
+      enum:
+        - dnsTest01
+        - dnsTest02
+        - dnsTest03
+        - etc
+
+    dnssecTestReference:
+      description: Reference codes for DNSSEC test plans.
+      type: string
+      enum:
+        - dnssecTest01
+        - dnssecTest02
+        - dnssecTest03
+        - etc
+
+    proxyTestReference:
+      description: Reference codes for SRS Gateway test plans.
+      type: string
+      enum:
+        - proxyTest01
+        - proxyTest02
+        - proxyTest03
+        - etc
+
+    testPlan:
+      description: An object representing a test plan. A test plan is a set of test cases, grouped by area.
+      type: object
+      properties:
+        eppTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/eppTestReference"
+        rdapTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdapTestReference"
+        rdeTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdeTestReference"
+        idnTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/idnTestReference"
+        dnsTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnsTestReference"
+        dnssecTests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnssecTestReference"
+        proxytests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/proxyTestReference"
+
+
+    testParameters:
+      description: This object represents the parameters provided by the client which will be used to carry out tests.
+      type: object
+      properties:
+        eppTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/eppTestParameters"
+        rdapTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdapTestParameters"
+        rdeTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/rdeTestParameters"
+        idnTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/idnTestParameters"
+        dnsTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnsTestParameters"
+        dnssecTestParameters:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/dnssecTestParameters"
+        proxytests:
+          type:
+            - array
+            - "null"
+          items:
+            $ref: "#/components/schemas/proxytestParameters"
+
     testRequest:
       description: An object representing a request for a test submitted by a client.
       type: object
@@ -107,209 +317,6 @@ components:
         testResults:
           description: |
             The result of the test run.
-
-    eppTestParameters:
-      description: Input parameters for EPP tests.
-      type: object
-      properties:
-        xml:
-          description: XML input file.
-          type: string
-
-    rdapTestParameters:
-      description: Input parameters for RDAP tests.
-      type: object
-      properties:
-
-    rdeTestParameters:
-      description: Input parameters for RDE tests.
-      type: object
-      properties:
-
-    idnTestParameters:
-      description: Input parameters for IDN tests.
-      type: object
-      properties:
-
-    dnsTestParameters:
-      description: Input parameters for DNS tests.
-      type: object
-      properties:
-
-    dnssecTestParameters:
-
-    proxytestParameters:
-
-    testParameters:
-      description: This object represents the parameters provided by the client which will be used to carry out tests.
-      type: object
-      properties:
-        eppTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/eppTestParameters"
-        rdapTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdapTestParameters"
-        rdeTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdeTestParameters"
-        idnTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/idnTestParameters"
-        dnsTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnsTestParameters"
-        dnssecTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnssecTestParameters"
-        proxytests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/proxytestParameters"
-
-    testPlanReference:
-      description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
-      type: string
-      enum:
-        - all-tests
-        - all-epp-tests
-        - all-rdap-tests
-        - all-rde-tests
-        - all-idn-tests
-        - all-dns-tests
-        - all-dnssec-tests
-        - all-proxy-tests
-
-    eppTestReference:
-      description:
-      type: string
-      enum:
-        - eppTest01
-        - eppTest02
-        - eppTest03
-        - etc
-
-    rdapTestReference:
-      description:
-      type: string
-      enum:
-        - rdapTest01
-        - rdapTest02
-        - rdapTest03
-        - etc
-
-    rdeTestReference:
-      description:
-      type: string
-      enum:
-        - rdeTest01
-        - rdeTest02
-        - rdeTest03
-        - etc
-
-    idnTestReference:
-      description:
-      type: string
-      enum:
-        - rdeTest01
-        - rdeTest02
-        - rdeTest03
-        - etc
-
-    dnsTestReference:
-      description:
-      type: string
-      enum:
-        - dnsTest01
-        - dnsTest02
-        - dnsTest03
-        - etc
-
-    dnssecTestReference:
-      description:
-      type: string
-      enum:
-        - dnssecTest01
-        - dnssecTest02
-        - dnssecTest03
-        - etc
-
-    proxyTestReference:
-      description:
-      type: string
-      enum:
-        - proxyTest01
-        - proxyTest02
-        - proxyTest03
-        - etc
-
-    testPlan:
-      description: An object representing a test plan. A test plan is a set of test cases, grouped by area.
-      type: object
-      properties:
-        eppTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/eppTestReference"
-        rdapTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdapTestReference"
-        rdeTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdeTestReference"
-        idnTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/idnTestReference"
-        dnsTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnsTestReference"
-        dnssecTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnssecTestReference"
-        proxytests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/proxyTestReference"
-
 
 paths:
   /tests:
