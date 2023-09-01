@@ -32,6 +32,14 @@ components:
           type: string
           examples: [example]
 
+        tld:
+          description: The TLD to which this test relates.
+          type: string
+          format: hostname
+          maxLength: 63
+          minLength: 3
+          examples: [example]
+
         dateRequested:
           description: date/time when this request was submitted.
           type: string
@@ -94,7 +102,7 @@ components:
           description: |
             The test parameters provided by the requester.
           oneOf:
-            - $ref: "#/components/schemas/testParameter"
+            - $ref: "#/components/schemas/testParameters"
 
         testResults:
           description: |
@@ -132,7 +140,7 @@ components:
 
     proxytestParameters:
 
-    testParameter:
+    testParameters:
       description: This object represents the parameters provided by the client which will be used to carry out tests.
       type: object
       properties:
