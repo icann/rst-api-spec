@@ -14,30 +14,6 @@ info:
 servers:
   - url: https://api.rst.icann.org/v1
 
-paths:
-  /tests:
-    get:
-      description: |
-        Retrieve a list of test requests.
-        * normal users will see all requests they've submitted.
-        * superusers will see all requests
-      parameters:
-        - name: client
-          in: query
-          required: false
-          schema:
-            type: string
-          description: limit results to specific client (superuser access only)
-      responses:
-        '200':
-          description: A successful response.
-          content:
-            "application/json":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/testRequest"
-
 components:
   schemas:
 
@@ -190,7 +166,7 @@ components:
             - array
             - "null"
           items:
-            $ref: "#/components/schemas/proxyTestParameters"
+            $ref: "#/components/schemas/proxytestParameters"
 
     testPlanReference:
       description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
@@ -314,3 +290,28 @@ components:
             - "null"
           items:
             $ref: "#/components/schemas/proxyTestReference"
+
+
+paths:
+  /tests:
+    get:
+      description: |
+        Retrieve a list of test requests.
+        * normal users will see all requests they've submitted.
+        * superusers will see all requests
+      parameters:
+        - name: client
+          in: query
+          required: false
+          schema:
+            type: string
+          description: limit results to specific client (superuser access only)
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/testRequest"
