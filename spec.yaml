@@ -12,14 +12,24 @@ info:
     email: rst@icann.org
 
 servers:
-  - url: https://api.rst.icann.org/
+  - url: https://api.rst.icann.org/v1
 
 paths:
-
+  /tests:
+    get:
+      description: |
+        Retrieve a list of test requests.
+        * normal users will see all requests they've submitted.
+        * superusers will see all requests
+      parameters:
+        
+      responses:
+        '200':
 components:
   schemas:
+
     testRequest:
-      description: A request for a test submitted by a client.
+      description: An object representing a request for a test submitted by a client.
       type: object
       properties:
         id:
@@ -55,8 +65,8 @@ components:
         status:
           description: |
             The status of this request.
-            1. The **requested** value indicates that the request has been received but a test run has not yet started.
-            2. The **in-progress** value indicates that the test run has started but has not yet been completed.
+            1. The **requested** value indicates that the request has been received, but a test run has not yet started.
+            2. The **in-progress** value indicates that the test run has started, but has not yet been completed.
             3. The **completed** value indicates that the test run has completed.
           type: string
           default: requested
@@ -71,7 +81,8 @@ components:
             1. The **pass** value indicates that the test run completed with no errors.
             2. The **fail** value indicates that at least one test failed.
             3. The **error** value indicates that an internal issue prevented the test run from completing.
-            This value will be **null** unless the value of the **status** property is **completed**.
+            
+            This value will be **null** unless the value of the *status* property has the value **completed**.
           type:
             - string
             - "null"
@@ -85,16 +96,38 @@ components:
           description: |
             The test plan used requested.
           oneOf:
-            - type: "#/components/schemas/testPlanMnemonic"
-            - type: "#/components/schemas/detailedTestPlan"
+            - $ref: "#/components/schemas/testPlanMnemonic"
+            - $ref: "#/components/schemas/testPlan"
   
         testParameters:
           description: |
             The test parameters provided by the requester.
-          type: "#/components/schemas/testParameters"
 
         testResults:
           description: |
             The result of the test run.
-          oneOf:
-            - null
+
+    testPlanMnemonic:
+      description: Instead of providing a detailed test plan, one of the following mnemonic codes may be used instead.
+      type: string
+      enum:
+        - all-tests
+        - all-epp-tests
+        - all-rdap-tests
+        - all-rde-tests
+        - all-idn-tests
+        - all-dns-tests
+        - all-dnssec-tests
+        - all-proxy-tests
+
+    testPlan:
+      description: An object representing a test plan. A test plan is a set of test cases, grouped by area.
+      type: object
+      properties:
+        eppTests:
+          type: array
+        rdapTests:
+        rdeTests:
+        idnTests:
+        dnsTests:
+        dnssecTests:
