@@ -1,3 +1,4 @@
+---
 openapi: 3.1.0
 
 info:
@@ -22,7 +23,9 @@ components:
       type: object
       properties:
         input:
-          description: Name of the XML input file which must be uploaded along with the JSON object.
+          description: |
+            Name of the XML input file which must be uploaded along
+            with the JSON object.
           type: string
           examples: [pdtepp.xml]
 
@@ -57,7 +60,9 @@ components:
       properties:
 
     testPlanReference:
-      description: Instead of providing a detailed test plan, one of the following reference codes may be used instead.
+      description: |
+        Instead of providing a detailed test plan, one of the following
+        reference codes may be used instead.
       type: string
       enum:
         - all-tests
@@ -133,7 +138,9 @@ components:
         - etc
 
     testPlan:
-      description: An object representing a test plan. A test plan is a set of test cases, grouped by area.
+      description: |
+        An object representing a test plan. A test plan is a set of
+        test cases, grouped by area.
       type: object
       properties:
         eppTests:
@@ -181,7 +188,9 @@ components:
 
 
     testParameters:
-      description: This object represents the parameters provided by the client which will be used to carry out tests.
+      description: |
+        This object represents the parameters provided by the client which
+         will be used to carry out tests.
       type: object
       properties:
         eppTestParameters:
@@ -228,7 +237,8 @@ components:
             $ref: "#/components/schemas/proxytestParameters"
 
     testRequest:
-      description: An object representing a request for a test submitted by a client.
+      description: |
+        An object representing a request for a test submitted by a client.
       type: object
       properties:
         id:
@@ -274,9 +284,12 @@ components:
         status:
           description: |
             The status of this request.
-            1. The **requested** value indicates that the request has been received, but a test run has not yet started.
-            2. The **in-progress** value indicates that the test run has started, but has not yet been completed.
-            3. The **completed** value indicates that the test run has completed.
+            1. The **requested** value indicates that the request has been
+               received, but a test run has not yet started.
+            2. The **in-progress** value indicates that the test run has
+               started, but has not yet been completed.
+            3. The **completed** value indicates that the test run has
+               completed.
           type: string
           enum:
             - requested
@@ -287,11 +300,14 @@ components:
         result:
           description: |
             The outcome of the test run.
-            1. The **pass** value indicates that the test run completed with no errors.
+            1. The **pass** value indicates that the test run completed with no
+               errors.
             2. The **fail** value indicates that at least one test failed.
-            3. The **error** value indicates that an internal issue prevented the test run from completing.
-            
-            This value will be **null** unless the value of the *status* property has the value **completed**.
+            3. The **error** value indicates that an internal issue prevented
+               the test run from completing.
+
+            This value will be **null** unless the value of the *status*
+            property has the value **completed**.
           type:
             - string
             - "null"
