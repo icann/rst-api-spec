@@ -339,6 +339,21 @@ components:
             - $ref: "#/components/schemas/testParameters"
 
 paths:
+  /test:
+    post:
+      description: Submit a new test request.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filename:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+
   /tests:
     get:
       description: |
