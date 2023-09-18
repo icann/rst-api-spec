@@ -253,6 +253,11 @@ components:
           items:
             $ref: "#/components/schemas/proxytestParameters"
 
+    testRequest:
+      allOf:
+        - $ref: "#/components/schemas/testRequestBase"
+      type: object
+
     testRequestSubmitted:
       allOf:
         - $ref: "#/components/schemas/testRequestBase"
