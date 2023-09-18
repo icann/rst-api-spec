@@ -14,6 +14,11 @@ info:
 
 servers:
   - url: https://api.rst.icann.org/v1
+    description: Production server
+  - url: https://api.rst-test.icann.org/v1
+    description: Test server
+  - url: https://api.rst-staging.icann.org/v1
+    description: Staging server
 
 components:
 
