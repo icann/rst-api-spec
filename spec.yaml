@@ -259,6 +259,8 @@ components:
       type: object
 
     testRequestSubmitted:
+      description: |
+        This type describes a test request that has been successfully submitted. It inherits all the properties defined in the `testRequestBase` type
       allOf:
         - $ref: "#/components/schemas/testRequestBase"
       type: object
@@ -278,6 +280,14 @@ components:
           description: date/time when this request was submitted.
           type: string
           format: date-time
+
+        inputFiles:
+          description: |
+            A list of fully-qualified URLs for each of the submitted input files.
+          type: array
+          items:
+            type: string
+            format: url
 
         dateStarted:
           description: date/time when the test run started (which may be null).
@@ -337,27 +347,28 @@ components:
 
     testRequestBase:
       description: |
-        An object representing a request for a test submitted by a client.
+        An abstract base type which is concretised by `testRequest` and `testRequestSubmitted`.
       type: object
       properties:
         tld:
-          description: The TLD to which this test relates.
+          description: The TLD to which this test relates in A-label format.
           type: string
           format: hostname
+          pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
           maxLength: 63
           minLength: 3
           examples: [example]
 
         testPlan:
           description: |
-            The test plan used requested.
+            The test plan used requested. This can either be a mnemonic code (`testPlanReference`) or a detailed test plan object.
           oneOf:
             - $ref: "#/components/schemas/testPlanReference"
             - $ref: "#/components/schemas/testPlan"
 
         testParameters:
           description: |
-            The test parameters provided by the requester.
+            The test parameters provided by the requester not included as part of the input files.
           oneOf:
             - $ref: "#/components/schemas/testParameters"
 
@@ -421,17 +432,40 @@ paths:
                   $ref: "#/components/schemas/testRequestSubmitted"
         '400':
           description: Returned when the server receives a malformed request.
-        '401':
-          description: |
-            Returned when the client has not provided any authentication
-            credentials.
         '403':
-          description: |
-            Returned when the client has provided invalid authentication
-            credentials, or some other policy prevents access.
+          description: Returned when policy prevents access.
         '405':
           description: Returned when the request method is invalid.
         '429':
           description: Returned when the client has exceeded rate limits.
         '500':
           description: Returned when there has been an internal server error.
+
+  /files/{filePath}:
+    get:
+      description: |
+      parameters:
+        - name: filePath
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The file exists.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Returned when policy prevents access.
+        '404':
+          description: Returned when the requested file does not exist.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
