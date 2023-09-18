@@ -401,6 +401,38 @@ paths:
                     type: string
                     format: binary
 
+  /test/{id}:
+    get:
+      description: |
+        Get a specific test request.
+
+        Superusers can retrieve any test request; normal users can only
+        retrieve requests that they've submitted.
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful response.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
   /tests:
     get:
       description: |
@@ -447,6 +479,9 @@ paths:
         `testPlanSubmitted` objects have an `inputFiles` property which is an
         array of fully-qualified URLs that match the URL template of this
         resource.
+
+        Normal users can only access files associated with the test requests
+        that they submitted. Superusers can access any file.
       parameters:
         - name: filePath
           in: path
@@ -471,4 +506,3 @@ paths:
           description: Returned when the client has exceeded rate limits.
         '500':
           description: Returned when there has been an internal server error.
-
