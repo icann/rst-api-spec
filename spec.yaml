@@ -404,6 +404,12 @@ paths:
           schema:
             type: string
           description: limit results to specific client (superuser access only)
+        - name: tld
+          in: query
+          required: false
+          schema:
+            type: string
+          description: limit results to specific TLD (superuser access only)
       responses:
         '200':
           description: A successful response.
