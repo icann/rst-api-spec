@@ -40,12 +40,6 @@ components:
       description: Input parameters for EPP tests.
       type: object
       properties:
-        input:
-          description: |
-            Name of the XML input file which must be uploaded along
-            with the JSON object.
-          type: string
-          examples: [pdtepp.xml]
 
     rdapTestParameters:
       description: Input parameters for RDAP tests.
@@ -72,7 +66,7 @@ components:
       type: object
       properties:
 
-    proxytestParameters:
+    srsGatewayTestParameters:
       description: Input parameters for SRS Gateway tests.
       type: object
       properties:
@@ -90,7 +84,7 @@ components:
         - all-idn-tests
         - all-dns-tests
         - all-dnssec-tests
-        - all-proxy-tests
+        - all-srs-gateway-tests
 
     eppTestReference:
       description: Reference codes for EPP test plans.
@@ -146,13 +140,13 @@ components:
         - dnssecTest03
         - etc
 
-    proxyTestReference:
+    srsGatewayTestReference:
       description: Reference codes for SRS Gateway test plans.
       type: string
       enum:
-        - proxyTest01
-        - proxyTest02
-        - proxyTest03
+        - srsGatewayTest01
+        - srsGatewayTest02
+        - srsGatewayTest03
         - etc
 
     testPlan:
@@ -197,12 +191,12 @@ components:
             - "null"
           items:
             $ref: "#/components/schemas/dnssecTestReference"
-        proxytests:
+        srsGatewayTests:
           type:
             - array
             - "null"
           items:
-            $ref: "#/components/schemas/proxyTestReference"
+            $ref: "#/components/schemas/srsGatewayTestReference"
 
     testParameters:
       description: |
@@ -246,12 +240,12 @@ components:
             - "null"
           items:
             $ref: "#/components/schemas/dnssecTestParameters"
-        proxytests:
+        srsGatewayTests:
           type:
             - array
             - "null"
           items:
-            $ref: "#/components/schemas/proxytestParameters"
+            $ref: "#/components/schemas/srsGatewayTestParameters"
 
     testRequest:
       allOf:
@@ -260,7 +254,9 @@ components:
 
     testRequestSubmitted:
       description: |
-        This type describes a test request that has been successfully submitted. It inherits all the properties defined in the `testRequestBase` type
+        This type describes a test request that has been successfully
+        submitted. It inherits all the properties defined in the
+        `testRequestBase` type.
       allOf:
         - $ref: "#/components/schemas/testRequestBase"
       type: object
@@ -283,7 +279,8 @@ components:
 
         inputFiles:
           description: |
-            A list of fully-qualified URLs for each of the submitted input files.
+            A list of fully-qualified URLs for each of the submitted input
+            files.
           type: array
           items:
             type: string
@@ -347,7 +344,8 @@ components:
 
     testRequestBase:
       description: |
-        An abstract base type which is concretised by `testRequest` and `testRequestSubmitted`.
+        An abstract base type which is concretised by `testRequest` and
+        `testRequestSubmitted`.
       type: object
       properties:
         tld:
@@ -361,14 +359,16 @@ components:
 
         testPlan:
           description: |
-            The test plan used requested. This can either be a mnemonic code (`testPlanReference`) or a detailed test plan object.
+            The test plan used requested. This can either be a mnemonic code
+            (`testPlanReference`) or a detailed test plan object.
           oneOf:
             - $ref: "#/components/schemas/testPlanReference"
             - $ref: "#/components/schemas/testPlan"
 
         testParameters:
           description: |
-            The test parameters provided by the requester not included as part of the input files.
+            The test parameters provided by the requester not included as part
+            of the input files.
           oneOf:
             - $ref: "#/components/schemas/testParameters"
 
@@ -389,7 +389,6 @@ paths:
           * pdtwhois.xml
           * pdtidn.zip
           * etc
-
       requestBody:
         content:
           multipart/form-data:
@@ -444,6 +443,10 @@ paths:
   /files/{filePath}:
     get:
       description: |
+        Individual input files can be retrieved using this endpoint.
+        `testPlanSubmitted` objects have an `inputFiles` property which is an
+        array of fully-qualified URLs that match the URL template of this
+        resource.
       parameters:
         - name: filePath
           in: path
