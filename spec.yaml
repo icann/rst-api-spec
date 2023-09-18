@@ -364,7 +364,21 @@ components:
 paths:
   /test:
     post:
-      description: Submit a new test request.
+      description: |
+        Submit a new test request.
+
+        This endpoint expects all input data to be provided as file uploads.
+
+        At least one file **MUST** have the `application/json` content-type,
+        which **MUST** contain a single `testRequest` object.
+
+        All other files must correspond to the expected input files for the
+        test plan, such as
+          * pdtepp.xml
+          * pdtwhois.xml
+          * pdtidn.zip
+          * etc
+
       requestBody:
         content:
           multipart/form-data:
