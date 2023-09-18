@@ -16,6 +16,17 @@ servers:
   - url: https://api.rst.icann.org/v1
 
 components:
+
+  securitySchemes:
+    mTLS:
+      description: |
+        All authentication for this API is achieved through the use of Mutual
+        TLS (mTLS). API users must specify a fully-qualified domain name (FQDN)
+        at which one or more `TLSA` records are published, using the `_https`
+        application identifier, as per [draft-huque-dane-client-cert](https://www.ietf.org/archive/id/draft-huque-dane-client-cert-08.html#name-example-tlsa-records-for-cl)
+      type: mutualTLS
+      name: Mutual TLS (DANCE)
+
   schemas:
 
     eppTestParameters:
