@@ -20,6 +20,8 @@ servers:
   - url: https://api.rst-staging.icann.org/v1
     description: Staging server
 
+mTLS: []
+
 components:
 
   securitySchemes:
