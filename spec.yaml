@@ -50,6 +50,7 @@ info:
     url: https://www.icann.org/
     email: rst@icann.org
   license:
+    name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
 
 servers:
