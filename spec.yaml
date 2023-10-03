@@ -43,7 +43,7 @@ info:
     POSSIBILITY OF SUCH DAMAGE.
 
     Copyright 2023 Internet Corporation for Assigned Names and Numbers (ICANN).
-  version: 1.0.0
+  version: 1.1.0
   termsOfService: https://www.icann.org/resources/registry-system-testing
   contact:
     name: ICANN
@@ -64,243 +64,84 @@ servers:
 mTLS: []
 
 components:
-
   securitySchemes:
     mTLS:
-      description: |
-        All authentication for this API is achieved through the use of Mutual
-        TLS (mTLS). API users must specify a fully-qualified domain name (FQDN)
-        at which one or more `TLSA` records are published, using the `_https`
-        application identifier, as per [draft-huque-dane-client-cert](https://www.ietf.org/archive/id/draft-huque-dane-client-cert-08.html#name-example-tlsa-records-for-cl)
+      name: Mutual TLS
       type: mutualTLS
-      name: Mutual TLS (DANCE)
+      description: |
+        Each API client is associated with a fully-qualified domain name (FQDN),
+        at which one or more `TLSA` records are published. Clients must present
+        a certificate which matches one of these records.
+
+        There are two kinds of clients:
+
+        1. ICANN-internal clients which have "superuser" privileges
+        2. RSPs, who have limited privileges over objects associated with their
+           client ID (FQDN).
+
+        For internal clients, FQDNs are hard-coded into the system. For RSPs
+        they are attributes of test objects.
 
   schemas:
-
-    eppTestParameters:
-      description: Input parameters for EPP tests.
-      type: object
-      properties:
-
-    rdapTestParameters:
-      description: Input parameters for RDAP tests.
-      type: object
-      properties:
-
-    rdeTestParameters:
-      description: Input parameters for RDE tests.
-      type: object
-      properties:
-
-    idnTestParameters:
-      description: Input parameters for IDN tests.
-      type: object
-      properties:
-
-    dnsTestParameters:
-      description: Input parameters for DNS tests.
-      type: object
-      properties:
-
-    dnssecTestParameters:
-      description: Input parameters for DNSSEC tests.
-      type: object
-      properties:
-
-    srsGatewayTestParameters:
-      description: Input parameters for SRS Gateway tests.
-      type: object
-      properties:
-
-    testPlanReference:
+    tldSet:
       description: |
-        Instead of providing a detailed test plan, one of the following
-        reference codes may be used instead.
-      type: string
-      enum:
-        - all-tests
-        - all-epp-tests
-        - all-rdap-tests
-        - all-rde-tests
-        - all-idn-tests
-        - all-dns-tests
-        - all-dnssec-tests
-        - all-srs-gateway-tests
-
-    eppTestReference:
-      description: Reference codes for EPP test plans.
-      type: string
-      enum:
-        - eppTest01
-        - eppTest02
-        - eppTest03
-        - etc
-
-    rdapTestReference:
-      description: Reference codes for RDAP test plans.
-      type: string
-      enum:
-        - rdapTest01
-        - rdapTest02
-        - rdapTest03
-        - etc
-
-    rdeTestReference:
-      description: Reference codes for RDE test plans.
-      type: string
-      enum:
-        - rdeTest01
-        - rdeTest02
-        - rdeTest03
-        - etc
-
-    idnTestReference:
-      description: Reference codes for IDN test plans.
-      type: string
-      enum:
-        - rdeTest01
-        - rdeTest02
-        - rdeTest03
-        - etc
-
-    dnsTestReference:
-      description: Reference codes for DNS test plans.
-      type: string
-      enum:
-        - dnsTest01
-        - dnsTest02
-        - dnsTest03
-        - etc
-
-    dnssecTestReference:
-      description: Reference codes for DNSSEC test plans.
-      type: string
-      enum:
-        - dnssecTest01
-        - dnssecTest02
-        - dnssecTest03
-        - etc
-
-    srsGatewayTestReference:
-      description: Reference codes for SRS Gateway test plans.
-      type: string
-      enum:
-        - srsGatewayTest01
-        - srsGatewayTest02
-        - srsGatewayTest03
-        - etc
-
-    testPlan:
-      description: |
-        An object representing a test plan. A test plan is a set of
-        test cases, grouped by area.
-      type: object
-      properties:
-        eppTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/eppTestReference"
-        rdapTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdapTestReference"
-        rdeTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdeTestReference"
-        idnTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/idnTestReference"
-        dnsTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnsTestReference"
-        dnssecTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnssecTestReference"
-        srsGatewayTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/srsGatewayTestReference"
-
-    testParameters:
-      description: |
-        This object represents the parameters provided by the client which
-         will be used to carry out tests.
-      type: object
-      properties:
-        eppTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/eppTestParameters"
-        rdapTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdapTestParameters"
-        rdeTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/rdeTestParameters"
-        idnTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/idnTestParameters"
-        dnsTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnsTestParameters"
-        dnssecTestParameters:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/dnssecTestParameters"
-        srsGatewayTests:
-          type:
-            - array
-            - "null"
-          items:
-            $ref: "#/components/schemas/srsGatewayTestParameters"
+        A list of logically grouped TLDs. For a traditional ASCII TLD, this is
+        just an array containing a single string, but for IDN TLDs or variant
+        TLDs, it is an array of two or more strings.
+      type: array
+      items:
+        type: string
+        format: hostname
+        pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
+        maxLength: 63
+        minLength: 3
+        examples: [example]
+      minItems: 1
+      examples: [[example], [foo, bar]]
 
     testRequest:
-      allOf:
-        - $ref: "#/components/schemas/testRequestBase"
+      description: |
       type: object
+      properties:
+        tlds:
+          description: |
+            An array of TLDSet objects to which this test relates. In most cases
+            this will just be something like `[["example"]]` but more complex
+            sets of TLDs with variants are supported for RSP testing.
+          type: array
+          items:
+            $ref: "#/components/schemas/tldSet"
+          minItems: 1
+
+        clientID:
+          description: |
+            An FQDN which identifies the RSEP, and at which one or `TLSA`
+            records may be found which can be used for authentication.
+          type: string
+          format: hostname
+          examples: [tlsa.rsp.tech]
+
+        testPlan:
+          description: the test plan to be followed.
+          type: string
+          enum:
+            - StandardPreDelegationTest
+            - StandardRSPChangeTest
+            - DNSRSPChangeTest
+            - IDNTest
+            - SRSGatewayTest
+            - StandardRSPEvaluationTest
+            - DNSRSPEvaluationTest
+            - DNSSECRSPEvaluationTest
 
     testRequestSubmitted:
       description: |
         This type describes a test request that has been successfully
         submitted. It inherits all the properties defined in the
-        `testRequestBase` type.
-      allOf:
-        - $ref: "#/components/schemas/testRequestBase"
+        `testRequest` type.
       type: object
+      allOf:
+        - $ref: "#/components/schemas/testRequest"
       properties:
         id:
           description: Unique ID for this test request.
@@ -308,24 +149,10 @@ components:
           format: uint64
           examples: [987654321]
 
-        requester:
-          description: Unique ID for the user that submitted this request.
-          type: string
-          examples: [example]
-
         dateRequested:
           description: date/time when this request was submitted.
           type: string
           format: date-time
-
-        inputFiles:
-          description: |
-            A list of fully-qualified URLs for each of the submitted input
-            files.
-          type: array
-          items:
-            type: string
-            format: url
 
         dateStarted:
           description: date/time when the test run started (which may be null).
@@ -346,18 +173,23 @@ components:
         status:
           description: |
             The status of this request.
-            1. The **requested** value indicates that the request has been
-               received, but a test run has not yet started.
-            2. The **in-progress** value indicates that the test run has
+            1. The **inputs-needed** value indicates that the request has been
+               received, but input parameters are needed before the test can
+               begin.
+            2. The **pending** value indicates that all required input
+               parameters have been provided, but the test run has not yet
+               started.
+            3. The **in-progress** value indicates that the test run has
                started, but has not yet been completed.
-            3. The **completed** value indicates that the test run has
+            4. The **completed** value indicates that the test run has
                completed.
           type: string
           enum:
-            - requested
+            - inputs-needed
+            - pending
             - in-progress
             - completed
-          default: requested
+          default: inputs-needed
 
         result:
           description: |
@@ -379,76 +211,190 @@ components:
             - error
           default: null
 
-        testResults:
+        inputs:
           description: |
-            The result of the test run.
+            Any input parameters provided by the RSP.
+          type: array
+          items:
+            $ref: "#/components/schemas/inputParameters"
+        results:
+          description: |
+            A detailed log of all tests carried out.
+          type: array
+          items:
+            $ref: "#/components/schemas/testCaseLog"
 
-    testRequestBase:
+    inputParameters:
       description: |
-        An abstract base type which is concretised by `testRequest` and
-        `testRequestSubmitted`.
       type: object
       properties:
-        tld:
-          description: The TLD to which this test relates in A-label format.
+        dns:
+          description: |
+            A hash map containing input parameters related to DNS tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        dnssec:
+          description: |
+            A hash map containing input parameters related to DNSSEC tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        epp:
+          description: |
+            A hash map containing input parameters related to EPP tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        rdds:
+          description: |
+            A hash map containing input parameters related to RDDS tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        rde:
+          description: |
+            A hash map containing input parameters related to RDE tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        idn:
+          description: |
+            A hash map containing input parameters related to IDN tests. For
+            details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+        srsgw:
+          description: |
+            A hash map containing input parameters related to SRS Gateway tests.
+            For details of the specific input parameters required, consult the
+            relevant test plan documentation.
+          type:
+            - "null"
+            - object
+          additionalProperties:
+            type: string
+          default: null
+
+    testCaseLog:
+      description: |
+        A detailed log of an individual test case.
+      type: object
+      properties:
+        caseID:
+          description: the Test Case ID.
           type: string
-          format: hostname
-          pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
-          maxLength: 63
-          minLength: 3
-          examples: [example]
-
-        testPlan:
+        result:
+          description: the result of the test.
+          type: string
+          enum:
+            - pass
+            - fail
+            - error
+            - skipped
+        description:
+          description: A short description of the outcome of the test.
+          type: string
+        dateStarted:
+          description: date/time when the test case started.
+          type: string
+          format: date-time
+        dateCompleted:
+          description: date/time when the test case finished.
+          type: string
+          format: date-time
+        log:
+          description: detailed test logs
+          type: array
+          items:
+            type: string
+        context:
           description: |
-            The test plan used requested. This can either be a mnemonic code
-            (`testPlanReference`) or a detailed test plan object.
-          oneOf:
-            - $ref: "#/components/schemas/testPlanReference"
-            - $ref: "#/components/schemas/testPlan"
-
-        testParameters:
-          description: |
-            The test parameters provided by the requester not included as part
-            of the input files.
-          oneOf:
-            - $ref: "#/components/schemas/testParameters"
-
+            an object containing context parameters (eg input parameters,
+            environment variables, etc).
+          type: object
+          additionalProperties:
+            type: string
 paths:
   /test:
     post:
       description: |
-        Submit a new test request.
+        Create a new test object. Only internal clients can perform this
+        operation.
 
-        This endpoint expects all input data to be provided as file uploads.
+        Once a test object has been created, the RSP identified by the
+        `clientID` property can submit input parameters using a
+        `POST /test/{id}/inputs` request, and request test re-runs using a
+        `PATCH /test/{id}` request.
 
-        At least one file **MUST** have the `application/json` content-type,
-        which **MUST** contain a single `testRequest` object.
-
-        All other files must correspond to the expected input files for the
-        test plan, such as
-          * pdtepp.xml
-          * pdtwhois.xml
-          * pdtidn.zip
-          * etc
+      operationId: createTest
       requestBody:
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              type: object
-              properties:
-                filename:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
+              $ref: "#/components/schemas/testRequest"
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
 
   /test/{id}:
     get:
       description: |
-        Get a specific test request.
+        Get information about a specific test request.
 
-        Superusers can retrieve any test request; normal users can only
+        Internal clients can retrieve any test request; RSPs can only
         retrieve requests that they've submitted.
+      operationId: getTestInfo
       parameters:
         - name: id
           description: the test ID
@@ -458,7 +404,7 @@ paths:
             type: string
       responses:
         '200':
-          description: A successful response.
+          description: A successful result.
           content:
             "application/json":
               schema:
@@ -466,7 +412,81 @@ paths:
         '400':
           description: Returned when the server receives a malformed request.
         '403':
-          description: Returned when policy prevents access.
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
+    patch:
+      description: |
+        If a test failed, then this operation can be used to request a re-test.
+
+        This is achieved by submitting a `PATCH` request to set the `status`
+        property of the test object to `requested`.
+
+        This operation can only be used on tests which have the `status` of
+        `completed` and `result` of `fail` or `error`. Internal clients can use
+        it on any such test, while RSPs can only use it on tests associated with
+        their client ID.
+      operationId: restartTest
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          description: |
+            the new status for the test.
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - requested
+
+      responses:
+        '201':
+          description: A successful result.
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
+  /test/{id}/inputs:
+    post:
+      description: |
+        Submit test input parameters.
+      operationId: setTestInputParameters
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/rdap+json:
+            schema:
+              $ref: "#/components/schemas/inputParameters"
+      responses:
+        '201':
+          description: A successful result.
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
         '405':
           description: Returned when the request method is invalid.
         '429':
@@ -478,24 +498,46 @@ paths:
     get:
       description: |
         Retrieve a list of test requests.
-        * normal users will see all requests they've submitted.
-        * superusers will see all requests
+        * Internal clients will see all requests
+        * RSPs will see all requests associated with their client ID.
+      operationId: getTests
       parameters:
         - name: client
+          description: limit results to specific client (internal clients only)
           in: query
           required: false
           schema:
             type: string
-          description: limit results to specific client (superuser access only)
         - name: tld
+          description: limit results to specific TLD (internal clients only)
           in: query
           required: false
           schema:
             type: string
-          description: limit results to specific TLD (superuser access only)
+        - name: status
+          description: limit results to those with the given status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - inputs-needed
+              - pending
+              - in-progress
+              - completed
+        - name: result
+          description: limit results to those with the given result
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - pass
+              - fail
+              - error
       responses:
         '200':
-          description: A successful response.
+          description: A successful result.
           content:
             "application/json":
               schema:
@@ -505,46 +547,10 @@ paths:
         '400':
           description: Returned when the server receives a malformed request.
         '403':
-          description: Returned when policy prevents access.
+          description: Returned when the access control policy prevents access.
         '405':
           description: Returned when the request method is invalid.
         '429':
           description: Returned when the client has exceeded rate limits.
         '500':
           description: Returned when there has been an internal server error.
-
-  /files/{filePath}:
-    get:
-      description: |
-        Individual input files can be retrieved using this endpoint.
-        `testPlanSubmitted` objects have an `inputFiles` property which is an
-        array of fully-qualified URLs that match the URL template of this
-        resource.
-
-        Normal users can only access files associated with the test requests
-        that they submitted. Superusers can access any file.
-      parameters:
-        - name: filePath
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The file exists.
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '403':
-          description: Returned when policy prevents access.
-        '404':
-          description: Returned when the requested file does not exist.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
