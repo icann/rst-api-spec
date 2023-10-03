@@ -76,11 +76,11 @@ components:
         There are two kinds of clients:
 
         1. ICANN-internal clients which have "superuser" privileges
-        2. RSPs, who have limited privileges over objects associated with their
-           client ID (FQDN).
+        2. RSPs, whose privileges are limited to test requests associated with
+           their client ID (FQDN).
 
         For internal clients, FQDNs are hard-coded into the system. For RSPs
-        they are attributes of test objects.
+        they are attributes of test request objects.
 
   schemas:
     tldSet:
@@ -226,6 +226,9 @@ components:
 
     inputParameters:
       description: |
+        RSPs must provide various input parameters to be used within test cases.
+        This type is used when RSPs submit these parameters after a test request
+        is created, and is also used when returning test request information.
       type: object
       properties:
         dns:
@@ -355,10 +358,10 @@ paths:
   /test:
     post:
       description: |
-        Create a new test object. Only internal clients can perform this
+        Create a new test request. Only internal clients can perform this
         operation.
 
-        Once a test object has been created, the RSP identified by the
+        Once a test request has been created, the RSP identified by the
         `clientID` property can submit input parameters using a
         `POST /test/{id}/inputs` request, and request test re-runs using a
         `PATCH /test/{id}` request.
@@ -425,7 +428,7 @@ paths:
         If a test failed, then this operation can be used to request a re-test.
 
         This is achieved by submitting a `PATCH` request to set the `status`
-        property of the test object to `requested`.
+        property of the test request to `requested`.
 
         This operation can only be used on tests which have the `status` of
         `completed` and `result` of `fail` or `error`. Internal clients can use
