@@ -227,93 +227,28 @@ components:
     inputParameters:
       description: |
         RSPs must provide various input parameters to be used within test cases.
-        This type is used when RSPs submit these parameters after a test request
-        is created, and is also used when returning test request information.
+        An `inputParameters` object is used when RSPs submit these parameters
+        after a test request is created, and is also used when returning test
+        request information.
       type: object
-      properties:
-        dns:
-          description: |
-            A hash map containing input parameters related to DNS tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
+      additionalProperties: true
+      patternProperties:
+        ^(common|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
           type:
+            - string
+            - integer
+            - number
+            - boolean
             - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        dnssec:
-          description: |
-            A hash map containing input parameters related to DNSSEC tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
+            - array
+          items:
+            type:
+            - string
+            - integer
+            - number
+            - boolean
             - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        epp:
-          description: |
-            A hash map containing input parameters related to EPP tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
-            - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        rdds:
-          description: |
-            A hash map containing input parameters related to RDDS tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
-            - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        rde:
-          description: |
-            A hash map containing input parameters related to RDE tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
-            - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        idn:
-          description: |
-            A hash map containing input parameters related to IDN tests. For
-            details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
-            - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
-
-        srsgw:
-          description: |
-            A hash map containing input parameters related to SRS Gateway tests.
-            For details of the specific input parameters required, consult the
-            relevant test plan documentation.
-          type:
-            - "null"
-            - object
-          additionalProperties:
-            type: string
-          default: null
+      examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
 
     testCaseLog:
       description: |
@@ -431,9 +366,9 @@ paths:
         property of the test request to `requested`.
 
         This operation can only be used on tests which have the `status` of
-        `completed` and `result` of `fail` or `error`. Internal clients can use
-        it on any such test, while RSPs can only use it on tests associated with
-        their client ID.
+        `completed` and `result` of `fail` or `error`.
+
+        Only internal clients can access this resource.
       operationId: restartTest
       parameters:
         - name: id
