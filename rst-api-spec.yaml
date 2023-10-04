@@ -233,7 +233,7 @@ components:
       type: object
       additionalProperties: true
       patternProperties:
-        ^(common|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
+        ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
           type:
             - string
             - integer
