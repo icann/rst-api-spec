@@ -404,7 +404,16 @@ paths:
   /test/{id}/inputs:
     post:
       description: |
-        Submit test input parameters.
+        Submit test input parameters. The request payload will replace any
+        previously submitted parameters.
+
+        Input parameters can only be submitted for test request objects that
+        have the status of `input-needed`.
+
+        Any files referenced in an input parameter MUST be uploaded beforehand.
+
+        Once all required input parameters have been submitted, the status of
+        the test request object will change from `input-needed` to `pending`.
       operationId: setTestInputParameters
       parameters:
         - name: id
@@ -431,6 +440,28 @@ paths:
           description: Returned when the client has exceeded rate limits.
         '500':
           description: Returned when there has been an internal server error.
+
+  /test/{id}/files:
+    post:
+      description: |
+        Where tests require files to be provided as input parameters, this
+        resource may be used to submit them as file uploads. Multiple files may
+        be uploaded in a single request. If a filename matches a previously
+        submitted file, that file will be replaced.
+
+        Any files referenced in an input parameter MUST be uploaded beforehand.
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filename:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
 
   /tests:
     get:
