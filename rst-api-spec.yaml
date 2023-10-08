@@ -217,6 +217,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/inputParameters"
+
+        files:
+          description: |
+            A list of any files uploaded.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: the file name.
+                type: string
+                examples: [example_20231008_full_S1_R0.ryde]
+              uploaded:
+                description: when the file was uploaded.
+                type: string
+                format: date-time
+              href:
+                description: the URL of the file.
+                type: string
+                format: url
+                examples: [https://api.rst.icann.org/v1/test/987654321/files/example_20231008_full_S1_R0.ryde]
         results:
           description: |
             A detailed log of all tests carried out.
@@ -258,6 +279,7 @@ components:
         caseID:
           description: the Test Case ID.
           type: string
+          examples: [epp-01]
         result:
           description: the result of the test.
           type: string
@@ -269,6 +291,7 @@ components:
         description:
           description: A short description of the outcome of the test.
           type: string
+          examples: ["successfully resolved epp.hostname for IPv4 and IPv6"]
         dateStarted:
           description: date/time when the test case started.
           type: string
@@ -282,6 +305,7 @@ components:
           type: array
           items:
             type: string
+            examples: [["starting test epp-01", "resolving epp.rsp.tech/A", "found 1 RR(s)", "resolving epp.rsp.tech/AAAA", "found 1 RR(s)", "...and so on"]]
         context:
           description: |
             an object containing context parameters (eg input parameters,
@@ -289,6 +313,8 @@ components:
           type: object
           additionalProperties:
             type: string
+          examples: [{"host.name": "node01.rst", "user.name": "rst", "dig.version": "DiG 9.10.6", "uname": "Linux localhost.localdomain 6.4.15-200.fc38.aarch64 #1 SMP PREEMPT_DYNAMIC Thu Sep  7 00:51:10 UTC 2023 aarch64 GNU/Linux", "epp.hostname": "epp.rsp.tech"}]
+
 paths:
   /test:
     post:
@@ -451,6 +477,13 @@ paths:
 
         Any files referenced in an input parameter MUST be uploaded beforehand.
       operationId: uploadFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           multipart/form-data:
@@ -462,6 +495,55 @@ paths:
                   items:
                     type: string
                     format: binary
+      responses:
+        '201':
+          description: A successful result.
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
+  /test/{id}/file/{filename}:
+    get:
+      description: |
+      operationId: getFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filename
+          description: the file name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/octet-stream":
+              schema:
+                type: string
+                fomat: binary
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
 
   /tests:
     get:
