@@ -313,7 +313,7 @@ components:
           type: object
           additionalProperties:
             type: string
-          examples: [{"host.name": "node01.rst", "user.name": "rst", "dig.version": "DiG 9.10.6", "uname": "Linux localhost.localdomain 6.4.15-200.fc38.aarch64 #1 SMP PREEMPT_DYNAMIC Thu Sep  7 00:51:10 UTC 2023 aarch64 GNU/Linux", "epp.hostname": "epp.rsp.tech"}]
+          examples: [{"host.name": "node01.rst", "host.ips": "192.168.0.32,fe80::79b5:adbc:141e:b15e", "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
 paths:
   /test:
