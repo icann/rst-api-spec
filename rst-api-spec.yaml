@@ -85,24 +85,33 @@ components:
   schemas:
     tldSet:
       description: |
-        A list of logically grouped TLDs. For a traditional ASCII TLD, this is
-        just an array containing a single string, but for IDN TLDs or variant
-        TLDs, it is an array of two or more strings.
-      type: array
-      items:
+        A TLD set represents one or more logically grouped TLDs (such as those
+        which contain IDN variants). A TLD set has properties which are TLD
+        A-labels, and values which are arrays of IDN table IDs.
+      type: object
+      additionalProperties:
+        description: |
+          Object properties are TLD labels. Property values MUST be an array of
+          strings.
         type: string
         format: hostname
         pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
         maxLength: 63
         minLength: 3
-        examples: [example]
-      minItems: 1
-      examples: [[example], [foo, bar]]
 
     testRequest:
       description: |
+        This object type is used to define the properties of a new test request
+        object. The `testRequestSubmitted` type inherits from it.
       type: object
       properties:
+        applicationID:
+          description: |
+            For RSP evaluation, the application ID.
+          type:
+            - string
+            - "null"
+          examples: [foo123]
         tlds:
           description: |
             An array of TLDSet objects to which this test relates. In most cases
@@ -112,15 +121,17 @@ components:
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-
-        clientID:
+          examples: [[{"xn--8pvz8d":["zh_CN"],"xn--8pvxs":["zh_TW"]},{"xn--spcimen-cya":["fr_FR","fr_CA","fr_DZ"]},{"example":[]}]]
+        clientIDs:
           description: |
-            An FQDN which identifies the RSEP, and at which one or `TLSA`
-            records may be found which can be used for authentication.
-          type: string
-          format: hostname
-          examples: [tlsa.rsp.tech]
-
+            An array of FQDNs which identify the RSEP, and at which one or more
+            `TLSA` records may be found which can be used for authentication.
+          type: array
+          items:
+            schema:
+              type: string
+              format: hostname
+          examples: [[tlsa.rsp.tech]]
         testPlan:
           description: the test plan to be followed.
           type: string
@@ -133,6 +144,10 @@ components:
             - StandardRSPEvaluationTest
             - DNSRSPEvaluationTest
             - DNSSECRSPEvaluationTest
+        dueDate:
+          description: the date/time before which the test must be passed.
+          type: string
+          format: date-time
 
     testRequestSubmitted:
       description: |
@@ -154,6 +169,14 @@ components:
           type: string
           format: date-time
 
+        dateUpdated:
+          description: date/time when this request was last updated.
+          type:
+            - string
+            - "null"
+          format: date-time
+          default: null
+
         dateStarted:
           description: date/time when the test run started (which may be null).
           type:
@@ -173,35 +196,47 @@ components:
         status:
           description: |
             The status of this request.
-            1. The **inputs-needed** value indicates that the request has been
+            1. The `inputs-needed` value indicates that the request has been
                received, but input parameters are needed before the test can
                begin.
-            2. The **pending** value indicates that all required input
+            2. The `inputs-complete` value indicates that all the required
+               input parameters have been provided.
+            3. The `ready` value indicates that all required input
                parameters have been provided, but the test run has not yet
                started.
-            3. The **in-progress** value indicates that the test run has
+            4. The `in-progress` value indicates that the test run has
                started, but has not yet been completed.
-            4. The **completed** value indicates that the test run has
+            5. The `completed` value indicates that the test run has
                completed.
+            6. The `expired` value indicates that the test did not have a status
+               of `completed` when the `dueDate` was reached.
+
+            The following state diagram outlines how the status of a test object
+            changes throughout its lifetime:
+
+            ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg?token=GHSAT0AAAAAACIBFKWM66DUUS4XNUPJORJAZJOQJ4Q)
+
           type: string
           enum:
             - inputs-needed
-            - pending
+            - inputs-complete
+            - ready
             - in-progress
             - completed
+            - expired
           default: inputs-needed
 
         result:
           description: |
             The outcome of the test run.
-            1. The **pass** value indicates that the test run completed with no
+            1. The `pass` value indicates that the test run completed with no
                errors.
-            2. The **fail** value indicates that at least one test failed.
-            3. The **error** value indicates that an internal issue prevented
+            2. The `fail` value indicates that at least one test failed.
+            3. The `error` value indicates that an internal issue prevented
                the test run from completing.
 
-            This value will be **null** unless the value of the *status*
-            property has the value **completed**.
+            This value will be `null` unless the value of the `status`
+            property has the value `completed`.
           type:
             - string
             - "null"
@@ -214,9 +249,10 @@ components:
         inputs:
           description: |
             Any input parameters provided by the RSP.
-          type: array
-          items:
+          type: object
+          schema:
             $ref: "#/components/schemas/inputParameters"
+          examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid01": "clid01", "epp.pw01": "foo2bar"}]
 
         files:
           description: |
@@ -252,7 +288,6 @@ components:
         after a test request is created, and is also used when returning test
         request information.
       type: object
-      additionalProperties: true
       patternProperties:
         ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
           type:
@@ -281,13 +316,22 @@ components:
           type: string
           examples: [epp-01]
         result:
-          description: the result of the test.
+          description: |
+            the result of the test.
+            * `pass` - the test passed.
+            * `fail` - the test was not passed.
+            * `error` - an error occurred which meant a result could not be
+              determined.
+            * `skipped` - the test case was not applicable and was not carried
+              out.
+            * `aborted` - the test case was aborted before it could complete.
           type: string
           enum:
             - pass
             - fail
             - error
             - skipped
+            - aborted
         description:
           description: A short description of the outcome of the test.
           type: string
@@ -309,11 +353,18 @@ components:
         context:
           description: |
             an object containing context parameters (eg input parameters,
-            environment variables, etc).
+            software versions, environment variables, etc). These are intended
+            to assist in debugging any issues that may have caused the test case
+            to fail or error.
           type: object
           additionalProperties:
-            type: string
-          examples: [{"host.name": "node01.rst", "host.ips": "192.168.0.32,fe80::79b5:adbc:141e:b15e", "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+            type:
+            - string
+            - integer
+            - number
+            - boolean
+            - "null"
+          examples: [{"host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
 paths:
   /test:
@@ -326,7 +377,6 @@ paths:
         `clientID` property can submit input parameters using a
         `POST /test/{id}/inputs` request, and request test re-runs using a
         `PATCH /test/{id}` request.
-
       operationId: createTest
       requestBody:
         content:
@@ -386,16 +436,24 @@ paths:
 
     patch:
       description: |
-        If a test failed, then this operation can be used to request a re-test.
-
-        This is achieved by submitting a `PATCH` request to set the `status`
-        property of the test request to `requested`.
-
-        This operation can only be used on tests which have the `status` of
-        `completed` and `result` of `fail` or `error`.
-
-        Only internal clients can access this resource.
-      operationId: restartTest
+        This operation allows the status or result of a request to be changed.
+        The status of a test can be changed  under the
+        following circumstances:
+          1. if the current status of the test is `completed`, and the `result`
+             property is either `fail` or `error`, then the status can be
+             changed to `inputs-needed`. This allows an RSP to update input
+             parameters prior to a re-test.
+          2. if the current status of the test is `inputs-complete`, then the
+             status can be changed to `ready`. This allows the RSP to signal
+             that they are ready for the test to begin.
+          3. if the current status of the test is `in-progress`, then the status
+             can be changed to `inputs-needed`. This allows an in-progress test
+             to be cancelled, and changed to a state where input parameters
+             may be submitted prior to a re-test.
+        
+        Internal users can change the `result` property of a test from `fail` or
+        `error` to `pass`, but only when the status of the test is `completed`.
+      operationId: setTestStatus
       parameters:
         - name: id
           description: the test ID
@@ -407,12 +465,21 @@ paths:
           description: |
             the new status for the test.
           in: query
-          required: true
+          required: false
           schema:
             type: string
             enum:
-              - requested
-
+              - inputs-needed
+              - ready
+        - name: result
+          description:
+              the new result for the test (internal clients only).
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - pass
       responses:
         '201':
           description: A successful result.
@@ -427,6 +494,32 @@ paths:
         '500':
           description: Returned when there has been an internal server error.
 
+    delete:
+      description: |
+        Internal users can use the `DELETE` method to mark a test as deleted. If
+        successful, it becomes invisible to `GET` requests (status 404) and will
+        not appear in search results.
+      operationId: deleteTest
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: A successful result.
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
   /test/{id}/inputs:
     post:
       description: |
@@ -436,9 +529,8 @@ paths:
         Input parameters can only be submitted for test request objects that
         have the status of `input-needed`.
 
-        Any files referenced in an input parameter MUST be uploaded beforehand.
-
-        Once all required input parameters have been submitted, the status of
+        Once all required input parameters have been submitted (and any files
+        referenced in those parameters have been uploaded), the status of
         the test request object will change from `input-needed` to `pending`.
       operationId: setTestInputParameters
       parameters:
@@ -450,7 +542,7 @@ paths:
             type: string
       requestBody:
         content:
-          application/rdap+json:
+          application/json:
             schema:
               $ref: "#/components/schemas/inputParameters"
       responses:
@@ -475,7 +567,8 @@ paths:
         be uploaded in a single request. If a filename matches a previously
         submitted file, that file will be replaced.
 
-        Any files referenced in an input parameter MUST be uploaded beforehand.
+        All files MUST be referenced in an input parameter before being
+        uploaded.
       operationId: uploadFile
       parameters:
         - name: id
@@ -548,19 +641,26 @@ paths:
   /tests:
     get:
       description: |
-        Retrieve a list of test requests.
-        * Internal clients will see all requests
+        Query the database for test request objects:
+        * Internal clients will see all requests;
         * RSPs will see all requests associated with their client ID.
       operationId: getTests
       parameters:
         - name: client
-          description: limit results to specific client (internal clients only)
+          description: limit results to specific client (internal clients only).
           in: query
           required: false
           schema:
             type: string
         - name: tld
-          description: limit results to specific TLD (internal clients only)
+          description: limit results to specific TLD (internal clients only).
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: applicationID
+          description: |
+            limit results to specific application ID (internal clients only).
           in: query
           required: false
           schema:
@@ -573,9 +673,11 @@ paths:
             type: string
             enum:
               - inputs-needed
-              - pending
+              - inputs-complete
+              - ready
               - in-progress
               - completed
+              - expired
         - name: result
           description: limit results to those with the given result
           in: query
