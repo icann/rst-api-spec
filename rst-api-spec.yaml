@@ -297,6 +297,7 @@ components:
             - boolean
             - "null"
             - array
+            - object
           items:
             type:
             - string
