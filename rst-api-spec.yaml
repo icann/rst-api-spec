@@ -305,6 +305,7 @@ components:
             - number
             - boolean
             - "null"
+            - object
       examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
 
     testCaseLog:
