@@ -83,11 +83,33 @@ components:
         they are attributes of test request objects.
 
   schemas:
+    idnSpec:
+      description: |
+        An IDN set represents the IDN tables for a TLD, and the level of support
+        for variants (if applicable).
+
+        An IDN set object has properties which are IDN table IDs, and the values
+        are either `null`, or integers indicating the level of support for
+        variants:
+
+        * `null`: variants are not applicable for this table ID
+        * `1`: variants are not offered
+        * `2`: variant labels under the same TLD are supported
+        * `3`: variant labels under the variant TLDs are supported
+      type: object
+      additionalProperties:
+        description: |
+          Object properties are IDN table IDs. Property values MUST be either
+          `null` or an integer indicating the variant support level.
+        type: string
+
     tldSet:
       description: |
         A TLD set represents one or more logically grouped TLDs (such as those
-        which contain IDN variants). A TLD set has properties which are TLD
-        A-labels, and values which are arrays of IDN table IDs.
+        which contain IDN variants).
+
+        A TLD set has properties which are TLD A-labels, and values which are
+        objects where the properties are idnSpec objects.
       type: object
       additionalProperties:
         description: |
@@ -114,14 +136,14 @@ components:
           examples: [foo123]
         tlds:
           description: |
-            An array of TLDSet objects to which this test relates. In most cases
-            this will just be something like `[["example"]]` but more complex
-            sets of TLDs with variants are supported for RSP testing.
+            An array of tldSet objects to which this test relates. In most cases
+            this will just be something like `[{"example": []}]` but more
+            complex sets of TLDs with variants are supported for RSP testing.
           type: array
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"xn--8pvz8d":["zh_CN"],"xn--8pvxs":["zh_TW"]},{"xn--spcimen-cya":["fr_FR","fr_CA","fr_DZ"]},{"example":[]}]]
+          examples: [[{"xn--8pvz8d":{"zh_CN":3},"xn--8pvxs":{"zh_TW":3}},{"xn--spcimen-cya":{"fr_FR":1,"de_DE":2}},{"example":{}}]]
         clientIDs:
           description: |
             An array of FQDNs which identify the RSEP, and at which one or more
@@ -145,8 +167,13 @@ components:
             - DNSRSPEvaluationTest
             - DNSSECRSPEvaluationTest
         dueDate:
-          description: the date/time before which the test must be passed.
-          type: string
+          description: |
+            The date/time before which the test must be passed. If `null`, the
+            test remains open indefinitely (unless the `completed` status is
+            reached).
+          type: 
+            - string
+            - "null"
           format: date-time
 
     testRequestSubmitted:
@@ -373,7 +400,7 @@ paths:
     post:
       description: |
         Create a new test request. Only internal clients can perform this
-        operation.
+        operation in production; but all clients can use it in OT&E.
 
         Once a test request has been created, the RSP identified by the
         `clientID` property can submit input parameters using a
