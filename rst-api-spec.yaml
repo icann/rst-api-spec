@@ -60,6 +60,8 @@ servers:
     description: Test server
   - url: https://api.rst-staging.icann.org/v1
     description: Staging server
+  - url: https://ote.rst-staging.icann.org/v1
+    description: OT&E server
 
 mTLS: []
 
@@ -73,15 +75,19 @@ components:
         at which one or more `TLSA` records are published. Clients must present
         a certificate which matches one of these records.
 
-        There are two kinds of clients:
+        There are three privilege levels, from highest to lowest:
 
-        1. ICANN-internal clients which have "superuser" privileges
-        2. RSPs, whose privileges are limited to test requests associated with
-           their client ID (FQDN).
+        1. The Test Orchestration System (TOS) client, which is responsible for
+           running tests and reporting on their results;
+        2. ICANN-internal Test Administrator (TA) clients, which are able to
+           create new test objects, query them, and exceptionally delete
+           requests or modify their status;
+        3. Registry Service Provider (RSP) clients, whose privileges are limited
+           to those test requests that are associated with their client ID
+           (FQDN).
 
-        For internal clients, FQDNs are hard-coded into the system. For RSPs
+        For types 1 and 2, FQDNs are hard-coded into the system. For RSPs
         they are attributes of test request objects.
-
   schemas:
     idnSpec:
       description: |
@@ -176,6 +182,56 @@ components:
             - "null"
           format: date-time
 
+    testStatus:
+      description: |
+        A string indicating the status of a test request.
+
+        1. The `inputs-needed` value indicates that the request has been
+           received, but input parameters are needed before the test can
+           begin.
+        2. The `inputs-complete` value indicates that all the required
+           input parameters and files have been provided.
+        3. The `ready` value indicates that all required input
+           parameters and files have been provided, but the test run has not
+           yet started.
+        4. The `in-progress` value indicates that the test run has started,
+           but has not yet been completed.
+        5. The `completed` value indicates that the test run has completed.
+        6. The `expired` value indicates that the test did not have a status
+           of `completed` when the `dueDate` was reached.
+
+        The following state diagram outlines how the status of a test object
+        changes throughout its lifetime:
+
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg?token=GHSAT0AAAAAACIBFKWNBJMZ45OKMG3PEW4OZJOSQGA)
+      type: string
+      enum:
+        - inputs-needed
+        - inputs-complete
+        - ready
+        - in-progress
+        - completed
+        - expired
+      default: inputs-needed
+
+    testResult:
+      description: |
+        A string indicating the result of a test request.
+
+        1. The `pass` value indicates that the test run completed with no
+           errors.
+        2. The `fail` value indicates that at least one test failed.
+        3. The `error` value indicates that an internal issue prevented
+           the test run from completing.
+      type:
+        - string
+        - "null"
+      enum:
+        - pass
+        - fail
+        - error
+      default: null
+
     testRequestSubmitted:
       description: |
         This type describes a test request that has been successfully
@@ -221,69 +277,25 @@ components:
           default: null
 
         status:
-          description: |
-            The status of this request.
-            1. The `inputs-needed` value indicates that the request has been
-               received, but input parameters are needed before the test can
-               begin.
-            2. The `inputs-complete` value indicates that all the required
-               input parameters have been provided.
-            3. The `ready` value indicates that all required input
-               parameters have been provided, but the test run has not yet
-               started.
-            4. The `in-progress` value indicates that the test run has
-               started, but has not yet been completed.
-            5. The `completed` value indicates that the test run has
-               completed.
-            6. The `expired` value indicates that the test did not have a status
-               of `completed` when the `dueDate` was reached.
-
-            The following state diagram outlines how the status of a test object
-            changes throughout its lifetime:
-
-            ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg?token=GHSAT0AAAAAACIBFKWNBJMZ45OKMG3PEW4OZJOSQGA)
-
-          type: string
-          enum:
-            - inputs-needed
-            - inputs-complete
-            - ready
-            - in-progress
-            - completed
-            - expired
-          default: inputs-needed
-
+          description: The status of this request.
+          schema:
+            $ref: "#/components/schemas/testStatus"
+          examples: ["inputs-needed"]
         result:
-          description: |
-            The outcome of the test run.
-            1. The `pass` value indicates that the test run completed with no
-               errors.
-            2. The `fail` value indicates that at least one test failed.
-            3. The `error` value indicates that an internal issue prevented
-               the test run from completing.
-
-            This value will be `null` unless the value of the `status`
-            property has the value `completed`.
-          type:
-            - string
-            - "null"
-          enum:
-            - pass
-            - fail
-            - error
-          default: null
+          description: The outcome of the test run.
+          schema:
+            $ref: "#/components/schemas/testResult"
+          examples: [null]
 
         inputs:
-          description: |
-            Any input parameters provided by the RSP.
+          description: Any input parameters provided by the RSP.
           type: object
           schema:
             $ref: "#/components/schemas/inputParameters"
           examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid01": "clid01", "epp.pw01": "foo2bar"}]
 
         files:
-          description: |
-            A list of any files uploaded.
+          description: A list of any files uploaded.
           type: array
           items:
             type: object
@@ -303,7 +315,14 @@ components:
                 examples: [https://api.rst.icann.org/v1/test/987654321/files/example_20231008_full_S1_R0.ryde]
         results:
           description: |
-            A detailed log of all tests carried out.
+            A detailed log of all tests carried out. This property will
+            initially be an empty array, until the status of the test changes to
+            `in-progress`. From this point onwards, test results will be added
+            to the array as the test progresses.
+
+            If the test fails, is aborted, or there is an error, the results of
+            the last test will always be included in this property, and will not
+            be overridden until a re-test begins.
           type: array
           items:
             $ref: "#/components/schemas/testCaseLog"
@@ -335,9 +354,27 @@ components:
             - object
       examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
 
-    testCaseLog:
+    testCaseResult:
       description: |
-        A detailed log of an individual test case.
+        A string indicating the status of a test case.
+
+        * `pass` - the test passed.
+        * `fail` - the test was not passed.
+        * `error` - an error occurred which meant a result could not be
+          determined.
+        * `skipped` - the test case was not applicable and was not carried
+          out.
+        * `aborted` - the test case was aborted before it could complete.
+      type: string
+      enum:
+        - pass
+        - fail
+        - error
+        - skipped
+        - aborted
+
+    testCaseLog:
+      description: A detailed log of an individual test case.
       type: object
       properties:
         caseID:
@@ -345,22 +382,10 @@ components:
           type: string
           examples: [epp-01]
         result:
-          description: |
-            the result of the test.
-            * `pass` - the test passed.
-            * `fail` - the test was not passed.
-            * `error` - an error occurred which meant a result could not be
-              determined.
-            * `skipped` - the test case was not applicable and was not carried
-              out.
-            * `aborted` - the test case was aborted before it could complete.
-          type: string
-          enum:
-            - pass
-            - fail
-            - error
-            - skipped
-            - aborted
+          description: the result of the test.
+          schema:
+            $ref: "#/components/schemas/testCaseResult"
+          examples: ["pass"]
         description:
           description: A short description of the outcome of the test.
           type: string
@@ -399,13 +424,14 @@ paths:
   /test:
     post:
       description: |
-        Create a new test request. Only internal clients can perform this
-        operation in production; but all clients can use it in OT&E.
+        This operation create a new test request. Only TA clients can perform
+        this operation in production; but RSP clients can use it in OT&E.
 
         Once a test request has been created, the RSP identified by the
         `clientID` property can submit input parameters using a
-        `POST /test/{id}/inputs` request, and request test re-runs using a
-        `PATCH /test/{id}` request.
+        `POST /test/{id}/inputs` request, upload files using
+        `POST /test/{id}/files`, and request test re-runs using
+        `PATCH /test/{id}`.
       operationId: createTest
       requestBody:
         content:
@@ -433,10 +459,10 @@ paths:
   /test/{id}:
     get:
       description: |
-        Get information about a specific test request.
+        This operation returns information about a specific test request.
 
-        Internal clients can retrieve any test request; RSPs can only
-        retrieve requests that they've submitted.
+        TOS and TA clients can retrieve any test request; RSPs can only
+        retrieve requests associated with their Client ID.
       operationId: getTestInfo
       parameters:
         - name: id
@@ -465,23 +491,36 @@ paths:
 
     patch:
       description: |
-        This operation allows the status or result of a request to be changed.
-        The status of a test can be changed  under the
-        following circumstances:
-          1. if the current status of the test is `completed`, and the `result`
+        This operation allows test request properties such as the status or
+        result to be changed.
+
+        RSP clients can change the status of a test under the following
+        circumstances:
+
+          1. If the current status of the test is `completed`, and the `result`
              property is either `fail` or `error`, then the status can be
-             changed to `inputs-needed`. This allows an RSP to update input
-             parameters prior to a re-test.
-          2. if the current status of the test is `inputs-complete`, then the
-             status can be changed to `ready`. This allows the RSP to signal
-             that they are ready for the test to begin.
+             changed to `inputs-needed`. The RSP can then update input
+             parameters and files, and then request a re-test.
+          2. If the current status of the test is `inputs-complete`, then the
+             status can be changed to `ready`. This signals that the RSP is
+             ready for the test to begin.
           3. if the current status of the test is `in-progress`, then the status
              can be changed to `inputs-needed`. This allows an in-progress test
-             to be cancelled, and changed to a state where input parameters
-             may be submitted prior to a re-test.
-        
-        Internal users can change the `result` property of a test from `fail` or
+             to be cancelled, and changed to a state where input parameters may
+             be submitted prior to a re-test.
+
+        TA clients can change the `result` property of a test from `fail` or
         `error` to `pass`, but only when the status of the test is `completed`.
+
+        The TOS client can use this operation as follows:
+
+          1. to update the status of a test from `ready` to `in-progress` (this
+             also updates the `dateStarted` property, and clears the `results`
+             property);
+          2. to update the status of a test from `in-progress` to `completed`
+             (this also updates the `dateCompleted` property). The `result`
+             property MUST be specified as part of this operation.
+
       operationId: setTestStatus
       parameters:
         - name: id
@@ -491,24 +530,16 @@ paths:
           schema:
             type: string
         - name: status
-          description: |
-            the new status for the test.
+          description: the new status for the test.
           in: query
           required: false
           schema:
-            type: string
-            enum:
-              - inputs-needed
-              - ready
+            $ref: "#/components/schemas/testStatus"
         - name: result
-          description:
-              the new result for the test (internal clients only).
+          description: the new result for the test (TA clients only).
           in: query
-          required: false
           schema:
-            type: string
-            enum:
-              - pass
+            $ref: "#/components/schemas/testResult"
       responses:
         '201':
           description: A successful result.
@@ -634,6 +665,7 @@ paths:
   /test/{id}/file/{filename}:
     get:
       description: |
+        This retrieves an uploaded file.
       operationId: getFile
       parameters:
         - name: id
@@ -656,6 +688,39 @@ paths:
               schema:
                 type: string
                 fomat: binary
+        '400':
+          description: Returned when the server receives a malformed request.
+        '403':
+          description: Returned when the access control policy prevents access.
+        '405':
+          description: Returned when the request method is invalid.
+        '429':
+          description: Returned when the client has exceeded rate limits.
+        '500':
+          description: Returned when there has been an internal server error.
+
+  /test/{id}/results:
+    post:
+      description: |
+        This operation is used by the TOS client to update the object with
+        test results. The POST will append the provided `testCaseLog` object to
+        the `results` property of the object.
+      operationId: addResult
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testCaseLog"
+      responses:
+        '201':
+          description: A successful result.
         '400':
           description: Returned when the server receives a malformed request.
         '403':
@@ -699,24 +764,13 @@ paths:
           in: query
           required: false
           schema:
-            type: string
-            enum:
-              - inputs-needed
-              - inputs-complete
-              - ready
-              - in-progress
-              - completed
-              - expired
+            $ref: "#/components/schemas/testStatus"
         - name: result
           description: limit results to those with the given result
           in: query
           required: false
           schema:
-            type: string
-            enum:
-              - pass
-              - fail
-              - error
+            $ref: "#/components/schemas/testResult"
       responses:
         '200':
           description: A successful result.
