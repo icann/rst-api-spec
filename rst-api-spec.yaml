@@ -198,7 +198,7 @@ components:
            begin.
         2. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided.
-        3. The `ready-to-start` value indicates that all required input
+        3. The `ready` value indicates that all required input
            parameters and files have been provided, but the test run has not
            yet started.
         4. The `in-progress` value indicates that the test run has started,
@@ -215,7 +215,7 @@ components:
       enum:
         - inputs-needed
         - inputs-complete
-        - ready-to-start
+        - ready
         - in-progress
         - completed
         - expired
@@ -523,8 +523,8 @@ paths:
              changed to `inputs-needed`. The RSP can then update input
              parameters and files, and then request a re-test.
           2. If the current status of the test is `inputs-complete`, then the
-             status can be changed to `ready-to-start`. This signals that the
-             RSP is ready for the test to begin.
+             status can be changed to `ready`. This signals that the RSP is
+             ready for the test to begin.
           <!-- this functionality will not be offered in the MVP
           3. if the current status of the test is `in-progress`, then the status
              can be changed to `inputs-needed`. This allows an in-progress test
@@ -536,9 +536,9 @@ paths:
 
         The TOS client can use this operation as follows:
 
-          1. to update the status of a test from `ready-to-start` to
-             `in-progress` (this also updates the `dateStarted` property, and
-             clears the `results` property);
+          1. to update the status of a test from `ready` to `in-progress` (this
+             also updates the `dateStarted` property, and clears the `results`
+             property);
           2. to update the status of a test from `in-progress` to `completed`
              (this also updates the `dateCompleted` property). The `result`
              property MUST be specified as part of this operation.
@@ -616,7 +616,7 @@ paths:
 
         Once all required input parameters have been submitted (and any files
         referenced in those parameters have been uploaded), the status of
-        the test request object will change from `input-needed` to `pending`.
+        the test request object will change from `input-needed` to `inputs-complete`.
       operationId: setTestInputParameters
       parameters:
         - name: id
