@@ -3,7 +3,7 @@ flowchart TD
     A[inputs-needed] -->|"setTestInputParameters (RSP)"| B{inputs complete?}
     B -->|N| A
     B -->|Y| C[inputs-complete]
-    C -->|"setTestStatus (RSP)"| D[ready]
+    C -->|"setTestStatus (RSP)"| D[ready-to-start]
     D --> |"setTestStatus (TOS)"| E1[in-progress]
     E1 --> |setTestStatus| A
     E1 --> |"setTestStatus (TOS)"| G{pass?}
