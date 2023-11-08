@@ -5,6 +5,13 @@ externalDocs:
   url: https://www.icann.org/resources/registry-system-testing
   description: More information
 
+tags:
+  - name: Creating test requests
+  - name: Providing input parameters & files
+  - name: Retrieving test information
+  - name: Starting, stopping and restarting tests
+  - name: Test administration
+
 info:
   title: ICANN RST-API
   summary: ICANN Registry System Testing (RST) API.
@@ -294,6 +301,14 @@ components:
             $ref: "#/components/schemas/inputParameters"
           examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid01": "clid01", "epp.pw01": "foo2bar"}]
 
+        missingInputs:
+          description: |
+            An array listing any required input parameters that have not yet
+            been provided.
+          type: array
+          items:
+            type: string
+          examples: [["epp.kitchSink", "rdap.coffeePotURL"]]
         files:
           description: A list of any files uploaded.
           type: array
@@ -423,6 +438,8 @@ components:
 paths:
   /test:
     post:
+      tags:
+        - Creating test requests
       description: |
         This operation create a new test request. Only TA clients can perform
         this operation in production; but RSP clients can use it in OT&E.
@@ -458,6 +475,8 @@ paths:
 
   /test/{id}:
     get:
+      tags:
+        - Retrieving test information
       description: |
         This operation returns information about a specific test request.
 
@@ -490,6 +509,8 @@ paths:
           description: Returned when there has been an internal server error.
 
     patch:
+      tags:
+        - Starting, stopping and restarting tests
       description: |
         This operation allows test request properties such as the status or
         result to be changed.
@@ -504,10 +525,11 @@ paths:
           2. If the current status of the test is `inputs-complete`, then the
              status can be changed to `ready`. This signals that the RSP is
              ready for the test to begin.
+          <!-- this functionality will not be offered in the MVP
           3. if the current status of the test is `in-progress`, then the status
              can be changed to `inputs-needed`. This allows an in-progress test
              to be cancelled, and changed to a state where input parameters may
-             be submitted prior to a re-test.
+             be submitted prior to a re-test. -->
 
         TA clients can change the `result` property of a test from `fail` or
         `error` to `pass`, but only when the status of the test is `completed`.
@@ -520,7 +542,6 @@ paths:
           2. to update the status of a test from `in-progress` to `completed`
              (this also updates the `dateCompleted` property). The `result`
              property MUST be specified as part of this operation.
-
       operationId: setTestStatus
       parameters:
         - name: id
@@ -555,6 +576,8 @@ paths:
           description: Returned when there has been an internal server error.
 
     delete:
+      tags:
+        - Test administration
       description: |
         Internal users can use the `DELETE` method to mark a test as deleted. If
         successful, it becomes invisible to `GET` requests (status 404) and will
@@ -582,6 +605,8 @@ paths:
           description: Returned when there has been an internal server error.
   /test/{id}/inputs:
     post:
+      tags:
+        - Providing input parameters & files
       description: |
         Submit test input parameters. The request payload will replace any
         previously submitted parameters.
@@ -621,6 +646,8 @@ paths:
 
   /test/{id}/files:
     post:
+      tags:
+        - Providing input parameters & files
       description: |
         Where tests require files to be provided as input parameters, this
         resource may be used to submit them as file uploads. Multiple files may
@@ -664,6 +691,8 @@ paths:
 
   /test/{id}/file/{filename}:
     get:
+      tags:
+        - Retrieving test information
       description: |
         This retrieves an uploaded file.
       operationId: getFile
@@ -701,6 +730,8 @@ paths:
 
   /test/{id}/results:
     post:
+      tags:
+        - Test administration
       description: |
         This operation is used by the TOS client to update the object with
         test results. The POST will append the provided `testCaseLog` object to
@@ -734,6 +765,8 @@ paths:
 
   /tests:
     get:
+      tags:
+        - Retrieving test information
       description: |
         Query the database for test request objects:
         * Internal clients will see all requests;
