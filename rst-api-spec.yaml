@@ -105,10 +105,10 @@ components:
         are either `null`, or integers indicating the level of support for
         variants:
 
-        * `null`: variants are not applicable for this table ID
+        * `null`: variants are not applicable for this table
         * `1`: variants are not offered
         * `2`: variant labels under the same TLD are supported
-        * `3`: variant labels under the variant TLDs are supported
+        * `3`: variant labels under variant TLDs are supported
       type: object
       additionalProperties:
         description: |
@@ -123,11 +123,15 @@ components:
 
         A TLD set has properties which are TLD A-labels, and values which are
         objects where the properties are idnSpec objects.
+
+        If a TLD offers registrations at the third or higher levels, then
+        between one and three second-level "registry-class" domain name(s)
+        should be separately listed, rather than the TLD itself.
       type: object
       additionalProperties:
         description: |
-          Object properties are TLD labels. Property values MUST be an array of
-          strings.
+          Object properties are TLD labels. Property values MUST be `idnSpec`
+          objects.
         type: string
         format: hostname
         pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
@@ -142,21 +146,21 @@ components:
       properties:
         applicationID:
           description: |
-            For RSP evaluation, the application ID.
+            For RSP evaluation, the application ID, otherwise `null`.
           type:
             - string
             - "null"
           examples: [foo123]
         tlds:
           description: |
-            An array of tldSet objects to which this test relates. In most cases
-            this will just be something like `[{"example": []}]` but more
+            An array of `tldSet` objects to which this test relates. In most
+            cases this will just be something like `[{"example": []}]` but more
             complex sets of TLDs with variants are supported for RSP testing.
           type: array
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"xn--8pvz8d":{"zh_CN":3},"xn--8pvxs":{"zh_TW":3}},{"xn--spcimen-cya":{"fr_FR":1,"de_DE":2}},{"example":{}}]]
+          examples: [[{"xn--8pvz8d":{"zh_CN":3},"xn--8pvxs":{"zh_TW":3}},{"xn--spcimen-cya":{"fr_FR":1,"de_DE":2}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
         clientIDs:
           description: |
             An array of FQDNs which identify the RSEP, and at which one or more
@@ -166,7 +170,7 @@ components:
             schema:
               type: string
               format: hostname
-          examples: [[tlsa.rsp.tech]]
+          examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
         testPlan:
           description: the test plan to be followed.
           type: string
