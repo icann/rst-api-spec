@@ -303,7 +303,7 @@ components:
           type: object
           schema:
             $ref: "#/components/schemas/inputParameters"
-          examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid01": "clid01", "epp.pw01": "foo2bar"}]
+          examples: [{"example.name": "example.value"}]
 
         missingInputs:
           description: |
@@ -312,7 +312,7 @@ components:
           type: array
           items:
             type: string
-          examples: [["epp.kitchSink", "rdap.coffeePotURL"]]
+          examples: [["epp.kitchenSink", "rdap.coffeePotURL"]]
         files:
           description: A list of any files uploaded.
           type: array
@@ -371,7 +371,7 @@ components:
             - boolean
             - "null"
             - object
-      examples: [{"epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
+      examples: [{"important.note": "the contents of this object are purely illustrative", "epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
 
     testCaseResult:
       description: |
@@ -421,8 +421,7 @@ components:
           description: detailed test logs
           type: array
           items:
-            type: string
-            examples: [["starting test epp-01", "resolving epp.rsp.tech/A", "found 1 RR(s)", "resolving epp.rsp.tech/AAAA", "found 1 RR(s)", "...and so on"]]
+            $ref: "#/components/schemas/testCaseLogMessage"
         context:
           description: |
             an object containing context parameters (eg input parameters,
@@ -437,7 +436,33 @@ components:
             - number
             - boolean
             - "null"
-          examples: [{"host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+
+    testCaseLogMessage:
+      description: A log message.
+      type: object
+      properties:
+        severity:
+          description: |
+            The log level of the message, a subset of the values defined in
+            RFC5424.
+          type: string
+          enum:
+            - INFO
+            - NOTICE
+            - WARNING
+            - ERROR
+            - CRITICAL
+          default: WARNING
+        timestamp:
+          description: |
+            the timestamp when the message was generated.
+          type: string
+          format: date-time
+        message:
+          description: the message.
+          type: string
+          examples: ["Something informative just happened!", "Something critical just happened!"]
 
 paths:
   /test:
