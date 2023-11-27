@@ -236,7 +236,7 @@ components:
         The following state diagram outlines how the status of a test object
         changes throughout its lifetime:
 
-        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg?token=GHSAT0AAAAAACIBFKWNM7YJDSJPIPM4YGO2ZKLXUTQ)
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg)
       type: string
       enum:
         - inputs-needed
