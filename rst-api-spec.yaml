@@ -13,14 +13,15 @@ tags:
   - name: Test administration
 
 info:
-  title: ICANN RST-API
-  summary: ICANN Registry System Testing (RST) API.
+  title: ICANN Registry System Testing (RST) API
   description: |
-    The Registry System Testing (RST-API) provides a simple RESTful interface
-    to ICANN's Registry System Testing environment, which is used to conduct
-    conformance tests of the critical registry systems during the lifecycle of
-    a gTLD (before initial delegation, before the transition to a new Registry
-    Service Provider, or before the approval of various Registry Services).
+    The Registry System Testing (RST-API) provides a RESTful interface to
+    ICANN's [Registry System Testing](https://www.icann.org/resources/registry-system-testing)
+    system, which is used to conduct conformance tests of critical registry
+    systems during the lifecycle of a gTLD (before initial delegation, before
+    the transition to a new Registry Service Provider, or before the approval of
+    various Registry Services). It is also used by the Registry Service Provider
+    (RSP) evaluation system.
 
     This API can be used to submit requests for tests, and to review the
     outcome of those tests.
@@ -53,9 +54,9 @@ info:
   version: 1.1.0
   termsOfService: https://www.icann.org/resources/registry-system-testing
   contact:
-    name: ICANN
-    url: https://www.icann.org/
-    email: rst@icann.org
+    name: ICANN Global Support
+    url: https://www.icann.org/resources/registry-system-testing
+    email: globalsupport@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
@@ -65,7 +66,7 @@ servers:
     description: |
       The production environment. In the production environment, only TA clients
       can create new test requests.
-  - url: https://ote.rst-ote.icann.org/v1
+  - url: https://api.rst.ote.icann.org/v1
     description: |
       The OT&E environment. In the OT&E environment, any authenticated user can
       create new test requests.
@@ -95,10 +96,12 @@ components:
 
         For types 1 and 2, FQDNs are hard-coded into the system. For RSPs
         they are attributes of test request objects.
-  schemas:
 
+  schemas:
     variantSupportSpec:
       description: |
+        An `variantSupportSpec` object describes the level of support provided
+        for an IDN table that has variant labels.
       type: object
       properties:
         supportLevel:
