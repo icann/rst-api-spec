@@ -323,6 +323,10 @@ components:
                 description: the file name.
                 type: string
                 examples: [example_20231008_full_S1_R0.ryde]
+              type:
+                description: the media type of the file.
+                type: string
+                examples: [application/octet-stream]
               uploaded:
                 description: when the file was uploaded.
                 type: string
