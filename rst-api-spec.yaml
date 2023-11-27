@@ -595,7 +595,7 @@ paths:
           schema:
             $ref: "#/components/schemas/testResult"
       responses:
-        '201':
+        '204':
           description: A successful result.
         '400':
           description: Returned when the server receives a malformed request.
@@ -624,7 +624,7 @@ paths:
           schema:
             type: string
       responses:
-        '201':
+        '204':
           description: A successful result.
         '400':
           description: Returned when the server receives a malformed request.
@@ -703,7 +703,7 @@ paths:
             schema:
               type: object
               properties:
-                filename:
+                file:
                   type: array
                   items:
                     type: string
@@ -722,7 +722,7 @@ paths:
         '500':
           description: Returned when there has been an internal server error.
 
-  /test/{id}/file/{filename}:
+  /test/{id}/file/{file}:
     get:
       tags:
         - Retrieving test information
@@ -736,7 +736,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: filename
+        - name: file
           description: the file name
           in: path
           required: true
