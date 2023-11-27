@@ -96,6 +96,38 @@ components:
         For types 1 and 2, FQDNs are hard-coded into the system. For RSPs
         they are attributes of test request objects.
   schemas:
+    variantSupportSpec:
+      description: |
+      type: object
+      properties:
+        supportLevel:
+          description: |
+            The level of support for variants.
+            * `0`: variants are not applicable for this table
+            * `1`: variants are not offered
+            * `2`: variant labels under the same TLD are supported
+            * `3`: variant labels under variant TLDs are supported
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          default: 1
+        variantPolicy:
+          description: |
+            What policy is in place for variant labels:
+            * `not-blocked`: variants are not blocked. This **MUST** be set if
+              `supportLevel` is `0` and **MUST NOT** be set if `supportLevel` is
+              `1`, `2` or `3`.
+            * `blocked`: variants are blocked.
+            * `allocatable`: variants may be allocated.
+          Type: string
+          enum:
+            - not-blocked
+            - blocked
+            - allocatable
+          default: not-blocked
     idnSpec:
       description: |
         An IDN set represents the IDN tables for a TLD, and the level of support
@@ -105,15 +137,11 @@ components:
         are either `null`, or integers indicating the level of support for
         variants:
 
-        * `null`: variants are not applicable for this table
-        * `1`: variants are not offered
-        * `2`: variant labels under the same TLD are supported
-        * `3`: variant labels under variant TLDs are supported
       type: object
       additionalProperties:
         description: |
-          Object properties are IDN table IDs. Property values MUST be either
-          `null` or an integer indicating the variant support level.
+          Object properties are IDN table IDs. Property values **MUST** be
+          `variantSupportSpec` objects.
         type: string
 
     tldSet:
@@ -160,7 +188,7 @@ components:
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"xn--8pvz8d":{"zh_CN":3},"xn--8pvxs":{"zh_TW":3}},{"xn--spcimen-cya":{"fr_FR":1,"de_DE":2}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
+          examples: [[{"xn--8pvz8d":{"zh_CN":{"supportLevel":3,"variantPolicy":"allocatable"}},"xn--8pvxs":{"zh_TW":{"supportLevel":3,"variantPolicy":"allocatable"}}},{"xn--spcimen-cya":{"fr_FR":{"supportLevel":1,"variantPolicy":"blocked"},"de_DE":{"supportLevel":2,"variantPolicy":"blocked"}}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
         clientIDs:
           description: |
             An array of FQDNs which identify the RSEP, and at which one or more
