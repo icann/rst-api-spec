@@ -96,6 +96,7 @@ components:
         For types 1 and 2, FQDNs are hard-coded into the system. For RSPs
         they are attributes of test request objects.
   schemas:
+
     variantSupportSpec:
       description: |
       type: object
@@ -128,21 +129,19 @@ components:
             - blocked
             - allocatable
           default: not-blocked
+
     idnSpec:
       description: |
         An IDN set represents the IDN tables for a TLD, and the level of support
         for variants (if applicable).
 
         An IDN set object has properties which are IDN table IDs, and the values
-        are either `null`, or integers indicating the level of support for
-        variants:
-
+        are `variantSupportSpec` objects.
       type: object
       additionalProperties:
-        description: |
-          Object properties are IDN table IDs. Property values **MUST** be
-          `variantSupportSpec` objects.
-        type: string
+        type:
+          schema:
+            $ref: "#/components/schemas/variantSupportSpec"
 
     tldSet:
       description: |
@@ -157,14 +156,9 @@ components:
         should be separately listed, rather than the TLD itself.
       type: object
       additionalProperties:
-        description: |
-          Object properties are TLD labels. Property values MUST be `idnSpec`
-          objects.
-        type: string
-        format: hostname
-        pattern: ^([a-z][a-z\-]*[a-z]|xn--[a-z0-9\-]*[a-z0-9])$
-        maxLength: 63
-        minLength: 3
+        type:
+          schema:
+            $ref: "#/components/schemas/idnSpec"
 
     testRequest:
       description: |
