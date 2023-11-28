@@ -1,10 +1,6 @@
 ---
 openapi: 3.1.0
 
-externalDocs:
-  url: https://www.icann.org/resources/registry-system-testing
-  description: More information
-
 tags:
   - name: Creating test requests
   - name: Providing input parameters & files
@@ -14,6 +10,14 @@ tags:
 
 info:
   title: ICANN Registry System Testing (RST) API
+  version: 1.1.0
+  contact:
+    name: ICANN Global Support
+    url: https://www.icann.org/resources/registry-system-testing
+    email: globalsupport@icann.org
+  license:
+    name: BSD 3-Clause "New" or "Revised" License
+    identifier: BSD-3-Clause
   description: |
     The Registry System Testing (RST-API) provides a RESTful interface to
     ICANN's [Registry System Testing](https://www.icann.org/resources/registry-system-testing)
@@ -51,15 +55,6 @@ info:
     POSSIBILITY OF SUCH DAMAGE.
 
     Copyright 2023 Internet Corporation for Assigned Names and Numbers (ICANN).
-  version: 1.1.0
-  termsOfService: https://www.icann.org/resources/registry-system-testing
-  contact:
-    name: ICANN Global Support
-    url: https://www.icann.org/resources/registry-system-testing
-    email: globalsupport@icann.org
-  license:
-    name: BSD 3-Clause "New" or "Revised" License
-    identifier: BSD-3-Clause
 
 servers:
   - url: https://api.rst.icann.org/v1
