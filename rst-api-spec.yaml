@@ -31,20 +31,16 @@ info:
 
 servers:
   - url: https://api.rst.icann.org/v1
-    description: |
-      The production environment. In the production environment, only TA clients
-      can create new test requests.
+    description: production
   - url: https://api.rst.ote.icann.org/v1
-    description: |
-      The OT&E environment. In the OT&E environment, any authenticated user can
-      create new test requests.
+    description: OT&E
 
 mTLS: []
 
 components:
   securitySchemes:
     mTLS:
-      name: Mutual TLS
+      name: Mutual TLS (TLSA)
       type: mutualTLS
       description: |
         Each API client is associated with a fully-qualified domain name (FQDN),
