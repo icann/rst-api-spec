@@ -64,7 +64,7 @@ components:
   schemas:
     variantSupportSpec:
       description: |
-        An `variantSupportSpec` object describes the level of support provided
+        A `variantSupportSpec` object describes the level of support provided
         for an IDN table that has variant labels.
       type: object
       properties:
@@ -435,6 +435,12 @@ components:
       description: A log message.
       type: object
       properties:
+        code:
+          description: the error code (if any).
+          type:
+            - string
+            - "null"
+          default: null
         severity:
           description: |
             The log level of the message, a subset of the values defined in
