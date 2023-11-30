@@ -124,7 +124,7 @@ paths:
 
     patch:
       tags:
-        - Starting and restarting tests
+        - Test administration
       description: |
         This operation allows the `status` and `result` properties of a test
         request object to be changed.

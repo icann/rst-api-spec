@@ -155,7 +155,11 @@ paths:
 
     patch:
       tags:
+#ifdef INTERNAL
+        - Test administration
+#else
         - Starting and restarting tests
+#endif
       description: |
 #ifndef INTERNAL
         This operation allows the `status` property of a test request object to
