@@ -4,7 +4,7 @@ tags:
   - name: Creating test request objects
   - name: Providing input parameters & files
   - name: Retrieving test information
-  - name: Starting, stopping and restarting tests
+  - name: Starting and restarting tests
   - name: Test administration
 
 info:
@@ -126,34 +126,13 @@ paths:
 
     patch:
       tags:
-        - Starting, stopping and restarting tests
+        - Starting and restarting tests
       description: |
-        This operation allows test request object properties such as the status
-        or result to be changed.
-
-        Users can only perform this operation if their certificate
-        matches a `TLSA` record published in the DNS at one of the hostnames
-        specified in the `clientIDs` property of the test request object.
-
-        The status of a test can only be changed under the following
-        circumstances:
-
-        1. If the current status of the test is `completed`, and the `result`
-           property is either `fail` or `error`, then the status can be
-           changed to `inputs-needed`. The user can then update input
-           parameters and files, and then request a re-test.
-        2. If the current status of the test is `inputs-complete`, then the
-           status can be changed to `ready`. This signals that the user is
-           ready for the test to begin.
-        <!-- this functionality will not be offered in the MVP
-        3. if the current status of the test is `in-progress`, then the status
-           can be changed to `inputs-needed`. This allows an in-progress test
-           to be cancelled, and changed to a state where input parameters may
-           be submitted prior to a re-test. -->
-
-        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+        This operation allows the `status` and `result` properties of a test
+        request object to be changed.
 
         Internal users can:
+
         1. change the `result` property of a test from `fail` or
            `error` to `pass`, but only when the status of the test is
            `completed`;
@@ -163,6 +142,8 @@ paths:
         3. update the status of a test from `in-progress` to `completed`
            (this also updates the `dateCompleted` property). The `result`
            property MUST be specified as part of this operation.
+
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
       operationId: setTestStatus
       parameters:
         - name: id
@@ -177,7 +158,6 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/testStatus"
-
         - name: result
           description: the new result for the test.
           in: query
@@ -192,8 +172,8 @@ paths:
         - Test administration
       description: |
         Internal users can use the `DELETE` method to mark a test as deleted. If
-        successful, it becomes invisible to `GET` requests (status 404) and will
-        not appear in search results.
+        successful, it becomes invisible to `GET`, `POST` and `PATCH` requests
+        (status 404) and will not appear in search results.
       operationId: deleteTest
       parameters:
         - name: id
@@ -206,80 +186,6 @@ paths:
         '204':
           description: A successful result.
 
-  /test/{id}/inputs:
-    post:
-      tags:
-        - Providing input parameters & files
-      description: |
-        This operation submits test input parameters. Parameters in the payload
-        will replace any previously submitted values.
-
-        Input parameters can only be submitted for test request objects that
-        have the status of `inputs-needed`.
-
-        Users can only perform this operation if their certificate
-        matches a `TLSA` record published in the DNS at one of the hostnames
-        specified in the `clientIDs` property of the test request object.
-
-        Once all required input parameters have been submitted (and any files
-        referenced in those parameters have been uploaded), the status of
-        the test request object will change from `input-needed` to
-        `inputs-complete`.
-      operationId: setTestInputParameters
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/inputParameters"
-      responses:
-        '201':
-          description: A successful result.
-
-  /test/{id}/files:
-    post:
-      tags:
-        - Providing input parameters & files
-      description: |
-        This resource may be used to upload files. Multiple files may
-        be uploaded in a single request. If a filename matches a previously
-        submitted file, that file will be replaced.
-
-        All files MUST be referenced in an input parameter **before** being
-        uploaded.
-
-        Users can only perform this operation if their certificate
-        matches a `TLSA` record published in the DNS at one of the hostnames
-        specified in the `clientIDs` property of the test request object.
-
-      operationId: uploadFile
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        '201':
-          description: A successful result.
 
   /test/{id}/file/{file}:
     get:

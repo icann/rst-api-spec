@@ -4,7 +4,7 @@ tags:
   - name: Creating test request objects
   - name: Providing input parameters & files
   - name: Retrieving test information
-  - name: Starting, stopping and restarting tests
+  - name: Starting and restarting tests
 
 info:
   version: 1.1.0
@@ -127,10 +127,10 @@ paths:
 
     patch:
       tags:
-        - Starting, stopping and restarting tests
+        - Starting and restarting tests
       description: |
-        This operation allows test request object properties such as the status
-        or result to be changed.
+        This operation allows the `status` property of a test request object to
+        be changed.
 
         Users can only perform this operation if their certificate
         matches a `TLSA` record published in the DNS at one of the hostnames
@@ -153,7 +153,6 @@ paths:
            be submitted prior to a re-test. -->
 
         ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
-
       operationId: setTestStatus
       parameters:
         - name: id
@@ -168,7 +167,6 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/testStatus"
-
       responses:
         '204':
           description: A successful result.
@@ -180,7 +178,8 @@ paths:
         - Providing input parameters & files
       description: |
         This operation submits test input parameters. Parameters in the payload
-        will replace any previously submitted values.
+        will previously submitted values. Values that are present in the object
+        but not present in the payload will not be modified.
 
         Input parameters can only be submitted for test request objects that
         have the status of `inputs-needed`.
