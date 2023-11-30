@@ -2,9 +2,7 @@ openapi: 3.1.0
 
 tags:
   - name: Creating test request objects
-  - name: Providing input parameters & files
   - name: Retrieving test information
-  - name: Starting and restarting tests
   - name: Test administration
 
 info:

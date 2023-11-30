@@ -6,7 +6,9 @@ tags:
   - name: Providing input parameters & files
 #endif
   - name: Retrieving test information
+#ifndef INTERNAL
   - name: Starting and restarting tests
+#endif
 #ifdef INTERNAL
   - name: Test administration
 #endif
