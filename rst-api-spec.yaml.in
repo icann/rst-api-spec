@@ -54,7 +54,7 @@ info:
     one of these hostnames, it will be permitted to perform operations on that
     object.
 
-#ifdef internal
+#ifdef INTERNAL
     #### Internal users
 
     Internal users must use a certificate that matches a `TLSA` record
@@ -89,7 +89,8 @@ paths:
         - Creating test requests
       description: |
         This operation creates a new test request.
-#ifndef internal
+
+#ifndef INTERNAL
         This operation is not available to external users in production, but
         may be used in OT&E.
 #endif
@@ -118,7 +119,7 @@ paths:
         `TLSA` record published in the DNS at one of the hostnames specified in
         the `clientIDs` property of the test request object.
 
-#ifndef internal
+#ifndef INTERNAL
         Internal users can perform this operation on any object.
 #endif
       operationId: getTestInfo
@@ -166,10 +167,11 @@ paths:
 
         ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
 
-#ifdef internal
+#ifdef INTERNAL
         Internal users can:
         1. change the `result` property of a test from `fail` or
-        `error` to `pass`, but only when the status of the test is `completed`;
+           `error` to `pass`, but only when the status of the test is
+           `completed`;
         2. update the status of a test from `ready` to `in-progress` (this
            also updates the `dateStarted` property, and clears the `results`
            property) and;
@@ -192,19 +194,18 @@ paths:
           schema:
             $ref: "#/components/schemas/testStatus"
 
-#ifdef internal
+#ifdef INTERNAL
         - name: result
           description: the new result for the test.
           in: query
           schema:
             $ref: "#/components/schemas/testResult"
 #endif
-
       responses:
         '204':
           description: A successful result.
 
-#ifdef internal
+#ifdef INTERNAL
     delete:
       tags:
         - Test administration
@@ -333,8 +334,7 @@ paths:
                 type: string
                 fomat: binary
 
-#ifdef internal
-
+#ifdef INTERNAL
   /test/{id}/results:
     post:
       tags:
@@ -359,7 +359,6 @@ paths:
       responses:
         '201':
           description: A successful result.
-
 #endif
 
   /tests:
@@ -374,15 +373,13 @@ paths:
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-#ifdef internal
+#ifdef INTERNAL
         Internal users will see results for all test objects.
 #endif
-
       operationId: getTests
       parameters:
 
-#ifdef internal
-
+#ifdef INTERNAL
         - name: client
           description: limit results to specific user.
           in: query
@@ -402,9 +399,7 @@ paths:
           required: false
           schema:
             type: string
-
 #endif
-
         - name: status
           description: limit results to those with the given status
           in: query
