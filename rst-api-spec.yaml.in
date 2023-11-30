@@ -5,7 +5,9 @@ tags:
   - name: Providing input parameters & files
   - name: Retrieving test information
   - name: Starting, stopping and restarting tests
+#ifdef INTERNAL
   - name: Test administration
+#endif
 
 info:
   title: ICANN Registry System Testing (RST) API
