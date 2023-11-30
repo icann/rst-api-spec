@@ -82,6 +82,7 @@ paths:
         - Creating test requests
       description: |
         This operation creates a new test request.
+
         This operation is not available to external users in production, but
         may be used in OT&E.
       operationId: createTest
@@ -169,7 +170,6 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/testStatus"
-
 
       responses:
         '204':
@@ -297,10 +297,8 @@ paths:
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-
       operationId: getTests
       parameters:
-
 
         - name: status
           description: limit results to those with the given status
