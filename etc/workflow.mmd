@@ -1,0 +1,60 @@
+sequenceDiagram
+    Applicant->>RSP Portal: submit RSP evaluation application
+
+    Activate RSP Portal
+
+    Note right of RSP Portal: ICANN then reviews application
+
+    RSP Portal->>RST-API: create new test request
+
+    Activate RST-API
+    Note right of RST-API: createTest()
+    RST-API->>RSP Portal: respond with test request ID
+    Deactivate RST-API
+
+    RSP Portal->>Applicant: provide test request ID to applicant
+
+    Deactivate RSP Portal
+
+    par RSP Portal monitors for test result
+        Activate RSP Portal
+
+        loop 1h
+            RSP Portal->>RST-API: query for results
+        end
+
+        RSP Portal->>Applicant: notice of completed test
+
+        Deactivate RSP Portal
+    and
+        loop Applicant self-administers the test
+            Activate Applicant
+            Applicant->>RST-API: submit input parameters
+            Applicant->>RST-API: upload files
+            Applicant->>RST-API: initiate test
+            Deactivate Applicant
+            par Test run
+                loop 1m
+                    Activate RST-TOS
+                    RST-TOS->>RST-API: query for "ready" tests
+                    RST-TOS->>RST-API: retrieve input parameters
+                    RST-TOS->>RST-API: retrieve uploaded files
+                    Note right of RST-TOS: run test suites
+                    RST-TOS->>RST-API: submit results and update status
+                    Deactivate RST-TOS
+                end
+            and
+                loop
+                    Activate Applicant
+                    Applicant->>RST-API: poll for results
+                    critical Test result
+                    option Pass
+                        Note left of Applicant: outer loop ends
+                    option Fail/Error
+                        Note left of Applicant: outer loop repeats
+                    end
+                    Deactivate Applicant
+                end
+            end
+        end
+    end
