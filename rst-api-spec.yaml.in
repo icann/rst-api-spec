@@ -2,7 +2,9 @@ openapi: 3.1.0
 
 tags:
   - name: Creating test request objects
+#ifndef INTERNAL
   - name: Providing input parameters & files
+#endif
   - name: Retrieving test information
   - name: Starting and restarting tests
 #ifdef INTERNAL
