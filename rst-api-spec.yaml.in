@@ -1,7 +1,7 @@
 openapi: 3.1.0
 
 tags:
-  - name: Creating test requests
+  - name: Creating test request objects
   - name: Providing input parameters & files
   - name: Retrieving test information
   - name: Starting, stopping and restarting tests
@@ -10,14 +10,21 @@ tags:
 #endif
 
 info:
-  title: ICANN Registry System Testing (RST) API
   version: 1.1.0
+#ifdef INTERNAL
+  title: ICANN Registry System Testing (RST) API (Internal view)
+  contact:
+    name: Gavin Brown (GDS Technical Services)
+    email: gavin.brown@icann.org
+#else
+  title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
     email: globalsupport@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
+#endif
   description: |
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
@@ -88,13 +95,13 @@ paths:
   /test:
     post:
       tags:
-        - Creating test requests
+        - Creating test request objects
       description: |
-        This operation creates a new test request.
+        This operation creates a new test request object.
 
 #ifndef INTERNAL
-        This operation is not available to external users in production, but
-        may be used in OT&E.
+        **OT&E only:** this operation is not available to external users in
+        production, but may be used in OT&E.
 #endif
       operationId: createTest
       requestBody:
@@ -115,13 +122,15 @@ paths:
       tags:
         - Retrieving test information
       description: |
-        This operation returns information about a specific test request.
+        This operation returns information about a specific test request object.
 
+#ifndef INTERNAL
         Users can only perform this operation if their certificate matches a
         `TLSA` record published in the DNS at one of the hostnames specified in
         the `clientIDs` property of the test request object.
+#endif
 
-#ifndef INTERNAL
+#ifdef INTERNAL
         Internal users can perform this operation on any object.
 #endif
       operationId: getTestInfo
@@ -144,8 +153,8 @@ paths:
       tags:
         - Starting, stopping and restarting tests
       description: |
-        This operation allows test request properties such as the status or
-        result to be changed.
+        This operation allows test request object properties such as the status
+        or result to be changed.
 
         Users can only perform this operation if their certificate
         matches a `TLSA` record published in the DNS at one of the hostnames
@@ -556,7 +565,7 @@ components:
 
     testStatus:
       description: |
-        A string indicating the status of a test request.
+        A string indicating the status of a test request object.
 
         1. The `inputs-needed` value indicates that the request has been
            received, but input parameters are needed before the test can
@@ -588,7 +597,7 @@ components:
 
     testResult:
       description: |
-        A string indicating the result of a test request.
+        A string indicating the result of a test request object.
 
         1. The `pass` value indicates that the test run completed with no
            errors.
@@ -606,7 +615,7 @@ components:
 
     testRequestSubmitted:
       description: |
-        This type describes a test request that has been successfully
+        This type describes a test request object that has been successfully
         submitted. It inherits all the properties defined in the
         `testRequest` type.
       type: object
@@ -614,7 +623,7 @@ components:
         - $ref: "#/components/schemas/testRequest"
       properties:
         id:
-          description: Unique ID for this test request.
+          description: Unique ID for this test request object.
           type: integer
           format: uint64
           examples: [987654321]
@@ -726,8 +735,8 @@ components:
       description: |
         Users must provide various input parameters to be used within test
         cases. An `inputParameters` object is used when users submit these
-        parameters after a test request is created, and is also used when
-        returning test request information.
+        parameters after a test request object is created, and is also used when
+        returning test request object information.
       type: object
       patternProperties:
         ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
