@@ -1,0 +1,829 @@
+openapi: 3.1.0
+
+tags:
+  - name: Creating test requests
+  - name: Providing input parameters & files
+  - name: Retrieving test information
+  - name: Starting, stopping and restarting tests
+  - name: Test administration
+
+info:
+  title: ICANN Registry System Testing (RST) API
+  version: 1.1.0
+  contact:
+    name: ICANN Global Support
+    email: globalsupport@icann.org
+  license:
+    name: BSD 3-Clause "New" or "Revised" License
+    identifier: BSD-3-Clause
+  description: |
+    The Registry System Testing (RST-API) provides a
+    [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
+    System Testing](https://www.icann.org/resources/registry-system-testing)
+    platform, which is used to conduct conformance tests of [critical registry
+    functions](https://www.icann.org/registry-transition-processes-en#:~:text=Critical%20Functions:,registry%20data%20escrow)
+    at various points during the lifecycle of a gTLD (before initial delegation,
+    before the [transition to a new Registry Service
+    Provider](https://www.icann.org/resources/material-subcontracting-arrangement),
+    or before the approval of new [registry
+    services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)). It
+    will also used by forthcoming Registry Service Provider (RSP) evaluation
+    Program.
+
+    ### Workflow overview
+
+    The sequence diagram below describes the process by which tests are
+    scheduled, configured, and executed, in the context of the RSP Evaluation
+    Program:
+
+    ![workflow](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/workflow.svg)
+
+    ### Role-based Access Control
+
+    This API implements Role-Based Access Control, where access to certain
+    operations is restricted based on the role that is assigned to a user. For
+    example, external users cannot create new test request objects in the
+    production environment, but can in OT&E.
+
+    ### Authentication
+
+    All access to the API is authenticated using TLS certificates that are
+    authenticated using `TLSA` records published in the DNS. Test request
+    objects are associated with DNS hostnames; if a user presents a
+    certificate which matches one of the `TLSA` records published in the DNS at
+    one of these hostnames, it will be permitted to perform operations on that
+    object.
+
+    #### Internal users
+
+    Internal users must use a certificate that matches a `TLSA` record
+    found at a hard-coded DNS hostname *(the exact name is yet to be
+    determined)*.
+
+    ### HTTP Status Codes
+
+    In addition to the HTTP status codes described below, all operations may
+    respond to requests with one of the following HTTP status codes:
+
+    * **400:** returned when the server receives a malformed request.
+    * **403:** returned when the access control policy prevents access.
+    * **405:** returned when the request method is invalid.
+    * **429:** returned when the user has exceeded rate limits.
+    * **504:** returned when an intermediate proxy experiences an error.
+    * **500:** returned when there has been an  server error.
+
+servers:
+  - url: https://api.rst.icann.org/v1
+    description: production server address (NOT FINAL)
+  - url: https://api.rst.ote.icann.org/v1
+    description: OT&E server address (NOT FINAL)
+
+mTLS: []
+
+paths:
+  /test:
+    post:
+      tags:
+        - Creating test requests
+      description: |
+        This operation creates a new test request.
+      operationId: createTest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testRequest"
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+
+  /test/{id}:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This operation returns information about a specific test request.
+
+        Users can only perform this operation if their certificate matches a
+        `TLSA` record published in the DNS at one of the hostnames specified in
+        the `clientIDs` property of the test request object.
+
+      operationId: getTestInfo
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+
+    patch:
+      tags:
+        - Starting, stopping and restarting tests
+      description: |
+        This operation allows test request properties such as the status or
+        result to be changed.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        The status of a test can only be changed under the following
+        circumstances:
+
+        1. If the current status of the test is `completed`, and the `result`
+           property is either `fail` or `error`, then the status can be
+           changed to `inputs-needed`. The user can then update input
+           parameters and files, and then request a re-test.
+        2. If the current status of the test is `inputs-complete`, then the
+           status can be changed to `ready`. This signals that the user is
+           ready for the test to begin.
+        <!-- this functionality will not be offered in the MVP
+        3. if the current status of the test is `in-progress`, then the status
+           can be changed to `inputs-needed`. This allows an in-progress test
+           to be cancelled, and changed to a state where input parameters may
+           be submitted prior to a re-test. -->
+
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+
+        Internal users can:
+        1. change the `result` property of a test from `fail` or
+        `error` to `pass`, but only when the status of the test is `completed`;
+        2. update the status of a test from `ready` to `in-progress` (this
+           also updates the `dateStarted` property, and clears the `results`
+           property) and;
+        3. update the status of a test from `in-progress` to `completed`
+           (this also updates the `dateCompleted` property). The `result`
+           property MUST be specified as part of this operation.
+      operationId: setTestStatus
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          description: the new status for the test.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testStatus"
+
+        - name: result
+          description: the new result for the test.
+          in: query
+          schema:
+            $ref: "#/components/schemas/testResult"
+
+      responses:
+        '204':
+          description: A successful result.
+
+    delete:
+      tags:
+        - Test administration
+      description: |
+        Internal users can use the `DELETE` method to mark a test as deleted. If
+        successful, it becomes invisible to `GET` requests (status 404) and will
+        not appear in search results.
+      operationId: deleteTest
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful result.
+
+  /test/{id}/inputs:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This operation submits test input parameters. Parameters in the payload
+        will replace any previously submitted values.
+
+        Input parameters can only be submitted for test request objects that
+        have the status of `inputs-needed`.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        Once all required input parameters have been submitted (and any files
+        referenced in those parameters have been uploaded), the status of
+        the test request object will change from `input-needed` to
+        `inputs-complete`.
+      operationId: setTestInputParameters
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/inputParameters"
+      responses:
+        '201':
+          description: A successful result.
+
+  /test/{id}/files:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This resource may be used to upload files. Multiple files may
+        be uploaded in a single request. If a filename matches a previously
+        submitted file, that file will be replaced.
+
+        All files MUST be referenced in an input parameter **before** being
+        uploaded.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+      operationId: uploadFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: A successful result.
+
+  /test/{id}/file/{file}:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This retrieves an uploaded file.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+      operationId: getFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: file
+          description: the file name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/octet-stream":
+              schema:
+                type: string
+                fomat: binary
+
+
+  /test/{id}/results:
+    post:
+      tags:
+        - Test administration
+      description: |
+        This operation may be used to update the object with
+        test results. It will append the provided `testCaseLog` object to
+        the `results` property of the object.
+      operationId: addResult
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testCaseLog"
+      responses:
+        '201':
+          description: A successful result.
+
+
+  /tests:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This operation performs a search on the database and returns all
+        matching results.
+
+        External users will only see results where their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        Internal users will see results for all test objects.
+
+      operationId: getTests
+      parameters:
+
+
+        - name: client
+          description: limit results to specific user.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tld
+          description: limit results to specific TLD.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: applicationID
+          description: |
+            limit results to specific application ID.
+          in: query
+          required: false
+          schema:
+            type: string
+
+
+        - name: status
+          description: limit results to those with the given status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testStatus"
+        - name: result
+          description: limit results to those with the given result
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testResult"
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/testRequestSubmitted"
+
+components:
+  securitySchemes:
+    mTLS:
+      name: mTLS
+      in: header
+      type: mutualTLS
+      description: |
+        Client certificates are required. Authorization to perform operations is
+        determined using `TLSA` records published in the DNS under hostnames
+        associated with test objects.
+
+  schemas:
+    variantSupportSpec:
+      description: |
+        A `variantSupportSpec` object describes the level of support provided
+        for an IDN table that has variant labels.
+      type: object
+      properties:
+        supportLevel:
+          description: |
+            The level of support for variants.
+            * `0`: variants are not applicable for this table
+            * `1`: variants are not offered
+            * `2`: variant labels under the same TLD are supported
+            * `3`: variant labels under variant TLDs are supported
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+          default: 1
+        variantPolicy:
+          description: |
+            What policy is in place for variant labels:
+            * `not-blocked`: variants are not blocked. This **MUST** be set if
+              `supportLevel` is `0` and **MUST NOT** be set if `supportLevel` is
+              `1`, `2` or `3`.
+            * `blocked`: variants are blocked.
+            * `allocatable`: variants may be allocated.
+          Type: string
+          enum:
+            - not-blocked
+            - blocked
+            - allocatable
+          default: not-blocked
+
+    idnSpec:
+      description: |
+        An IDN set represents the IDN tables for a TLD, and the level of support
+        for variants (if applicable).
+
+        An IDN set object has properties which are IDN table IDs, and the values
+        are `variantSupportSpec` objects.
+      type: object
+      additionalProperties:
+        schema:
+          $ref: "#/components/schemas/variantSupportSpec"
+
+    tldSet:
+      description: |
+        A TLD set represents one or more logically grouped TLDs (such as those
+        which contain IDN variants).
+
+        A TLD set has properties which are TLD A-labels, and values which are
+        objects where the properties are idnSpec objects.
+
+        If a TLD offers registrations at the third or higher levels, then
+        between one and three second-level "registry-class" domain name(s)
+        should be separately listed, rather than the TLD itself.
+      type: object
+      additionalProperties:
+        schema:
+          $ref: "#/components/schemas/idnSpec"
+
+    testRequest:
+      description: |
+        This object type is used to define the properties of a new test request
+        object. The `testRequestSubmitted` type inherits from it.
+      type: object
+      properties:
+        applicationID:
+          description: |
+            For RSP evaluation, the application ID, otherwise `null`.
+          type:
+            - string
+            - "null"
+          examples: [foo123]
+        tlds:
+          description: |
+            An array of `tldSet` objects to which this test relates. In most
+            cases this will just be something like `[{"example": []}]` but more
+            complex sets of TLDs with variants are supported for RSP testing.
+          type: array
+          items:
+            $ref: "#/components/schemas/tldSet"
+          minItems: 1
+          examples: [[{"xn--8pvz8d":{"zh_CN":{"supportLevel":3,"variantPolicy":"allocatable"}},"xn--8pvxs":{"zh_TW":{"supportLevel":3,"variantPolicy":"allocatable"}}},{"xn--spcimen-cya":{"fr_FR":{"supportLevel":1,"variantPolicy":"blocked"},"de_DE":{"supportLevel":2,"variantPolicy":"blocked"}}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
+        clientIDs:
+          description: |
+            An array of FQDNs which identify the RSEP, and at which one or more
+            `TLSA` records may be found which can be used for authentication.
+          type: array
+          items:
+            schema:
+              type: string
+              format: hostname
+          examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
+        testPlan:
+          description: the test plan to be followed.
+          type: string
+          enum:
+            - StandardPreDelegationTest
+            - StandardRSPChangeTest
+            - DNSRSPChangeTest
+            - IDNTest
+            - SRSGatewayTest
+            - StandardRSPEvaluationTest
+            - DNSRSPEvaluationTest
+            - DNSSECRSPEvaluationTest
+        dueDate:
+          description: |
+            The date/time before which the test must be passed. If `null`, the
+            test remains open indefinitely (unless the `completed` status is
+            reached).
+          type: 
+            - string
+            - "null"
+          format: date-time
+
+    testStatus:
+      description: |
+        A string indicating the status of a test request.
+
+        1. The `inputs-needed` value indicates that the request has been
+           received, but input parameters are needed before the test can
+           begin.
+        2. The `inputs-complete` value indicates that all the required
+           input parameters and files have been provided.
+        3. The `ready` value indicates that all required input
+           parameters and files have been provided, but the test run has not
+           yet started.
+        4. The `in-progress` value indicates that the test run has started,
+           but has not yet been completed.
+        5. The `completed` value indicates that the test run has completed.
+        6. The `expired` value indicates that the test did not have a status
+           of `completed` when the `dueDate` was reached.
+
+        The following state diagram outlines how the status of a test object
+        changes throughout its lifetime:
+
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+      type: string
+      enum:
+        - inputs-needed
+        - inputs-complete
+        - ready
+        - in-progress
+        - completed
+        - expired
+      default: inputs-needed
+
+    testResult:
+      description: |
+        A string indicating the result of a test request.
+
+        1. The `pass` value indicates that the test run completed with no
+           errors.
+        2. The `fail` value indicates that at least one test failed.
+        3. The `error` value indicates that an  issue prevented
+           the test run from completing.
+      type:
+        - string
+        - "null"
+      enum:
+        - pass
+        - fail
+        - error
+      default: null
+
+    testRequestSubmitted:
+      description: |
+        This type describes a test request that has been successfully
+        submitted. It inherits all the properties defined in the
+        `testRequest` type.
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/testRequest"
+      properties:
+        id:
+          description: Unique ID for this test request.
+          type: integer
+          format: uint64
+          examples: [987654321]
+
+        dateRequested:
+          description: date/time when this request was submitted.
+          type: string
+          format: date-time
+
+        dateUpdated:
+          description: date/time when this request was last updated.
+          type:
+            - string
+            - "null"
+          format: date-time
+          default: null
+
+        dateStarted:
+          description: date/time when the test run started (which may be null).
+          type:
+            - string
+            - "null"
+          format: date-time
+          default: null
+
+        dateCompleted:
+          description: date/time when the test run finished (which may be null).
+          type:
+            - string
+            - "null"
+          format: date-time
+          default: null
+
+        status:
+          description: The status of this request.
+          schema:
+            $ref: "#/components/schemas/testStatus"
+          examples: ["inputs-needed"]
+
+        result:
+          description: The outcome of the test run.
+          schema:
+            $ref: "#/components/schemas/testResult"
+          examples: [null]
+
+        errorCodes:
+          description: |
+            if the result of the test is a fail or an error, then this property
+            will contain any `ERROR` or `CRITICAL` error codes generated by the
+            test run. Otherwise it will be empty.
+          type: array
+          items:
+            type: string
+          examples: [[EPP_HOSTNAME_NOT_RESOLVED]]
+
+        inputs:
+          description: Any input parameters provided by the user.
+          type: object
+          schema:
+            $ref: "#/components/schemas/inputParameters"
+          examples: [{"example.name": "example.value"}]
+
+        missingInputs:
+          description: |
+            An array listing any required input parameters that have not yet
+            been provided.
+          type: array
+          items:
+            type: string
+          examples: [["epp.kitchenSink", "rdap.coffeePotURL"]]
+        files:
+          description: A list of any files uploaded.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: the file name.
+                type: string
+                examples: [example_20231008_full_S1_R0.ryde]
+              type:
+                description: the media type of the file.
+                type: string
+                examples: [application/octet-stream]
+              uploaded:
+                description: when the file was uploaded.
+                type: string
+                format: date-time
+              href:
+                description: the URL of the file.
+                type: string
+                format: url
+                examples: [https://api.rst.icann.org/v1/test/987654321/files/example_20231008_full_S1_R0.ryde]
+        results:
+          description: |
+            A detailed log of all tests carried out. This property will
+            initially be an empty array, until the status of the test changes to
+            `in-progress`. From this point onwards, test results will be added
+            to the array as the test progresses.
+
+            If the test fails, is aborted, or there is an error, the results of
+            the last test will always be included in this property, and will not
+            be overridden until a re-test begins.
+          type: array
+          items:
+            $ref: "#/components/schemas/testCaseLog"
+
+    inputParameters:
+      description: |
+        Users must provide various input parameters to be used within test
+        cases. An `inputParameters` object is used when users submit these
+        parameters after a test request is created, and is also used when
+        returning test request information.
+      type: object
+      patternProperties:
+        ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw).[A-Za-z0-9.]+$:
+          type:
+            - string
+            - integer
+            - number
+            - boolean
+            - "null"
+            - array
+            - object
+          items:
+            type:
+            - string
+            - integer
+            - number
+            - boolean
+            - "null"
+            - object
+      examples: [{"important.note": "the contents of this object are purely illustrative", "epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
+
+    testCaseResult:
+      description: |
+        A string indicating the status of a test case.
+
+        * `pass` - the test passed.
+        * `fail` - the test was not passed.
+        * `error` - an error occurred which meant a result could not be
+          determined.
+        * `skipped` - the test case was not applicable and was not carried
+          out.
+        * `aborted` - the test case was aborted before it could complete.
+      type: string
+      enum:
+        - pass
+        - fail
+        - error
+        - skipped
+        - aborted
+
+    testCaseLog:
+      description: A detailed log of an individual test case.
+      type: object
+      properties:
+        caseID:
+          description: the Test Case ID.
+          type: string
+          examples: [epp-01]
+        result:
+          description: the result of the test.
+          schema:
+            $ref: "#/components/schemas/testCaseResult"
+          examples: ["pass"]
+        description:
+          description: A short description of the outcome of the test.
+          type: string
+          examples: ["successfully resolved epp.hostname for IPv4 and IPv6"]
+        dateStarted:
+          description: date/time when the test case started.
+          type: string
+          format: date-time
+        dateCompleted:
+          description: date/time when the test case finished.
+          type: string
+          format: date-time
+        log:
+          description: detailed test logs
+          type: array
+          items:
+            $ref: "#/components/schemas/testCaseLogMessage"
+        context:
+          description: |
+            an object containing context parameters (eg input parameters,
+            software versions, environment variables, etc). These are intended
+            to assist in debugging any issues that may have caused the test case
+            to fail or error.
+          type: object
+          additionalProperties:
+            type:
+            - string
+            - integer
+            - number
+            - boolean
+            - "null"
+          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+
+    testCaseLogMessage:
+      description: A log message.
+      type: object
+      properties:
+        code:
+          description: the error code (if any).
+          type:
+            - string
+            - "null"
+          default: null
+        severity:
+          description: |
+            The log level of the message, a subset of the values defined in
+            RFC5424.
+          type: string
+          enum:
+            - INFO
+            - NOTICE
+            - WARNING
+            - ERROR
+            - CRITICAL
+          default: WARNING
+        timestamp:
+          description: |
+            the timestamp when the message was generated.
+          type: string
+          format: date-time
+        message:
+          description: the message.
+          type: string
+          examples: ["Something informative just happened!", "Something critical just happened!"]
