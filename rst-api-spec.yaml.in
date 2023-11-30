@@ -54,15 +54,13 @@ info:
     one of these hostnames, it will be permitted to perform operations on that
     object.
 
-    #ifdef internal
-
+#ifdef internal
     #### Internal users
 
     Internal users must use a certificate that matches a `TLSA` record
     found at a hard-coded DNS hostname *(the exact name is yet to be
     determined)*.
-
-    #endif
+#endif
 
     ### HTTP Status Codes
 
@@ -91,14 +89,10 @@ paths:
         - Creating test requests
       description: |
         This operation creates a new test request.
-
-        #ifndef internal
-
+#ifndef internal
         This operation is not available to external users in production, but
         may be used in OT&E.
-
-        #endif
-
+#endif
       operationId: createTest
       requestBody:
         content:
@@ -124,12 +118,9 @@ paths:
         `TLSA` record published in the DNS at one of the hostnames specified in
         the `clientIDs` property of the test request object.
 
-        #ifndef internal
-
+#ifndef internal
         Internal users can perform this operation on any object.
-
-        #endif
-
+#endif
       operationId: getTestInfo
       parameters:
         - name: id
@@ -175,8 +166,7 @@ paths:
 
         ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
 
-        #ifdef internal
-
+#ifdef internal
         Internal users can:
         1. change the `result` property of a test from `fail` or
         `error` to `pass`, but only when the status of the test is `completed`;
@@ -186,9 +176,7 @@ paths:
         3. update the status of a test from `in-progress` to `completed`
            (this also updates the `dateCompleted` property). The `result`
            property MUST be specified as part of this operation.
-
-        #endif
-
+#endif
       operationId: setTestStatus
       parameters:
         - name: id
@@ -386,11 +374,9 @@ paths:
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-        #ifdef internal
-
+#ifdef internal
         Internal users will see results for all test objects.
-
-        #endif
+#endif
 
       operationId: getTests
       parameters:
