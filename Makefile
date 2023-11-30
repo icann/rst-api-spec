@@ -1,3 +1,3 @@
 all:
-	gpp rst-api-spec.yaml.in > rst-api-spec.yaml
-	gpp -DINTERNAL rst-api-spec.yaml.in > rst-api-spec-internal.yaml
+	gpp -x rst-api-spec.yaml.in > rst-api-spec.yaml
+	gpp -x -DINTERNAL rst-api-spec.yaml.in > rst-api-spec-internal.yaml

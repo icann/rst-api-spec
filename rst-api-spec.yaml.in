@@ -559,14 +559,7 @@ components:
           description: the test plan to be followed.
           type: string
           enum:
-            - StandardPreDelegationTest
-            - StandardRSPChangeTest
-            - DNSRSPChangeTest
-            - IDNTest
-            - SRSGatewayTest
-            - StandardRSPEvaluationTest
-            - DNSRSPEvaluationTest
-            - DNSSECRSPEvaluationTest
+#exec curl -s https://icann.github.io/rst-test-specs/rst-test-specs.yaml | yq -I 8 '."Test-Plans" | keys' | while read l ; do echo "            $l" ; done
         dueDate:
           description: |
             The date/time before which the test must be passed. If `null`, the

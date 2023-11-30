@@ -417,9 +417,10 @@ components:
             - DNSRSPChangeTest
             - IDNTest
             - SRSGatewayTest
-            - StandardRSPEvaluationTest
+            - MainRSPEvaluationTest
             - DNSRSPEvaluationTest
             - DNSSECRSPEvaluationTest
+            - SRSGatewayRSPTest
         dueDate:
           description: |
             The date/time before which the test must be passed. If `null`, the
