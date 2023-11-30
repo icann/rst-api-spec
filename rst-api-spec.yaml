@@ -1,4 +1,3 @@
----
 openapi: 3.1.0
 
 tags:
@@ -18,48 +17,440 @@ info:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
   description: |
-    The Registry System Testing (RST-API) provides a RESTful interface to
-    ICANN's [Registry System Testing](https://www.icann.org/resources/registry-system-testing)
-    system, which is used to conduct conformance tests of critical registry
-    systems during the lifecycle of a gTLD (before initial delegation, before
-    the transition to a new Registry Service Provider, or before the approval of
-    various Registry Services). It is also used by the Registry Service Provider
-    (RSP) evaluation system.
+    The Registry System Testing (RST-API) provides a
+    [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
+    System Testing](https://www.icann.org/resources/registry-system-testing)
+    platform, which is used to conduct conformance tests of [critical registry
+    functions](https://www.icann.org/registry-transition-processes-en#:~:text=Critical%20Functions:,registry%20data%20escrow)
+    at various points during the lifecycle of a gTLD (before initial delegation,
+    before the [transition to a new Registry Service
+    Provider](https://www.icann.org/resources/material-subcontracting-arrangement),
+    or before the approval of new [registry
+    services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)). It
+    will also used by forthcoming Registry Service Provider (RSP) evaluation
+    Program.
 
-    This API can be used to submit requests for tests, and to review the
-    outcome of those tests.
+    ### Workflow overview
+
+    The sequence diagram below describes the process by which tests are
+    scheduled, configured, and executed, in the context of the RSP Evaluation
+    Program:
+
+    ![workflow](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/workflow.svg)
+
+    ### Role-based Access Control
+
+    This API implements Role-Based Access Control, where access to certain
+    operations is restricted based on the role that is assigned to a user. For
+    example, external users cannot create new test request objects in the
+    production environment, but can in OT&E.
+
+    ### Authentication
+
+    All access to the API is authenticated using TLS certificates that are
+    authenticated using `TLSA` records published in the DNS. Test request
+    objects are associated with DNS hostnames; if a user presents a
+    certificate which matches one of the `TLSA` records published in the DNS at
+    one of these hostnames, it will be permitted to perform operations on that
+    object.
+
+    #ifdef internal
+
+    #### Internal users
+
+    Internal users must use a certificate that matches a `TLSA` record
+    found at a hard-coded DNS hostname *(the exact name is yet to be
+    determined)*.
+
+    #endif
+
+    ### HTTP Status Codes
+
+    In addition to the HTTP status codes described below, all operations may
+    respond to requests with one of the following HTTP status codes:
+
+    * **400:** returned when the server receives a malformed request.
+    * **403:** returned when the access control policy prevents access.
+    * **405:** returned when the request method is invalid.
+    * **429:** returned when the user has exceeded rate limits.
+    * **504:** returned when an intermediate proxy experiences an error.
+    * **500:** returned when there has been an internal server error.
 
 servers:
   - url: https://api.rst.icann.org/v1
-    description: production
+    description: production server address (NOT FINAL)
   - url: https://api.rst.ote.icann.org/v1
-    description: OT&E
+    description: OT&E server address (NOT FINAL)
 
 mTLS: []
+
+paths:
+  /test:
+    post:
+      tags:
+        - Creating test requests
+      description: |
+        This operation creates a new test request.
+
+        #ifndef internal
+
+        This operation is not available to external users in production, but
+        may be used in OT&E.
+
+        #endif
+
+      operationId: createTest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testRequest"
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+
+  /test/{id}:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This operation returns information about a specific test request.
+
+        Users can only perform this operation if their certificate matches a
+        `TLSA` record published in the DNS at one of the hostnames specified in
+        the `clientIDs` property of the test request object.
+
+        #ifndef internal
+
+        Internal users can perform this operation on any object.
+
+        #endif
+
+      operationId: getTestInfo
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRequestSubmitted"
+
+    patch:
+      tags:
+        - Starting, stopping and restarting tests
+      description: |
+        This operation allows test request properties such as the status or
+        result to be changed.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        The status of a test can only be changed under the following
+        circumstances:
+
+        1. If the current status of the test is `completed`, and the `result`
+           property is either `fail` or `error`, then the status can be
+           changed to `inputs-needed`. The user can then update input
+           parameters and files, and then request a re-test.
+        2. If the current status of the test is `inputs-complete`, then the
+           status can be changed to `ready`. This signals that the user is
+           ready for the test to begin.
+        <!-- this functionality will not be offered in the MVP
+        3. if the current status of the test is `in-progress`, then the status
+           can be changed to `inputs-needed`. This allows an in-progress test
+           to be cancelled, and changed to a state where input parameters may
+           be submitted prior to a re-test. -->
+
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+
+        #ifdef internal
+
+        Internal users can:
+        1. change the `result` property of a test from `fail` or
+        `error` to `pass`, but only when the status of the test is `completed`;
+        2. update the status of a test from `ready` to `in-progress` (this
+           also updates the `dateStarted` property, and clears the `results`
+           property) and;
+        3. update the status of a test from `in-progress` to `completed`
+           (this also updates the `dateCompleted` property). The `result`
+           property MUST be specified as part of this operation.
+
+        #endif
+
+      operationId: setTestStatus
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          description: the new status for the test.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testStatus"
+
+#ifdef internal
+        - name: result
+          description: the new result for the test.
+          in: query
+          schema:
+            $ref: "#/components/schemas/testResult"
+#endif
+
+      responses:
+        '204':
+          description: A successful result.
+
+#ifdef internal
+    delete:
+      tags:
+        - Test administration
+      description: |
+        Internal users can use the `DELETE` method to mark a test as deleted. If
+        successful, it becomes invisible to `GET` requests (status 404) and will
+        not appear in search results.
+      operationId: deleteTest
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: A successful result.
+#endif
+
+  /test/{id}/inputs:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This operation submits test input parameters. Parameters in the payload
+        will replace any previously submitted values.
+
+        Input parameters can only be submitted for test request objects that
+        have the status of `inputs-needed`.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        Once all required input parameters have been submitted (and any files
+        referenced in those parameters have been uploaded), the status of
+        the test request object will change from `input-needed` to
+        `inputs-complete`.
+      operationId: setTestInputParameters
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/inputParameters"
+      responses:
+        '201':
+          description: A successful result.
+
+  /test/{id}/files:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This resource may be used to upload files. Multiple files may
+        be uploaded in a single request. If a filename matches a previously
+        submitted file, that file will be replaced.
+
+        All files MUST be referenced in an input parameter **before** being
+        uploaded.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+      operationId: uploadFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: A successful result.
+
+  /test/{id}/file/{file}:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This retrieves an uploaded file.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+      operationId: getFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: file
+          description: the file name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/octet-stream":
+              schema:
+                type: string
+                fomat: binary
+
+#ifdef internal
+
+  /test/{id}/results:
+    post:
+      tags:
+        - Test administration
+      description: |
+        This operation may be used to update the object with
+        test results. It will append the provided `testCaseLog` object to
+        the `results` property of the object.
+      operationId: addResult
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testCaseLog"
+      responses:
+        '201':
+          description: A successful result.
+
+#endif
+
+  /tests:
+    get:
+      tags:
+        - Retrieving test information
+      description: |
+        This operation performs a search on the database and returns all
+        matching results.
+
+        External users will only see results where their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        #ifdef internal
+
+        Internal users will see results for all test objects.
+
+        #endif
+
+      operationId: getTests
+      parameters:
+
+#ifdef internal
+
+        - name: client
+          description: limit results to specific user.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tld
+          description: limit results to specific TLD.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: applicationID
+          description: |
+            limit results to specific application ID.
+          in: query
+          required: false
+          schema:
+            type: string
+
+#endif
+
+        - name: status
+          description: limit results to those with the given status
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testStatus"
+        - name: result
+          description: limit results to those with the given result
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testResult"
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/testRequestSubmitted"
 
 components:
   securitySchemes:
     mTLS:
-      name: Mutual TLS (TLSA)
+      name: mTLS
+      in: header
       type: mutualTLS
       description: |
-        Each API client is associated with a fully-qualified domain name (FQDN),
-        at which one or more `TLSA` records are published. Clients must present
-        a certificate which matches one of these records.
-
-        There are three privilege levels, from highest to lowest:
-
-        1. The Test Orchestration System (TOS) client, which is responsible for
-           running tests and reporting on their results;
-        2. ICANN-internal Test Administrator (TA) clients, which are able to
-           create new test objects, query them, and exceptionally delete
-           requests or modify their status;
-        3. Registry Service Provider (RSP) clients, whose privileges are limited
-           to those test requests that are associated with their client ID
-           (FQDN).
-
-        For types 1 and 2, FQDNs are hard-coded into the system. For RSPs
-        they are attributes of test request objects.
+        Client certificates are required. Authorization to perform operations is
+        determined using `TLSA` records published in the DNS under hostnames
+        associated with test objects.
 
   schemas:
     variantSupportSpec:
@@ -201,7 +592,7 @@ components:
         The following state diagram outlines how the status of a test object
         changes throughout its lifetime:
 
-        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/test-object-state-machine.svg)
+        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
       type: string
       enum:
         - inputs-needed
@@ -297,7 +688,7 @@ components:
           examples: [[EPP_HOSTNAME_NOT_RESOLVED]]
 
         inputs:
-          description: Any input parameters provided by the RSP.
+          description: Any input parameters provided by the user.
           type: object
           schema:
             $ref: "#/components/schemas/inputParameters"
@@ -350,10 +741,10 @@ components:
 
     inputParameters:
       description: |
-        RSPs must provide various input parameters to be used within test cases.
-        An `inputParameters` object is used when RSPs submit these parameters
-        after a test request is created, and is also used when returning test
-        request information.
+        Users must provide various input parameters to be used within test
+        cases. An `inputParameters` object is used when users submit these
+        parameters after a test request is created, and is also used when
+        returning test request information.
       type: object
       patternProperties:
         ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
@@ -471,392 +862,3 @@ components:
           description: the message.
           type: string
           examples: ["Something informative just happened!", "Something critical just happened!"]
-
-paths:
-  /test:
-    post:
-      tags:
-        - Creating test requests
-      description: |
-        This operation create a new test request. Only TA clients can perform
-        this operation in production; but RSP clients can use it in OT&E.
-
-        Once a test request has been created, the RSP identified by the
-        `clientID` property can submit input parameters using a
-        `POST /test/{id}/inputs` request, upload files using
-        `POST /test/{id}/files`, and request test re-runs using
-        `PATCH /test/{id}`.
-      operationId: createTest
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/testRequest"
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/testRequestSubmitted"
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-  /test/{id}:
-    get:
-      tags:
-        - Retrieving test information
-      description: |
-        This operation returns information about a specific test request.
-
-        TOS and TA clients can retrieve any test request; RSPs can only
-        retrieve requests associated with their Client ID.
-      operationId: getTestInfo
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/testRequestSubmitted"
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-    patch:
-      tags:
-        - Starting, stopping and restarting tests
-      description: |
-        This operation allows test request properties such as the status or
-        result to be changed.
-
-        RSP clients can change the status of a test under the following
-        circumstances:
-
-          1. If the current status of the test is `completed`, and the `result`
-             property is either `fail` or `error`, then the status can be
-             changed to `inputs-needed`. The RSP can then update input
-             parameters and files, and then request a re-test.
-          2. If the current status of the test is `inputs-complete`, then the
-             status can be changed to `ready`. This signals that the RSP is
-             ready for the test to begin.
-          <!-- this functionality will not be offered in the MVP
-          3. if the current status of the test is `in-progress`, then the status
-             can be changed to `inputs-needed`. This allows an in-progress test
-             to be cancelled, and changed to a state where input parameters may
-             be submitted prior to a re-test. -->
-
-        TA clients can change the `result` property of a test from `fail` or
-        `error` to `pass`, but only when the status of the test is `completed`.
-
-        The TOS client can use this operation as follows:
-
-          1. to update the status of a test from `ready` to `in-progress` (this
-             also updates the `dateStarted` property, and clears the `results`
-             property);
-          2. to update the status of a test from `in-progress` to `completed`
-             (this also updates the `dateCompleted` property). The `result`
-             property MUST be specified as part of this operation.
-      operationId: setTestStatus
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: status
-          description: the new status for the test.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/testStatus"
-        - name: result
-          description: the new result for the test (TA clients only).
-          in: query
-          schema:
-            $ref: "#/components/schemas/testResult"
-      responses:
-        '204':
-          description: A successful result.
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-    delete:
-      tags:
-        - Test administration
-      description: |
-        Internal users can use the `DELETE` method to mark a test as deleted. If
-        successful, it becomes invisible to `GET` requests (status 404) and will
-        not appear in search results.
-      operationId: deleteTest
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: A successful result.
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-  /test/{id}/inputs:
-    post:
-      tags:
-        - Providing input parameters & files
-      description: |
-        Submit test input parameters. The request payload will replace any
-        previously submitted parameters.
-
-        Input parameters can only be submitted for test request objects that
-        have the status of `input-needed`.
-
-        Once all required input parameters have been submitted (and any files
-        referenced in those parameters have been uploaded), the status of
-        the test request object will change from `input-needed` to `inputs-complete`.
-      operationId: setTestInputParameters
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/inputParameters"
-      responses:
-        '201':
-          description: A successful result.
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-  /test/{id}/files:
-    post:
-      tags:
-        - Providing input parameters & files
-      description: |
-        Where tests require files to be provided as input parameters, this
-        resource may be used to submit them as file uploads. Multiple files may
-        be uploaded in a single request. If a filename matches a previously
-        submitted file, that file will be replaced.
-
-        All files MUST be referenced in an input parameter before being
-        uploaded.
-      operationId: uploadFile
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              properties:
-                file:
-                  type: array
-                  items:
-                    type: string
-                    format: binary
-      responses:
-        '201':
-          description: A successful result.
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-  /test/{id}/file/{file}:
-    get:
-      tags:
-        - Retrieving test information
-      description: |
-        This retrieves an uploaded file.
-      operationId: getFile
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: file
-          description: the file name
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/octet-stream":
-              schema:
-                type: string
-                fomat: binary
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-  /test/{id}/results:
-    post:
-      tags:
-        - Test administration
-      description: |
-        This operation is used by the TOS client to update the object with
-        test results. The POST will append the provided `testCaseLog` object to
-        the `results` property of the object.
-      operationId: addResult
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/testCaseLog"
-      responses:
-        '201':
-          description: A successful result.
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
-
-  /tests:
-    get:
-      tags:
-        - Retrieving test information
-      description: |
-        Query the database for test request objects:
-        * Internal clients will see all requests;
-        * RSPs will see all requests associated with their client ID.
-      operationId: getTests
-      parameters:
-        - name: client
-          description: limit results to specific client (internal clients only).
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: tld
-          description: limit results to specific TLD (internal clients only).
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: applicationID
-          description: |
-            limit results to specific application ID (internal clients only).
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: status
-          description: limit results to those with the given status
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/testStatus"
-        - name: result
-          description: limit results to those with the given result
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/testResult"
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/json":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/testRequestSubmitted"
-        '400':
-          description: Returned when the server receives a malformed request.
-        '403':
-          description: Returned when the access control policy prevents access.
-        '405':
-          description: Returned when the request method is invalid.
-        '429':
-          description: Returned when the client has exceeded rate limits.
-        '500':
-          description: Returned when there has been an internal server error.
