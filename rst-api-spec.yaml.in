@@ -646,7 +646,7 @@ components:
             and follows the [Semantic Versioning](https://semver.org)
             convention.
           type: string
-          pattern: ^\d+(\.\d+)+$
+          pattern: ^\\d+(\\.\\d+)+$
           examples: [3.0.0]
 
         dateRequested:
