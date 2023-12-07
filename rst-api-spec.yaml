@@ -7,7 +7,7 @@ tags:
   - name: Starting and restarting tests
 
 info:
-  version: 1.1.0
+  version: 1.0.93
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support

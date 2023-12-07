@@ -6,7 +6,7 @@ tags:
   - name: Test administration
 
 info:
-  version: 1.1.0
+  version: 1.0.93
   title: ICANN Registry System Testing (RST) API (Internal view)
   contact:
     name: Gavin Brown (GDS Technical Services)
