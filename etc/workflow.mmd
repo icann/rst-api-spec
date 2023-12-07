@@ -1,22 +1,22 @@
 sequenceDiagram
-    Applicant->>RSP Portal: submit RSP evaluation application
+    Applicant->>RSP Portal: submit RSP<br>evaluation application
 
     Activate RSP Portal
 
-    Note right of RSP Portal: ICANN then reviews application
+    Note right of RSP Portal: ICANN org<br>reviews application
 
-    RSP Portal->>RST-API: create new test request
+    RSP Portal->>RST-API: create new<br>test request
 
     Activate RST-API
-    Note right of RST-API: createTest()
-    RST-API->>RSP Portal: respond with test request ID
+    Note right of RST-API: create test in<br>database
+    RST-API->>RSP Portal: respond with<br>test request ID
     Deactivate RST-API
 
-    RSP Portal->>Applicant: provide test request ID to applicant
+    RSP Portal->>Applicant: provide test<br>request ID to applicant
 
     Deactivate RSP Portal
 
-    par RSP Portal monitors for test result
+    par RSP Portal monitors<br>for test result
         Activate RSP Portal
 
         loop 1h
@@ -27,31 +27,55 @@ sequenceDiagram
 
         Deactivate RSP Portal
     and
-        loop Applicant self-administers the test
+        loop Applicant self-<br>administers the test
             Activate Applicant
             Applicant->>RST-API: submit input parameters
+            Note right of RST-API: store parameters
             Applicant->>RST-API: upload files
+            Note right of RST-API: store files
             Applicant->>RST-API: initiate test
+            Note right of RST-API: set test status to "ready"
             Deactivate Applicant
             par Test run
                 loop 1m
                     Activate RST-TOS
-                    RST-TOS->>RST-API: query for "ready" tests
-                    RST-TOS->>RST-API: retrieve input parameters
-                    RST-TOS->>RST-API: retrieve uploaded files
-                    Note right of RST-TOS: run test suites
-                    RST-TOS->>RST-API: submit results and update status
+                    RST-TOS->>RST-API: query for<br>"ready" tests
+                    RST-API->>RST-TOS: respond with<br>list of tests
+                    loop for each test
+                        Note right of RST-TOS: generate<br>test plan
+                        loop for each test case
+                            RST-TOS->>RST-API: request input<br>parameters
+                            RST-API->>RST-TOS: respond with<br>input parameters
+                            RST-TOS->>RST-API: request files
+                            RST-API->>RST-TOS: respond with file data
+                            Note right of RST-TOS: run test case
+                            RST-TOS->>RST-API: submit test case log
+                            Note left of RST-API: append case log<br>to test results
+                            critical Check test case result
+                            option Pass
+                                note right of RST-TOS: proceed to<br>next test case
+                            option Fail
+                                note right of RST-TOS: exit loop
+                            option Error
+                                note right of RST-TOS: notify ops and <br>exit loop
+                            end
+                        end
+                        RST-TOS->>RST-API: update test result
+                        Note left of RST-API: set test status to "completed"<br>and result to pass|fail|error
+                    end
                     Deactivate RST-TOS
                 end
             and
                 loop
                     Activate Applicant
                     Applicant->>RST-API: poll for results
-                    critical Test result
+                    critical Check test result
                     option Pass
                         Note left of Applicant: outer loop ends
-                    option Fail/Error
-                        Note left of Applicant: outer loop repeats
+                    option Fail
+                        note left of Applicant: applicant resolves issue and<br>outer loop repeats
+                    option Error
+                        Note left of Applicant: ICANN resolves issue<br>and notifies Applicant<br>out-of-band, and<br>outer loop repeats
                     end
                     Deactivate Applicant
                 end
