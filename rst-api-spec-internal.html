@@ -13,7 +13,7 @@
     <script>
       window.onload = () => {
         window.ui = SwaggerUIBundle({
-          url: 'https://icann.github.io/rst-api-spec/rst-api-spec-internal.yaml',
+          url: new URL("rst-api-spec-internal.yaml", window.location).toString(),
           dom_id: '#swagger-ui',
         });
       };
