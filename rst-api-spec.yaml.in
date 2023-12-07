@@ -14,7 +14,7 @@ tags:
 #endif
 
 info:
-  version: 1.1.0
+  version: #exec perl bin/generate-version.pl
 #ifdef INTERNAL
   title: ICANN Registry System Testing (RST) API (Internal view)
   contact:
