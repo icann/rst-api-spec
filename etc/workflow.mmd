@@ -42,7 +42,7 @@ sequenceDiagram
                     RST-TOS->>RST-API: query for<br>"ready" tests
                     RST-API->>RST-TOS: respond with<br>list of tests
                     loop for each test
-                        Note right of RST-TOS: generate<br>test plan
+                        Note right of RST-TOS: generate<br>test case sequence
                         loop for each test case
                             RST-TOS->>RST-API: request input<br>parameters
                             RST-API->>RST-TOS: respond with<br>input parameters
