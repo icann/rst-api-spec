@@ -409,7 +409,10 @@ components:
               format: hostname
           examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
         testPlan:
-          description: the test plan to be followed.
+          description: |
+            The test plan to be followed. A list of test plans and the permitted
+            values for this property may be found at
+            <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
           type: string
           enum:
             - StandardPreDelegationTest
@@ -495,6 +498,17 @@ components:
           type: integer
           format: uint64
           examples: [987654321]
+
+        testPlanVersion:
+          description: |
+            The version of the Test Plan that will be used for the test. This
+            will be determined using the `Version` property of the [RST Test
+            Specifications](https://icann.github.io/rst-test-specs/rst-test-specs.html)
+            and follows the [Semantic Versioning](https://semver.org)
+            convention.
+          type: string
+          pattern: ^d+(.d+)+$
+          examples: [3.0.0]
 
         dateRequested:
           description: date/time when this request was submitted.
