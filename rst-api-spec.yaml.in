@@ -547,7 +547,7 @@ components:
           examples: [[{"xn--8pvz8d":{"zh_CN":{"supportLevel":3,"variantPolicy":"allocatable"}},"xn--8pvxs":{"zh_TW":{"supportLevel":3,"variantPolicy":"allocatable"}}},{"xn--spcimen-cya":{"fr_FR":{"supportLevel":1,"variantPolicy":"blocked"},"de_DE":{"supportLevel":2,"variantPolicy":"blocked"}}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
         clientIDs:
           description: |
-            An array of FQDNs which identify the RSEP, and at which one or more
+            An array of FQDNs which identify the RSP, and at which one or more
             `TLSA` records may be found which can be used for authentication.
           type: array
           items:
