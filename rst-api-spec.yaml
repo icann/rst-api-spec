@@ -7,7 +7,7 @@ tags:
   - name: Starting and restarting tests
 
 info:
-  version: 1.0.96
+  version: 1.0.98
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -144,8 +144,8 @@ paths:
            changed to `inputs-needed`. The user can then update input
            parameters and files, and then request a re-test.
         2. If the current status of the test is `inputs-complete`, then the
-           status can be changed to `ready`. This signals that the user is
-           ready for the test to begin.
+           status can be changed to `ready-to-start`. This signals that the user
+           is ready for the test to begin.
         <!-- this functionality will not be offered in the MVP
         3. if the current status of the test is `in-progress`, then the status
            can be changed to `inputs-needed`. This allows an in-progress test
@@ -463,10 +463,9 @@ components:
            begin.
         2. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided.
-        3. The `ready` value indicates that all required input
-           parameters and files have been provided, but the test run has not
-           yet started.
-        4. The `in-progress` value indicates that the test run has started,
+        3. The `ready-to-start` value indicates that the RSP has requested a
+           test run, but it has not yet started.
+        4. The `in-progress` value indicates that a test run has started,
            but has not yet been completed.
         5. The `completed` value indicates that the test run has completed.
         6. The `expired` value indicates that the test did not have a status
@@ -480,7 +479,7 @@ components:
       enum:
         - inputs-needed
         - inputs-complete
-        - ready
+        - ready-to-start
         - in-progress
         - completed
         - expired
@@ -623,17 +622,18 @@ components:
 
         results:
           description: |
-            A detailed log of all tests carried out. This property will
-            initially be an empty array, until the status of the test changes to
-            `in-progress`. From this point onwards, test results will be added
-            to the array as the test progresses.
+            A test may result in multiple "runs". Each run is represented by a
+            `testRunLog` which contains a number of `testCaseLog` entries.
 
-            If the test fails, is aborted, or there is an error, the results of
-            the last test will always be included in this property, and will not
-            be overridden until a re-test begins.
+            The `results` property is an array of `testRunLog` objects. This
+            property will initially be an empty array, until the status of the
+            test changes to `in-progress`. When the test run starts, an empty
+            `testRunLog` object will be added to the array. As the test
+            progresses, `testCaseLog` entries will be appended to the
+            `testRunLog` object.
           type: array
           items:
-            $ref: "#/components/schemas/testCaseLog"
+            $ref: "#/components/schemas/testRunLog"
 
     inputParameters:
       description: |
