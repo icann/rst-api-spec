@@ -6,7 +6,7 @@ tags:
   - name: Test administration
 
 info:
-  version: 1.0.95
+  version: 1.0.96
   title: ICANN Registry System Testing (RST) API (Internal view)
   contact:
     name: Gavin Brown (GDS Technical Services)
@@ -218,7 +218,7 @@ paths:
                 type: string
                 fomat: binary
 
-  /test/{id}/results:
+  /test/{id}/results/{runID}:
     post:
       tags:
         - Test administration
@@ -230,6 +230,12 @@ paths:
       parameters:
         - name: id
           description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: runID
+          description: the run ID
           in: path
           required: true
           schema:
@@ -547,7 +553,7 @@ components:
           examples: ["inputs-needed"]
 
         result:
-          description: The outcome of the test run.
+          description: The outcome of the test.
           schema:
             $ref: "#/components/schemas/testResult"
           examples: [null]
@@ -577,6 +583,7 @@ components:
           items:
             type: string
           examples: [["epp.kitchenSink", "rdap.coffeePotURL"]]
+
         files:
           description: A list of any files uploaded.
           type: array
@@ -600,6 +607,7 @@ components:
                 type: string
                 format: url
                 examples: [https://api.rst.icann.org/v1/test/987654321/files/example_20231008_full_S1_R0.ryde]
+
         results:
           description: |
             A detailed log of all tests carried out. This property will
@@ -659,6 +667,31 @@ components:
         - error
         - skipped
         - aborted
+
+    testRunLog:
+      description: an object representing a discreet test run.
+      type: object
+      properties:
+        runID:
+          description: unique ID for this test run.
+          type: string
+        dateStarted:
+          description: the date and time the run started.
+          type: string
+          format: datetime
+        datecompleted:
+          description: the date and time the run finished.
+          type: string
+          format: datetime
+        result:
+          description: The outcome of the test.
+          schema:
+            $ref: "#/components/schemas/testResult"
+        log:
+          description: an array of test case log objects.
+          type: array
+          items:
+            $ref: "#/components/schemas/testCaseLog"
 
     testCaseLog:
       description: A detailed log of an individual test case.
