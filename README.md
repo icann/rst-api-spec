@@ -7,7 +7,7 @@ The specification is written in YAML and conforms to the [OpenApi
 3.1.0](https://spec.openapis.org/oas/latest.html) specification.
 
 A user-friendly rendering of the API specification is [here](rst-ap-spec.html),
-which is generated using the [https://editor-next.swagger.io](Swagger Editor).
+which is generated using the [Swagger Editor](https://editor-next.swagger.io).
 
 There are actually *two* different YAML files, representing two different
 "views" of the API:
