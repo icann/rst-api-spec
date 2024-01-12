@@ -1,5 +1,9 @@
 # ICANN Registry System Testing (RST) API Specification
 
+[![pages-build-deployment](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment)
+
+* [GitHub Repository](https://github.com/icann/rst-api-spec)
+
 This repository contain the specification for the Registry System Testing (RST)
 API.
 
