@@ -40,3 +40,7 @@ You may also be interested in the following:
 
 This repository is (c) 2024 Internet Corporation for Assigned Names and Numbers
 (ICANN). All rights reserved.
+
+## See Also
+
+* [RST Test Specifications](https://github.com/icann/rst-test-specs)
