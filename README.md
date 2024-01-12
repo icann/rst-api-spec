@@ -2,12 +2,10 @@
 
 [![pages-build-deployment](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment)
 
-* [GitHub Repository](https://github.com/icann/rst-api-spec)
-
 This repository contain the specification for the Registry System Testing (RST)
 API.
 
-The specification is written in YAML and conforms to the [OpenApi
+The specification is written in YAML and conforms to the [OpenAPI
 3.1.0](https://spec.openapis.org/oas/latest.html) specification.
 
 A user-friendly rendering of the API specification is [here](rst-ap-spec.html),
@@ -24,7 +22,8 @@ There are actually *two* different YAML files, representing two different
    represents ICANN org's view of the API, and includes operations required by
    internal ICANN systems and the test orchestrator which actually runs the
    tests. External users (RSPs and registry operators) won't have access to
-   these endpoints (except in OT&E, where some of them *are* available).
+   these endpoints (except in OT&E, where some of them *are* available). An HTML
+   rendering of this view is [here](rst-ap-spec-internal.html).
 
 Each of these files are generated from
 [rst-api-spec.yaml.in](rst-api-spec.yaml.in), which is the master file which
