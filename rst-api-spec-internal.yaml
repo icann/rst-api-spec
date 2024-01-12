@@ -6,7 +6,7 @@ tags:
   - name: Test administration
 
 info:
-  version: 1.0.98
+  version: 1.0.100
   title: ICANN Registry System Testing (RST) API (Internal view)
   contact:
     name: Gavin Brown (GDS Technical Services)
@@ -31,7 +31,7 @@ info:
     scheduled, configured, and executed, in the context of the RSP Evaluation
     Program:
 
-    ![workflow](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/workflow.svg)
+    * [High-level workflow](etc/workflow.svg)
 
     ### Role-based Access Control
 
@@ -140,7 +140,7 @@ paths:
            (this also updates the `dateCompleted` property). The `result`
            property MUST be specified as part of this operation.
 
-        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+        * [state diagram](etc/test-object-state-machine.svg)
       operationId: setTestStatus
       parameters:
         - name: id

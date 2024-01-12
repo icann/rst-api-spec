@@ -12,7 +12,7 @@ which is generated using the [https://editor-next.swagger.io](Swagger Editor).
 There are actually *two* different YAML files, representing two different
 "views" of the API:
 
-1. [rst-api-spec.yaml](https://icann.github.io/rst-api-spec/index.html)
+1. [rst-api-spec.yaml](https://icann.github.io/rst-api-spec/rst-api-spec.html)
    represents the external view of the API, and is limited just to those
    endpoints that external users (RSPs and registry operators) need to access;
 
@@ -27,6 +27,11 @@ Each of these files are generated from
 includes details of both views, and which is therefore useful for actually
 *implementing* the API. To generate the two views, run `make` *(you will need
 [gpp](https://files.nothingisreal.com/software/gpp/gpp.html))*.
+
+You may also be interested in the following:
+
+* [a high-level workflow of the RST system](https://icann.github.io/rst-api-spec/etc/workflow.svg) ([source](etc/workflow.mmd))
+* [a state diagram for test request objects](test-object-state-machine.svg) ([source](etc/test-object-state-machine.mmd))
 
 ## Copyright Statement
 
