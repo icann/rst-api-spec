@@ -36,11 +36,11 @@ You may also be interested in the following:
 * [a high-level workflow of the RST system](https://icann.github.io/rst-api-spec/etc/workflow.svg) ([source](etc/workflow.mmd))
 * [a state diagram for test request objects](test-object-state-machine.svg) ([source](etc/test-object-state-machine.mmd))
 
+## See Also
+
+* [RST Test Specifications](https://github.com/icann/rst-test-specs)
+
 ## Copyright Statement
 
 This repository is (c) 2024 Internet Corporation for Assigned Names and Numbers
 (ICANN). All rights reserved.
-
-## See Also
-
-* [RST Test Specifications](https://github.com/icann/rst-test-specs)
