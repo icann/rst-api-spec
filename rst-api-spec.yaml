@@ -7,7 +7,7 @@ tags:
   - name: Starting and restarting tests
 
 info:
-  version: 1.0.107
+  version: 1.0.109
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -715,6 +715,11 @@ components:
           description: the Test Case ID.
           type: string
           examples: [epp-01]
+        caseRef:
+          description: a link to the test case specification
+          type: string
+          format: url
+          examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-epp-01]
         result:
           description: the result of the test.
           schema:
@@ -763,14 +768,19 @@ components:
             - string
             - "null"
           default: null
+        codeRef:
+          description: a link to a description for the error code (if any).
+          type:
+            - string
+            - "null"
+          format: url
+          examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-EPP_ERROR_DNS_RESOLUTION_FAILED]
         severity:
           description: |
             The log level of the message, a subset of the values defined in
             RFC5424.
           type: string
           enum:
-            - INFO
-            - NOTICE
             - WARNING
             - ERROR
             - CRITICAL
