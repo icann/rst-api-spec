@@ -52,16 +52,16 @@ sequenceDiagram
                             RST-TOS->>RST-API: submit test case log
                             Note left of RST-API: append case log<br>to test results
                             critical Check test case result
-                            option Pass
+                            option Pass|Skip|Abort
                                 note right of RST-TOS: proceed to<br>next test case
                             option Fail
                                 note right of RST-TOS: exit loop
-                            option Error
+                            option Exception
                                 note right of RST-TOS: notify ops and <br>exit loop
                             end
                         end
                         RST-TOS->>RST-API: update test result
-                        Note left of RST-API: set test status to "completed"<br>and result to pass|fail|error
+                        Note left of RST-API: set test status to "completed"<br>and result to pass|fail|exception
                     end
                     Deactivate RST-TOS
                 end
@@ -74,7 +74,7 @@ sequenceDiagram
                         Note left of Applicant: outer loop ends
                     option Fail
                         note left of Applicant: applicant resolves issue and<br>outer loop repeats
-                    option Error
+                    option Exception
                         Note left of Applicant: ICANN resolves issue<br>and notifies Applicant<br>out-of-band, and<br>outer loop repeats
                     end
                     Deactivate Applicant

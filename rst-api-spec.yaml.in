@@ -618,7 +618,7 @@ components:
         1. The `pass` value indicates that the test run completed with no
            errors.
         2. The `fail` value indicates that at least one test failed.
-        3. The `error` value indicates that an internal issue prevented
+        3. The `exception` value indicates that an internal issue prevented
            the test run from completing.
       type:
         - string
@@ -626,7 +626,7 @@ components:
       enum:
         - pass
         - fail
-        - error
+        - exception
       default: null
 
     testRequestSubmitted:
@@ -794,8 +794,9 @@ components:
 
         * `pass` - the test passed.
         * `fail` - the test was not passed.
-        * `error` - an error occurred which meant a result could not be
-          determined.
+        * `exeception` - an error occurred which meant a result could not be
+          determined. This indicates an issue on the RST test system side, not
+          the test subject's.
         * `skipped` - the test case was not applicable and was not carried
           out.
         * `aborted` - the test case was aborted before it could complete.
@@ -803,7 +804,7 @@ components:
       enum:
         - pass
         - fail
-        - error
+        - exeception
         - skipped
         - aborted
 
