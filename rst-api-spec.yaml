@@ -7,7 +7,7 @@ tags:
   - name: Starting and restarting tests
 
 info:
-  version: 1.0.110
+  version: 1.0.114
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -420,28 +420,13 @@ components:
           type: string
           examples: [1.1]
 
-    idnSpec:
-      description: |
-        An IDN set represents the IDN tables for a TLD, and the level of support
-        for variants (if applicable).
-
-        An IDN set object has properties which are IDN table IDs, and the values
-        are `idnTableRef` objects.
-      type: object
-      minProperties: 1
-      patternProperties:
-        "^[a-z][a-z0-9-]+[a-z]$":
-          type: object
-          schema:
-            $ref: "#/components/schemas/idnTableRef"
-
     tldSet:
       description: |
-        A TLD set represents one or more logically grouped TLDs (such as those
-        which contain IDN variants).
+        A `tldSet` object represents one or more logically grouped TLDs (such as
+        those which contain IDN variants).
 
-        A TLD set has properties which are TLD A-labels, and values which are
-        objects where the properties are idnSpec objects.
+        A `tldSet` object has property names which are TLD A-labels, and values
+        which are arrays of `idnTableRef` objects.
 
         If a TLD offers registrations at the third or higher levels, then
         between one and three second-level "registry-class" domain name(s)
@@ -450,9 +435,9 @@ components:
       minProperties: 1
       patternProperties:
         "^[a-z][a-z0-9-]+[a-z]$":
-          type: object
-          schema:
-            $ref: "#/components/schemas/idnSpec"
+          type: array
+          items:
+            $ref: "#/components/schemas/idnTableRef"
 
     testRequest:
       description: |
