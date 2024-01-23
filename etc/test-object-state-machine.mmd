@@ -1,11 +1,14 @@
 flowchart TD
-    START[START] --> |"createTest (TA)"| A
-    A[inputs-needed] -->|"setTestInputParameters (RSP)"| B{inputs<br>complete?}
+    START[START] --> |"createTest()"| A
+    A[inputs-needed] -->|"setTestInputParameters()"| B{inputs<br>complete?}
     B -->|N| A
-    B -->|Y| C[inputs-complete]
-    C -->|"setTestStatus"| D[ready-to-start]
-    D --> |"setTestStatus"| E1[in-progress]
-    E1 --> |"setTestStatus"| G{Pass?}
+    B -->|Y| C1{IDN test<br>labels<br>available?}
+    C1 -->|N|C2[idn-labels-needed]
+    C2 --> |"createIDNTable()"|C1
+    C1 -->|Y|C[inputs-complete]
+    C -->|"setTestStatus()"| D[ready-to-start]
+    D --> |"setTestStatus()"| E1[in-progress]
+    E1 --> |"setTestStatus()"| G{Pass?}
     G --> |Y| H[completed]
     G --> |N| I{Expired?}
     I --> |N| A

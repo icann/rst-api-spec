@@ -7,7 +7,7 @@ tags:
   - name: Starting and restarting tests
 
 info:
-  version: 1.0.109
+  version: 1.0.110
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -37,7 +37,15 @@ info:
 
     * [High-level workflow](etc/workflow.svg)
 
-    ### Role-based Access Control
+    ### State diagram
+
+    Each test request object has a `status` property (see the `testStatus`
+    schema below) indicating its position in the test lifecycle. The following
+    state diagram describes this lifecycle:
+
+    * [State diagram](etc/test-object-state-machine.svg)
+
+    ### Role-based access control
 
     This API implements Role-Based Access Control, where access to certain
     operations is restricted based on the role that is assigned to a user. For
@@ -54,15 +62,19 @@ info:
     object.
 
 
-    ### HTTP Status Codes
+    ### HTTP status codes
 
-    In addition to the HTTP status codes described below, all operations may
-    respond to requests with one of the following HTTP status codes:
+    In addition to the HTTP status codes described in the operations
+    specifications below, all operations may respond to requests with one of the
+    following HTTP status codes:
 
     * **400:** returned when the server receives a malformed request.
     * **403:** returned when the access control policy prevents access.
+    * **404:** returned when the resource does not exist.
     * **405:** returned when the request method is invalid.
-    * **429:** returned when the user has exceeded rate limits.
+    * **409:** returned when the client attempts to overwrite an resource that
+      already exists.
+    * **429:** returned when the client has exceeded rate limits.
     * **504:** returned when an intermediate proxy experiences an error.
     * **500:** returned when there has been an internal server error.
 
@@ -319,6 +331,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/testRequestSubmitted"
 
+
 components:
   securitySchemes:
     mTLS:
@@ -331,40 +344,81 @@ components:
         associated with test objects.
 
   schemas:
-    variantSupportSpec:
+
+    idnTable:
       description: |
-        A `variantSupportSpec` object describes the level of support provided
-        for an IDN table that has variant labels.
+        This object describes an IDN table, or more specifically, an RSP's
+        implementation of such a table.
       type: object
       properties:
-        supportLevel:
+        rsp:
+          description: the RSP's unique ID.
+          type: string
+          examples: [RSP2312-M51]
+        tag:
+          description:
+            the language tag, which must conform to the specification in RFC
+            5646.
+          type: string
+          examples: [und-Arab]
+        version:
+          description: the version number.
+          type: string
+          examples: [1.1]
+        custom:
           description: |
-            The level of support for variants.
-            * `0`: variants are not applicable for this table
-            * `1`: variants are not offered
-            * `2`: variant labels under the same TLD are supported
-            * `3`: variant labels under variant TLDs are supported
-          type: integer
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-          default: 1
+            whether the RSP's implementation of the IDN table uses a Second-
+            Level Reference Label Generation Rules (LGRs) developed by ICANN.
+
+            If the value of this property is `false`, then the `lgrXML` property
+            **MUST** be populated with the RSP's LGR in XML format (see RFC
+            7940). If it is `true`, then the `lgrXML` property **MUST** be
+            `null`.
+
+            For more information on ICANN's Second-Level LGRS, please see:
+
+              * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
+          type: boolean
         variantPolicy:
           description: |
-            What policy is in place for variant labels:
-            * `not-blocked`: variants are not blocked. This **MUST** be set if
-              `supportLevel` is `0` and **MUST NOT** be set if `supportLevel` is
-              `1`, `2` or `3`.
-            * `blocked`: variants are blocked.
-            * `allocatable`: variants may be allocated.
-          Type: string
+            The variant policy supported for this table. The possible values
+            are:
+
+            * `novar` - no variants are supported/applicable
+            * `allblockvar` - all variants are blocked
+            * `mayallocatevar` - variants may be allocated
+          type: string
           enum:
-            - not-blocked
-            - blocked
-            - allocatable
-          default: not-blocked
+            - novar
+            - allblockvar
+            - mayallocatevar
+        lgrXML:
+          description: |
+            For custom implementations (see the `custom` property), this
+            property **MUST** contain the RSP's LGR in XML format. For standard
+            implementations (where `custom` is `false`) it **MUST** be `null`.
+          type:
+            - string
+            - "null"
+          examples: [<lgr xmlns="urn:ietf:params:xml:ns:lgr-1.0"><!--...--></lgr>]
+
+    idnTableRef:
+      description: |
+        An `idnTableRef` object provides a reference to an IDN table object. IDN
+        table objects must be created prior to being referenced in a test
+        request.
+      type: object
+      properties:
+        tag:
+          description:
+            the language tag, which must conform to the specification in RFC
+            5646.
+          type: string
+          examples: [und-Arab]
+        version:
+          description: the version number.
+          type: string
+          examples: [1.1]
 
     idnSpec:
       description: |
@@ -372,11 +426,14 @@ components:
         for variants (if applicable).
 
         An IDN set object has properties which are IDN table IDs, and the values
-        are `variantSupportSpec` objects.
+        are `idnTableRef` objects.
       type: object
-      additionalProperties:
-        schema:
-          $ref: "#/components/schemas/variantSupportSpec"
+      minProperties: 1
+      patternProperties:
+        "^[a-z][a-z0-9-]+[a-z]$":
+          type: object
+          schema:
+            $ref: "#/components/schemas/idnTableRef"
 
     tldSet:
       description: |
@@ -390,9 +447,12 @@ components:
         between one and three second-level "registry-class" domain name(s)
         should be separately listed, rather than the TLD itself.
       type: object
-      additionalProperties:
-        schema:
-          $ref: "#/components/schemas/idnSpec"
+      minProperties: 1
+      patternProperties:
+        "^[a-z][a-z0-9-]+[a-z]$":
+          type: object
+          schema:
+            $ref: "#/components/schemas/idnSpec"
 
     testRequest:
       description: |
@@ -407,20 +467,25 @@ components:
             - string
             - "null"
           examples: [foo123]
+        rsp:
+          description: the RSP's unique ID.
+          type: string
+          examples: [RSP2312-M51]
         tlds:
           description: |
-            An array of `tldSet` objects to which this test relates. In most
-            cases this will just be something like `[{"example": []}]` but more
-            complex sets of TLDs with variants are supported for RSP testing.
+            An array of `tldSet` objects to which this test relates. For a
+            single TLD with no IDN tables, this will just be something like
+            `[{"example": []}]`, but more complex sets of TLDs with variants are
+            supported for RSP testing.
           type: array
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"xn--8pvz8d":{"zh_CN":{"supportLevel":3,"variantPolicy":"allocatable"}},"xn--8pvxs":{"zh_TW":{"supportLevel":3,"variantPolicy":"allocatable"}}},{"xn--spcimen-cya":{"fr_FR":{"supportLevel":1,"variantPolicy":"blocked"},"de_DE":{"supportLevel":2,"variantPolicy":"blocked"}}},{"example":{}},{"sld1.example2":{}},{"sld2.example2":{}}]]
+          examples: [[{"example":[]}, {"eksempel":[{"tag": "dk", "version": "1.1"}, {"tag": "no", "version": "1.2"}]}, {"xn--8pvz8d":[{"tag": "zh-cn", "version": "1.0"}], "xn--8pvxs": [{"tag": "zh-tw", "version": "1.0"}]}]]
         clientIDs:
           description: |
-            An array of FQDNs which identify the RSP, and at which one or more
-            `TLSA` records may be found which can be used for authentication.
+            An array of FQDNs at which one or more `TLSA` records may be found
+            which can be used for authentication.
           type: array
           items:
             schema:
@@ -463,22 +528,24 @@ components:
            begin.
         2. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided.
-        3. The `ready-to-start` value indicates that the RSP has requested a
+        3. The `idn-labels-needed` value indicates that test labels for one or
+           more IDN tables have not yet been loaded into the system. If one or
+           more "custom" IDN tables have been specified for the test, then ICANN
+           staff may need to prepare these labels.
+        4. The `ready-to-start` value indicates that the RSP has requested a
            test run, but it has not yet started.
-        4. The `in-progress` value indicates that a test run has started,
+        5. The `in-progress` value indicates that a test run has started,
            but has not yet been completed.
-        5. The `completed` value indicates that the test run has completed.
-        6. The `expired` value indicates that the test did not have a status
+        6. The `completed` value indicates that the test run has completed.
+        7. The `expired` value indicates that the test did not have a status
            of `completed` when the `dueDate` was reached.
 
-        The following state diagram outlines how the status of a test object
-        changes throughout its lifetime:
-
-        ![state diagram](https://raw.githubusercontent.com/icann/rst-api-spec/main/etc/test-object-state-machine.svg)
+        * [State diagram](etc/test-object-state-machine.svg)
       type: string
       enum:
         - inputs-needed
         - inputs-complete
+        - idn-labels-needed
         - ready-to-start
         - in-progress
         - completed
@@ -751,11 +818,11 @@ components:
           type: object
           additionalProperties:
             type:
-            - string
-            - integer
-            - number
-            - boolean
-            - "null"
+              - string
+              - integer
+              - number
+              - boolean
+              - "null"
           examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
     testCaseLogMessage:
