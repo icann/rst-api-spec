@@ -29,12 +29,8 @@ Each of these files are generated from
 [rst-api-spec.yaml.in](rst-api-spec.yaml.in), which is the master file which
 includes details of both views, and which is therefore useful for actually
 *implementing* the API. To generate the two views, run `make` *(you will need
-[gpp](https://files.nothingisreal.com/software/gpp/gpp.html))*.
-
-You may also be interested in the following:
-
-* [a high-level workflow of the RST system](https://icann.github.io/rst-api-spec/etc/workflow.svg) ([source](etc/workflow.mmd))
-* [a state diagram for test request objects](test-object-state-machine.svg) ([source](etc/test-object-state-machine.mmd))
+[gpp](https://files.nothingisreal.com/software/gpp/gpp.html) and
+[mermaid-cli](https://github.com/mermaid-js/mermaid-cli))*.
 
 ## See Also
 
