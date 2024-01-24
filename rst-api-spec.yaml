@@ -5,9 +5,10 @@ tags:
   - name: Providing input parameters & files
   - name: Retrieving test information
   - name: Starting and restarting tests
+  - name: IDN table management
 
 info:
-  version: 1.0.114
+  version: 1.0.117
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -332,6 +333,85 @@ paths:
                   $ref: "#/components/schemas/testRequestSubmitted"
 
 
+  /table/{rsp}/{tag}/{version}:
+
+
+    get:
+      tags:
+        - IDN table management
+      operationId: getIDNTable
+      description: |
+        This operation returns information about an IDN table object.
+
+        External users can only access IDN tables that are linked to test
+        objects associated with their credentials.
+
+      parameters:
+        - name: rsp
+          description: the RSP ID.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tag
+          description: the language tag.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: version
+          description: the version.
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/idnTable"
+
+
+  /tables:
+
+
+  /table/{rsp}/{tag}/{version}/labels:
+
+
+    get:
+      tags:
+        - IDN table management
+      operationId: getIDNTestLabels
+      description: |
+        This operation returns an `idnTestLabels` object for the IDN table
+        identified by the `{rsp, tag, version}` triple.
+
+        External users can only access test label lists that are linked to IDN
+        tables that are linked test objects associated with their credentials.
+
+      parameters:
+        - name: rsp
+          description: the RSP ID.
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: tag
+          description: the language tag.
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/idnTestLabels"
+
 components:
   securitySchemes:
     mTLS:
@@ -349,6 +429,10 @@ components:
       description: |
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
+
+        The `rsp`, `tag` and `version` properties of this object uniquely
+        identify it, and can be used to populate the corresponding tokens in the
+        URL templates of the `getIDNTable()` and `getIDNLabels()` operations.
       type: object
       properties:
         rsp:
@@ -808,7 +892,7 @@ components:
               - number
               - boolean
               - "null"
-          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.168.0.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.0.2.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
     testCaseLogMessage:
       description: A log message.
@@ -846,3 +930,30 @@ components:
           description: the message.
           type: string
           examples: ["Something informative just happened!", "Something critical just happened!"]
+
+    idnTestLabels:
+      description: An object containing IDN test labels.
+      type: object
+      properties:
+        validLabels:
+          description: an array of **valid** IDN labels.
+          $ref: "#/components/schemas/idnTestLabelList"
+        invalidLabels:
+          description: an array of **invalid** IDN labels.
+          $ref: "#/components/schemas/idnTestLabelList"
+        level2VariantTestLabels:
+          description: |
+            an array of labels to be used to test Level 2 IDN variant support.
+          $ref: "#/components/schemas/idnTestLabelList"
+        level3VariantTestLabels:
+          description: |
+            an array of labels to be used to test Level 3 IDN variant support.
+          $ref: "#/components/schemas/idnTestLabelList"
+
+    idnTestLabelList:
+      description: an array of IDN test labels.
+      type: array
+      items:
+        type: string
+        pattern: ^xn--[a-z0-9-]+[a-z0-9]$
+      examples: [["xn--piemrs-s3a", "xn--mgbh0fb", "xn--e1afmkfd", "xn--8pvz8d", "xn--8pvxs"]]
