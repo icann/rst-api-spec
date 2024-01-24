@@ -5,7 +5,7 @@ sequenceDiagram
 
     Note right of RSP Portal: ICANN org<br>reviews application
 
-    RSP Portal->>RST-API: create new<br>test request
+    RSP Portal->>RST-API: create new<br>test request<br>[createTest()]
 
     Activate RST-API
     Note right of RST-API: create test in<br>database
@@ -20,7 +20,7 @@ sequenceDiagram
         Activate RSP Portal
 
         loop 1h
-            RSP Portal->>RST-API: query for results
+            RSP Portal->>RST-API: query for results<br>[getTestInfo()]
         end
 
         RSP Portal->>Applicant: notice of completed test
@@ -29,27 +29,27 @@ sequenceDiagram
     and
         loop Applicant self-<br>administers the test
             Activate Applicant
-            Applicant->>RST-API: submit input parameters
+            Applicant->>RST-API: submit input parameters<br>[setTestInputParameters()]
             Note right of RST-API: store parameters
-            Applicant->>RST-API: upload files
+            Applicant->>RST-API: upload files<br>[uploadFile()]
             Note right of RST-API: store files
-            Applicant->>RST-API: initiate test
+            Applicant->>RST-API: initiate test<br>[setTestStatus()]
             Note right of RST-API: set test status to "ready-to-start"
             Deactivate Applicant
             par Test run
                 loop 1m
                     Activate RST-TOS
-                    RST-TOS->>RST-API: query for<br>"ready" tests
+                    RST-TOS->>RST-API: query for<br>"ready" tests<br>[getTestInfo()]
                     RST-API->>RST-TOS: respond with<br>list of tests
                     loop for each test
                         Note right of RST-TOS: generate<br>test case sequence
                         loop for each test case
-                            RST-TOS->>RST-API: request input<br>parameters
+                            RST-TOS->>RST-API: request input<br>parameters<br>[getTestInfo()]
                             RST-API->>RST-TOS: respond with<br>input parameters
-                            RST-TOS->>RST-API: request files
+                            RST-TOS->>RST-API: request files<br>[getFile()]
                             RST-API->>RST-TOS: respond with file data
                             Note right of RST-TOS: run test case
-                            RST-TOS->>RST-API: submit test case log
+                            RST-TOS->>RST-API: submit test case log<br>[addResult()]
                             Note left of RST-API: append case log<br>to test results
                             critical Check test case result
                             option Pass|Skip|Abort
@@ -60,7 +60,7 @@ sequenceDiagram
                                 note right of RST-TOS: notify ops and <br>exit loop
                             end
                         end
-                        RST-TOS->>RST-API: update test result
+                        RST-TOS->>RST-API: update test result<br>[setTestStatus()]
                         Note left of RST-API: set test status to "completed"<br>and result to pass|fail|exception
                     end
                     Deactivate RST-TOS
@@ -68,7 +68,7 @@ sequenceDiagram
             and
                 loop
                     Activate Applicant
-                    Applicant->>RST-API: poll for results
+                    Applicant->>RST-API: poll for results<br>[getTestInfo()]
                     critical Check test result
                     option Pass
                         Note left of Applicant: outer loop ends
