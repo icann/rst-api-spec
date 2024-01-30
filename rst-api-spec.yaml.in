@@ -31,6 +31,8 @@ info:
     identifier: BSD-3-Clause
 #endif
   description: |
+    **Last updated:** #date %Y-%m-%d
+    <br><br>
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
     System Testing](https://www.icann.org/resources/registry-system-testing)
@@ -99,6 +101,10 @@ info:
     * **429:** returned when the client has exceeded rate limits.
     * **504:** returned when an intermediate proxy experiences an error.
     * **500:** returned when there has been an internal server error.
+
+    ### Change Log
+
+    * 2024-01-31: add this change log.
 
 servers:
   - url: https://api.rst.icann.org/v1
