@@ -2,11 +2,11 @@ openapi: 3.1.0
 
 tags:
   - name: Creating test request objects
-#ifndef INTERNAL
+#ifdef EXTERNAL
   - name: Providing input parameters & files
 #endif
   - name: Retrieving test information
-#ifndef INTERNAL
+#ifdef EXTERNAL
   - name: Starting and restarting tests
 #endif
 #ifdef INTERNAL
@@ -22,7 +22,7 @@ info:
     name: Gavin Brown (GDS Technical Services)
     email: gavin.brown@icann.org
 #endif
-#ifndef INTERNAL
+#ifdef EXTERNAL
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -123,7 +123,7 @@ paths:
       description: |
         This operation creates a new test request object.
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
         **OT&E only:** this operation is not available to external users in
         production, but may be used in OT&E.
 #endif
@@ -148,7 +148,7 @@ paths:
       description: |
         This operation returns information about a specific test request object.
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
         Users can only perform this operation if their certificate matches a
         `TLSA` record published in the DNS at one of the hostnames specified in
         the `clientIDs` property of the test request object.
@@ -178,11 +178,11 @@ paths:
 #ifdef INTERNAL
         - Test administration
 #endif
-#ifndef INTERNAL
+#ifdef EXTERNAL
         - Starting and restarting tests
 #endif
       description: |
-#ifndef INTERNAL
+#ifdef EXTERNAL
         This operation allows the `status` property of a test request object to
         be changed.
 
@@ -269,7 +269,7 @@ paths:
           description: A successful result.
 #endif
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
   /test/{id}/inputs:
     post:
       tags:
@@ -492,7 +492,7 @@ paths:
         and multiple tables with the same RSP, tag and version are not
         permitted.
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
         **OT&E only:** this operation is not available to external users in
         production, but may be used in OT&E.
 #endif
@@ -557,7 +557,7 @@ paths:
       description: |
         This operation returns information about an IDN table object.
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
         External users can only access IDN tables that are linked to test
         objects associated with their credentials.
 #endif
@@ -723,7 +723,7 @@ paths:
         This operation returns an `idnTestLabels` object for the IDN table
         identified by the `{rsp, tag, version}` triple.
 
-#ifndef INTERNAL
+#ifdef EXTERNAL
         External users can only access test label lists that are linked to IDN
         tables that are linked test objects associated with their credentials.
 #endif
