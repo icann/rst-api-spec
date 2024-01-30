@@ -21,7 +21,8 @@ info:
   contact:
     name: Gavin Brown (GDS Technical Services)
     email: gavin.brown@icann.org
-#else
+#endif
+#ifndef INTERNAL
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -176,7 +177,8 @@ paths:
       tags:
 #ifdef INTERNAL
         - Test administration
-#else
+#endif
+#ifndef INTERNAL
         - Starting and restarting tests
 #endif
       description: |
@@ -203,7 +205,8 @@ paths:
            can be changed to `inputs-needed`. This allows an in-progress test
            to be cancelled, and changed to a state where input parameters may
            be submitted prior to a re-test. -->
-#else
+#endif
+#ifdef INTERNAL
         This operation allows the `status` and `result` properties of a test
         request object to be changed.
 
