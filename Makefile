@@ -5,5 +5,5 @@ diagrams:
 	mmdc -i etc/workflow.mmd -o etc/workflow.svg
 
 spec:
-	gpp -x -DEXTERNAL rst-api-spec.yaml.in > rst-api-spec.yaml
-	gpp -x -DINTERNAL rst-api-spec.yaml.in > rst-api-spec-internal.yaml
+	gpp -x -DVIEW=EXTERNAL rst-api-spec.yaml.in > rst-api-spec.yaml
+	gpp -x -DVIEW=INTERNAL rst-api-spec.yaml.in > rst-api-spec-internal.yaml
