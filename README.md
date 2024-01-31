@@ -32,6 +32,11 @@ includes details of both views, and which is therefore useful for actually
 [gpp](https://files.nothingisreal.com/software/gpp/gpp.html) and
 [mermaid-cli](https://github.com/mermaid-js/mermaid-cli))*.
 
+## Branches
+
+All development is done on the `dev` branch. The `main` branch is updated every
+ Wednesday from the `dev` branch.
+
 ## See Also
 
 * [RST Test Specifications](https://github.com/icann/rst-test-specs)
