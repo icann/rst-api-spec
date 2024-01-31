@@ -110,10 +110,8 @@ paths:
       description: |
         This operation creates a new test request object.
 
-#ifeq VIEW EXTERNAL
         **OT&E only:** this operation is not available to external users in
         production, but may be used in OT&E.
-#endif
       operationId: createTest
       requestBody:
         content:
@@ -135,15 +133,11 @@ paths:
       description: |
         This operation returns information about a specific test request object.
 
-#ifeq VIEW EXTERNAL
         Users can only perform this operation if their certificate matches a
         `TLSA` record published in the DNS at one of the hostnames specified in
         the `clientIDs` property of the test request object.
-#endif
 
-#ifeq VIEW INTERNAL
         Internal users can perform this operation on any object.
-#endif
       operationId: getTestInfo
       parameters:
         - name: id
@@ -165,19 +159,18 @@ paths:
         - Test administration
         - Starting and restarting tests
       description: |
-#ifeq VIEW EXTERNAL
-        This operation allows the `status` property of a test request object to
+        This operation allows the certain properties of a test request object to
         be changed.
 
         Users can only perform this operation if their certificate
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-        The status of a test can only be changed under the following
+        External users can only change the status of a test under the following
         circumstances:
 
         1. If the current status of the test is `completed`, and the `result`
-           property is either `fail` or `error`, then the status can be
+           property is either `fail` or `exception`, then the status can be
            changed to `inputs-needed`. The user can then update input
            parameters and files, and then request a re-test.
         2. If the current status of the test is `inputs-complete`, then the
@@ -188,16 +181,12 @@ paths:
            can be changed to `inputs-needed`. This allows an in-progress test
            to be cancelled, and changed to a state where input parameters may
            be submitted prior to a re-test. -->
-#endif
-#ifeq VIEW INTERNAL
-        This operation allows the `status` and `result` properties of a test
-        request object to be changed.
 
+#ifeq VIEW INTERNAL
         Internal users can:
 
-        1. change the `result` property of a test from `fail` or
-           `error` to `pass`, but only when the status of the test is
-           `completed`;
+        1. change the `result` property of a test from `fail` or `exception` to
+           `pass`, but only when the status of the test is `completed`;
         2. update the status of a test from `ready-to-start` to `in-progress`
            (this also updates the `dateStarted` property) and;
         3. update the status of a test from `in-progress` to `completed`
@@ -252,7 +241,6 @@ paths:
           description: A successful result.
 #endif
 
-#ifeq VIEW EXTERNAL
   /test/{id}/inputs:
     post:
       tags:
@@ -328,7 +316,6 @@ paths:
       responses:
         '201':
           description: A successful result.
-#endif
 
   /test/{id}/file/{file}:
     get:
@@ -410,9 +397,7 @@ paths:
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-#ifeq VIEW INTERNAL
         Internal users will see results for all test objects.
-#endif
       operationId: getTests
       parameters:
 
@@ -437,6 +422,7 @@ paths:
           schema:
             type: string
 #endif
+
         - name: status
           description: limit results to those with the given status
           in: query
@@ -474,12 +460,6 @@ paths:
         IDN tables are uniquely identified by the triple `{rsp, tag, version}`,
         and multiple tables with the same RSP, tag and version are not
         permitted.
-
-#ifeq VIEW EXTERNAL
-        **OT&E only:** this operation is not available to external users in
-        production, but may be used in OT&E.
-#endif
-
       requestBody:
         content:
           application/json:
@@ -540,10 +520,8 @@ paths:
       description: |
         This operation returns information about an IDN table object.
 
-#ifeq VIEW EXTERNAL
         External users can only access IDN tables that are linked to test
         objects associated with their credentials.
-#endif
 
       parameters:
         - name: rsp
@@ -706,11 +684,8 @@ paths:
         This operation returns an `idnTestLabels` object for the IDN table
         identified by the `{rsp, tag, version}` triple.
 
-#ifeq VIEW EXTERNAL
         External users can only access test label lists that are linked to IDN
         tables that are linked test objects associated with their credentials.
-#endif
-
       parameters:
         - name: rsp
           description: the RSP ID.

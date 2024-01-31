@@ -9,13 +9,11 @@ tags:
   - name: IDN table management
 
 info:
-  version: 1.0.126
-
-  title: ICANN Registry System Testing (RST) API (Internal view)
-
+  version: 1.0.130
+  title: ICANN Registry System Testing (RST) API (INTERNAL view)
   contact:
-    name: Gavin Brown (GDS Technical Services)
-    email: gavin.brown@icann.org
+    name: ICANN Global Support
+    email: globalsupport@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
@@ -109,6 +107,8 @@ paths:
       description: |
         This operation creates a new test request object.
 
+        **OT&E only:** this operation is not available to external users in
+        production, but may be used in OT&E.
       operationId: createTest
       requestBody:
         content:
@@ -130,6 +130,9 @@ paths:
       description: |
         This operation returns information about a specific test request object.
 
+        Users can only perform this operation if their certificate matches a
+        `TLSA` record published in the DNS at one of the hostnames specified in
+        the `clientIDs` property of the test request object.
 
         Internal users can perform this operation on any object.
       operationId: getTestInfo
@@ -153,14 +156,33 @@ paths:
         - Test administration
         - Starting and restarting tests
       description: |
-        This operation allows the `status` and `result` properties of a test
-        request object to be changed.
+        This operation allows the certain properties of a test request object to
+        be changed.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        External users can only change the status of a test under the following
+        circumstances:
+
+        1. If the current status of the test is `completed`, and the `result`
+           property is either `fail` or `exception`, then the status can be
+           changed to `inputs-needed`. The user can then update input
+           parameters and files, and then request a re-test.
+        2. If the current status of the test is `inputs-complete`, then the
+           status can be changed to `ready-to-start`. This signals that the user
+           is ready for the test to begin.
+        <!-- this functionality will not be offered in the MVP
+        3. if the current status of the test is `in-progress`, then the status
+           can be changed to `inputs-needed`. This allows an in-progress test
+           to be cancelled, and changed to a state where input parameters may
+           be submitted prior to a re-test. -->
 
         Internal users can:
 
-        1. change the `result` property of a test from `fail` or
-           `error` to `pass`, but only when the status of the test is
-           `completed`;
+        1. change the `result` property of a test from `fail` or `exception` to
+           `pass`, but only when the status of the test is `completed`;
         2. update the status of a test from `ready-to-start` to `in-progress`
            (this also updates the `dateStarted` property) and;
         3. update the status of a test from `in-progress` to `completed`
@@ -210,6 +232,81 @@ paths:
         '204':
           description: A successful result.
 
+  /test/{id}/inputs:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This operation submits test input parameters. Parameters in the payload
+        will previously submitted values. Values that are present in the object
+        but not present in the payload will not be modified.
+
+        Input parameters can only be submitted for test request objects that
+        have the status of `inputs-needed`.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+        Once all required input parameters have been submitted (and any files
+        referenced in those parameters have been uploaded), the status of
+        the test request object will change from `input-needed` to
+        `inputs-complete`.
+      operationId: setTestInputParameters
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/inputParameters"
+      responses:
+        '201':
+          description: A successful result.
+
+  /test/{id}/files:
+    post:
+      tags:
+        - Providing input parameters & files
+      description: |
+        This resource may be used to upload files. Multiple files may
+        be uploaded in a single request. If a filename matches a previously
+        submitted file, that file will be replaced.
+
+        All files MUST be referenced in an input parameter **before** being
+        uploaded.
+
+        Users can only perform this operation if their certificate
+        matches a `TLSA` record published in the DNS at one of the hostnames
+        specified in the `clientIDs` property of the test request object.
+
+      operationId: uploadFile
+      parameters:
+        - name: id
+          description: the test ID
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '201':
+          description: A successful result.
 
   /test/{id}/file/{file}:
     get:
@@ -312,6 +409,7 @@ paths:
           required: false
           schema:
             type: string
+
         - name: status
           description: limit results to those with the given status
           in: query
@@ -348,8 +446,6 @@ paths:
         IDN tables are uniquely identified by the triple `{rsp, tag, version}`,
         and multiple tables with the same RSP, tag and version are not
         permitted.
-
-
       requestBody:
         content:
           application/json:
@@ -407,6 +503,8 @@ paths:
       description: |
         This operation returns information about an IDN table object.
 
+        External users can only access IDN tables that are linked to test
+        objects associated with their credentials.
 
       parameters:
         - name: rsp
@@ -563,7 +661,8 @@ paths:
         This operation returns an `idnTestLabels` object for the IDN table
         identified by the `{rsp, tag, version}` triple.
 
-
+        External users can only access test label lists that are linked to IDN
+        tables that are linked test objects associated with their credentials.
       parameters:
         - name: rsp
           description: the RSP ID.
