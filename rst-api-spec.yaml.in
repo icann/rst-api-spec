@@ -10,17 +10,10 @@ tags:
 
 info:
   version: #exec perl bin/generate-version.pl
-
-#ifeq VIEW INTERNAL
-  title: ICANN Registry System Testing (RST) API (Internal view)
-#endif
-#ifeq VIEW EXTERNAL
-  title: ICANN Registry System Testing (RST) API
-#endif
-
+  title: ICANN Registry System Testing (RST) API (VIEW view)
   contact:
-    name: Gavin Brown (GDS Technical Services)
-    email: gavin.brown@icann.org
+    name: ICANN Global Support
+    email: globalsupport@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
