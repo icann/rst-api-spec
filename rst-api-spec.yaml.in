@@ -1106,25 +1106,9 @@ components:
         parameters after a test request object is created, and is also used when
         returning test request object information.
       type: object
-      patternProperties:
-        ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw)\.[A-Za-z0-9\.]+$:
-          type:
-            - string
-            - integer
-            - number
-            - boolean
-            - "null"
-            - array
-            - object
-          items:
-            type:
-            - string
-            - integer
-            - number
-            - boolean
-            - "null"
-            - object
-      examples: [{"important.note": "the contents of this object are purely illustrative", "epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
+      properties:
+#exec bin/generate-input-parameter-schema.pl | sed 's/^/        /'
+      required: []
 
     testCaseResult:
       description: |
