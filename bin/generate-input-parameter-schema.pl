@@ -21,7 +21,7 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
 
     } else {
         $schema->{$name} = {
-            'type' => ('string' eq $meta{'Type'} ? 'string' : $meta{'Type'}),
+            'type' => ('file' eq $meta{'Type'} ? 'string' : $meta{'Type'}),
         };
     }
 
