@@ -2,35 +2,29 @@ openapi: 3.1.0
 
 tags:
   - name: Creating test request objects
-#ifdef EXTERNAL
   - name: Providing input parameters & files
-#endif
   - name: Retrieving test information
-#ifdef EXTERNAL
   - name: Starting and restarting tests
-#endif
-#ifdef INTERNAL
   - name: Test administration
-#endif
   - name: IDN table management
 
 info:
   version: #exec perl bin/generate-version.pl
+
 #ifdef INTERNAL
   title: ICANN Registry System Testing (RST) API (Internal view)
-  contact:
-    name: Gavin Brown (GDS Technical Services)
-    email: gavin.brown@icann.org
 #endif
 #ifdef EXTERNAL
   title: ICANN Registry System Testing (RST) API
+#endif
+
   contact:
-    name: ICANN Global Support
-    email: globalsupport@icann.org
+    name: Gavin Brown (GDS Technical Services)
+    email: gavin.brown@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
-#endif
+
   description: |
     **Last updated:** #date %Y-%m-%d
     <br><br>
@@ -175,12 +169,8 @@ paths:
 
     patch:
       tags:
-#ifdef INTERNAL
         - Test administration
-#endif
-#ifdef EXTERNAL
         - Starting and restarting tests
-#endif
       description: |
 #ifdef EXTERNAL
         This operation allows the `status` property of a test request object to

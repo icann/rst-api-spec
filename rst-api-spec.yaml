@@ -5,17 +5,21 @@ tags:
   - name: Providing input parameters & files
   - name: Retrieving test information
   - name: Starting and restarting tests
+  - name: Test administration
   - name: IDN table management
 
 info:
-  version: 1.0.124
+  version: 1.0.126
+
   title: ICANN Registry System Testing (RST) API
+
   contact:
-    name: ICANN Global Support
-    email: globalsupport@icann.org
+    name: Gavin Brown (GDS Technical Services)
+    email: gavin.brown@icann.org
   license:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
+
   description: |
     **Last updated:** 2024-01-31    <br><br>
     The Registry System Testing (RST-API) provides a
@@ -145,6 +149,7 @@ paths:
 
     patch:
       tags:
+        - Test administration
         - Starting and restarting tests
       description: |
         This operation allows the `status` property of a test request object to
