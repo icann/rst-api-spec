@@ -8,7 +8,7 @@ tags:
   - name: IDN table management
 
 info:
-  version: 1.0.117
+  version: 1.0.124
   title: ICANN Registry System Testing (RST) API
   contact:
     name: ICANN Global Support
@@ -17,6 +17,7 @@ info:
     name: BSD 3-Clause "New" or "Revised" License
     identifier: BSD-3-Clause
   description: |
+    **Last updated:** 2024-01-31    <br><br>
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
     System Testing](https://www.icann.org/resources/registry-system-testing)
@@ -78,6 +79,10 @@ info:
     * **429:** returned when the client has exceeded rate limits.
     * **504:** returned when an intermediate proxy experiences an error.
     * **500:** returned when there has been an internal server error.
+
+    ### Change Log
+
+    * 2024-01-31: add this change log.
 
 servers:
   - url: https://api.rst.icann.org/v1
@@ -778,25 +783,323 @@ components:
         parameters after a test request object is created, and is also used when
         returning test request object information.
       type: object
-      patternProperties:
-        ^(general|dns|dnssec|rdap|epp|rde|idn|srsgw).[A-Za-z0-9.]+$:
-          type:
-            - string
-            - integer
-            - number
-            - boolean
-            - "null"
-            - array
-            - object
+      properties:
+        dns.nameservers:
+          description: |
+            The set of nameservers that will be authoritative for the TLD(s).
+        
+            This input parameter is an object where the object properties are the
+            TLD names, and the values are objects. For these objects, the properties
+            are the nameserver names, and the values are arrays of IPv4 and IPv6
+            addresses.
+        
+            There **MUST** be at least two nameservers, and at least two nameservers
+            **MUST** have at least one IPv6 address.
+        
+            All DNS server names **MUST** comply with the requirements for valid
+            hostnames described in RFC 1123, section 2.1. Additionally, all IDN labels
+            in those hostnames **MUST** comply with IDNA2008.
+          patternProperties:
+            ^[a-z]+[a-z0-9\.]*[a-z]\$:
+              items:
+                format:
+                - ipv4
+                - ipv6
+                type: string
+              type: array
+          type: object
+        dnssec.dsRecords:
+          description: |
+            The DS record(s) that may be used to validate the DNSSEC signature for the
+            TLD(s). This input parameter is an object where the object properties are
+            the TLD names and the values are arrays of objects representing DS
+            records.
+        
+            There **MUST** be an entry for every TLD in the TLD set and there **MUST**
+            be at least one DS record for each TLD.
+          type: object
+        dnssecOps.algorithmRolloverZone:
+          description: |
+            The domain name which will be monitored for the occurrence of an algorithm
+            rollover.
+          type: string
+        dnssecOps.csk:
+          description: |
+            A boolean indicating whether the RSP uses a Combined Signing Key (CSK,
+            also referred to as a "Single Type Signing Scheme") instead of a split
+            KSK/ZSK configuration.
+          type: boolean
+        dnssecOps.kskRolloverZone:
+          description: |
+            The domain name which will be monitored for the occurrence of a KSK
+            rollover.
+          type: string
+        dnssecOps.nameservers:
+          description: |
+            The set of nameservers that will be authoritative for the zones used in the
+            DNSSEC operations test suite.
+        
+            This input parameter is an object where the object properties are the
+            zone names, and the values are objects. For these objects, the properties
+            are the nameserver names, and the values are arrays of IPv4 and IPv6
+            addresses.
+          patternProperties:
+            ^[a-z]+[a-z0-9\.]*[a-z]\$:
+              items:
+                format:
+                - ipv4
+                - ipv6
+                type: string
+              type: array
+          type: object
+        dnssecOps.primaryServer:
+          description: The primary nameserver from which zones can be transferred.
+          format:
+          - ipv4
+          - ipv6
+          type: string
+        dnssecOps.tsigKey:
+          description: The TSIG key which should be used to perform zone transfers.
+          properties:
+            algorithm:
+              type: string
+            name:
+              type: string
+            secret:
+              type: string
+          type: object
+        dnssecOps.zskRolloverZone:
+          description: |
+            The domain name which will be monitored for the occurrence of a ZSK
+            rollover.
+          type: string
+        epp.clid01:
+          description: the username used to log in to the EPP server
+          type: string
+        epp.clid02:
+          description: the username used for transfer tests
+          type: string
+        epp.greeting:
+          description: |
+            an XML instance which contains a copy of the server's `<greeting>`.
+          type: string
+        epp.hostModel:
+          description: |
+            The host model supported by the EPP server. The possible values for this
+            parameter are:
+              * `objects`
+              * `attributes`
+          enum:
+          - objects
+          - attributes
+          type: string
+        epp.hostName:
+          description: |
+            The fully-qualified domain name of the EPP server.
+        
+            The server name **MUST** comply with the requirements for valid
+            hostnames described in RFC 1123, section 2.1. Additionally, all IDN labels
+            in the server name **MUST** comply with IDNA2008.
+          format: hostname
+          type: string
+        epp.pwd01:
+          description: the password used to log in to the EPP server
+          type: string
+        epp.pwd02:
+          description: the password used for transfer tests
+          type: string
+        epp.registeredContacts:
+          description: |
+            An array of contact IDs that exist in the EPP server and which are
+            therefore unavailable for registration.
+        
+            If the value of `general.minimalPublicDataSet` is `false`, this array
+            **MUST** contain one member for each TLD in the TLD set. However, if it is
+            `false`, the array **MUST** be empty.
           items:
-            type:
-            - string
-            - integer
-            - number
-            - boolean
-            - "null"
-            - object
-      examples: [{"important.note": "the contents of this object are purely illustrative", "epp.hostname": "epp.rsp.tech", "epp.port": 700, "epp.clid": "CLID1", "epp.pw": "foo2bar", "epp.feeCurrency": "USD", "epp.feeAmount": 25.01, "dns.servers": ["ns1.rsp.tech", "ns2.rsp.tech"], "dnssec.KSKLength": 4096, "dnssec.nsec3": true, "rdap.hostname": "rdap.rsp.tech", "idn.tables": ["latn", "arab", "zh"], "rde.supportedTypes": ["FULL", "INCR"]}]
+            type: string
+          type: array
+        epp.registeredNames:
+          description: |
+            An array of domain names that exist in the EPP server and which are
+            therefore unavailable for registration. The domains **MUST NOT** be under
+            the sponsorship of the `epp.clid01` or `epp.clid02` registrars. The array
+            **MUST** contain one member for each TLD in the TLD set.
+          items:
+            format: hostname
+            type: string
+          type: array
+        epp.registeredNameservers:
+          description: |
+            An array of host objects that exist in the EPP server and which are
+            therefore unavailable for registration.
+        
+            If the value of `epp.hostModel` is `objects`, this array **MUST** contain
+            one member for each TLD in the TLD set. However, if it is `attributes`,
+            the array **MUST** be empty.
+          items:
+            format: hostname
+            type: string
+          type: array
+        epp.restoreReportRequired:
+          description: |
+            Whether the server requires submission of a restore report when a client
+            attempts to restore a domain.
+        
+            If the value of `general.gracePeriodsSupported` is `false`, then this
+            input parameter is ignored.
+          type: boolean
+        epp.secDNSInterfaces:
+          description: |
+            Which of the interfaces defined in Section 4 of RFC 5910 the server
+            supports (either `dsData` or `keyData`).
+          enum:
+          - dsData
+          - keyData
+          type: string
+        epp.serverIssuedClientCertificate01:
+          description: |
+            If the EPP server uses a private CA to issue client certificates, then
+            a certificate generated using the CSR provided in the `epp.clientCSR` may
+            be provided using this parameter. This certificate will only be used in
+            conjunction with the `epp.clid01` and `epp.pwd01` credentials. If the
+            server will accept ICANN's own client certificate, this parameter
+            **SHOULD** be empty.
+          type: string
+        epp.serverIssuedClientCertificate02:
+          description: |
+            If the EPP server uses a private CA to issue client certificates, then
+            a certificate generated using the CSR provided in the `epp.clientCSR` may
+            be provided using this parameter. This certificate will only be used in
+            conjunction with the `epp.clid02` and `epp.pwd02` credentials. If the
+            server will accept ICANN's own client certificate, this parameter
+            **SHOULD** be empty.
+          type: string
+        general.minimalPublicDataSet:
+          description: |
+            if true, then the registry only supports the minimum public data set, and
+            does not collect registrant and/or technical contact information from
+            registrars.
+          type: boolean
+        integration.rdeSFTPDirectory:
+          description: |
+            The directory on the SFTP server where deposit files may be found.
+          type: string
+        integration.rdeSFTPHostname:
+          description: The hostname of the operator's SFTP server.
+          type: string
+        integration.rdeSFTPUsername:
+          description: The username that can be used to connect to the SFTP server.
+          type: string
+        integration.rriACL:
+          description: |
+            An array of IP addresses from which requests to the RRI will be sent.
+          type: array
+        minimumRPMS.claimsTLD:
+          description: |
+            A TLD, or other registry-class zone, which has been configured to be in
+            perpetual trademark claims.
+          type: string
+        minimumRPMS.sunriseModels:
+          description: |
+            The sunrise models supported by the EPP server. The possible values for
+            this parameter are:
+              * `start-date`
+              * `end-date`
+              * `both`
+          type: string
+        minimumRPMS.sunriseTLD:
+          description: |
+            A TLD, or other registry-class zone, which has been configured to be in
+            perpetual sunrise.
+          type: string
+        rdap.baseURLs:
+          description: ~
+          patternProperties:
+            ^[a-z][a-\0-9-]*[a-z]\$:
+              format: url
+              type: string
+          type: object
+        rdap.testDomains:
+          description: |
+            The domain(s) that will be queried to validate domain responses. This
+            input parameter is an object, where the object properties are the TLD
+            names and the values domain names.
+          patternProperties:
+            ^[a-z][a-\0-9-]*[a-z]\$:
+              format: hostname
+              type: string
+          type: object
+        rdap.testEntities:
+          description: |
+            The entities(s) that will be queried to validate entity responses. This
+            input parameter is an object, where the object properties are the TLD
+            names and the values entity handles.
+          patternProperties:
+            ^[a-z][a-\0-9-]*[a-z]\$:
+              type: string
+          type: object
+        rdap.testNameservers:
+          description: |
+            The nameservers(s) that will be queried to validate nameserver responses.
+            This input parameter is an object, where the object properties are the TLD
+            names and the values host names.
+          patternProperties:
+            ^[a-z][a-\0-9-]*[a-z]\$:
+              format: hostname
+              type: string
+          type: object
+        rde.depositFile:
+          description: |
+            an RDE deposit file. The TLD to which the deposit relates **MUST** match
+            one of the TLDs that are associated with the test object.
+          type: string
+        rde.publicKey:
+          description: a PGP public key block
+          type: string
+        rde.signatureFile:
+          description: an ASCII-armoured OpenPGP signature covering the deposit file
+          type: string
+        srsgw.eppClid01:
+          description: the username used to log in to the SRS Gateway EPP server
+          type: string
+        srsgw.eppClid02:
+          description: the username used for transfer tests
+          type: string
+        srsgw.eppHostName:
+          description: the fully-qualified domain name of the SRS Gateway EPP server
+          type: string
+        srsgw.eppPwd01:
+          description: the password used to log in to the SRS Gateway EPP server
+          type: string
+        srsgw.eppPwd02:
+          description: the password used for transfer tests
+          type: string
+        srsgw.rdapBaseURLs:
+          description: |
+            The RDAP base URL(s) for the TLD(s). This input parameter is an object,
+            where the object properties are the TLD names and the values are strings
+            containing the base URL. The URL **MUST** end with a slash ("/").
+          type: object
+        srsgw.serverIssuedClientCertificate01:
+          description: |
+            If the EPP server uses a private CA to issue client certificates, then
+            a certificate generated using the CSR provided in the `epp.clientCSR` may
+            be provided using this parameter. This certificate will only be used in
+            conjunction with the `srsgw.eppClid01` and `srsgw.eppPwd01` credentials.
+            If the server will accept ICANN's own client certificate, this parameter
+            **SHOULD** be empty.
+          type: string
+        srsgw.serverIssuedClientCertificate02:
+          description: |
+            If the EPP server uses a private CA to issue client certificates, then
+            a certificate generated using the CSR provided in the `epp.clientCSR` may
+            be provided using this parameter. This certificate will only be used in
+            conjunction with the `srsgw.eppClid02` and `srsgw.eppPwd02` credentials.
+            If the server will accept ICANN's own client certificate, this parameter
+            **SHOULD** be empty.
+          type: string
+      required: []
 
     testCaseResult:
       description: |
