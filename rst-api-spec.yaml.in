@@ -92,7 +92,9 @@ info:
 
     ### Change Log
 
-    * 2024-01-31: add this change log.
+    * 2024-01-31:
+      * add this change log.
+      * minimise the delta between the internal and external view.
 
 servers:
   - url: https://api.rst.icann.org/v1
