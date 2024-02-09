@@ -9,7 +9,7 @@ tags:
   - name: IDN table management
 
 info:
-  version: 1.0.130
+  version: 1.2024040
   title: ICANN Registry System Testing (RST) API (EXTERNAL view)
   contact:
     name: ICANN Global Support
@@ -19,7 +19,7 @@ info:
     identifier: BSD-3-Clause
 
   description: |
-    **Last updated:** 2024-01-31    <br><br>
+    **Last updated:** 2024-02-09    <br><br>
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
     System Testing](https://www.icann.org/resources/registry-system-testing)
@@ -84,7 +84,12 @@ info:
 
     ### Change Log
 
-    * 2024-01-31: add this change log.
+    * 2024-09-04:
+      * use a date-based version number instead of a commit-based version, ahead
+        of switching to a weekly release cycle
+    * 2024-01-31:
+      * add this change log.
+      * minimise the delta between the internal and external view.
 
 servers:
   - url: https://api.rst.icann.org/v1
@@ -805,6 +810,14 @@ components:
             All DNS server names **MUST** comply with the requirements for valid
             hostnames described in RFC 1123, section 2.1. Additionally, all IDN labels
             in those hostnames **MUST** comply with IDNA2008.
+          examples:
+          - example:
+              ns1.example.com:
+              - 192.0.2.1
+              - 2001:DB8::53:1
+              ns2.example.com:
+              - 192.0.2.2
+              - 2001:DB8::53:2
           patternProperties:
             ^[a-z]+[a-z0-9\.]*[a-z]\$:
               items:
@@ -823,22 +836,34 @@ components:
         
             There **MUST** be an entry for every TLD in the TLD set and there **MUST**
             be at least one DS record for each TLD.
+          examples:
+          - example:
+            - alg: 8
+              digest: E2D3...5766
+              digestType: 2
+              keyTag: 12345
           type: object
         dnssecOps.algorithmRolloverZone:
           description: |
             The domain name which will be monitored for the occurrence of an algorithm
             rollover.
+          examples:
+          - example.com
           type: string
         dnssecOps.csk:
           description: |
             A boolean indicating whether the RSP uses a Combined Signing Key (CSK,
             also referred to as a "Single Type Signing Scheme") instead of a split
             KSK/ZSK configuration.
+          examples:
+          - ''
           type: boolean
         dnssecOps.kskRolloverZone:
           description: |
             The domain name which will be monitored for the occurrence of a KSK
             rollover.
+          examples:
+          - example.com
           type: string
         dnssecOps.nameservers:
           description: |
@@ -849,6 +874,14 @@ components:
             zone names, and the values are objects. For these objects, the properties
             are the nameserver names, and the values are arrays of IPv4 and IPv6
             addresses.
+          examples:
+          - example:
+              ns1.example.com:
+              - 192.0.2.1
+              - 2001:DB8::53:1
+              ns2.example.com:
+              - 192.0.2.2
+              - 2001:DB8::53:2
           patternProperties:
             ^[a-z]+[a-z0-9\.]*[a-z]\$:
               items:
@@ -860,12 +893,18 @@ components:
           type: object
         dnssecOps.primaryServer:
           description: The primary nameserver from which zones can be transferred.
+          examples:
+          - 192.0.2.1
           format:
           - ipv4
           - ipv6
           type: string
         dnssecOps.tsigKey:
           description: The TSIG key which should be used to perform zone transfers.
+          examples:
+          - algorithm: hmac-sha256
+            name: rst-tsig-01
+            secret: NQO...xQ=
           properties:
             algorithm:
               type: string
@@ -878,16 +917,49 @@ components:
           description: |
             The domain name which will be monitored for the occurrence of a ZSK
             rollover.
+          examples:
+          - example.com
           type: string
         epp.clid01:
           description: the username used to log in to the EPP server
+          examples:
+          - clid-01
           type: string
         epp.clid02:
           description: the username used for transfer tests
+          examples:
+          - clid-02
           type: string
         epp.greeting:
           description: |
             an XML instance which contains a copy of the server's `<greeting>`.
+          examples:
+          - |
+            <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+            <epp xmlns="urn:ietf:params:xml:ns:epp-1.0">
+              <greeting>
+                <svID>EPP server</svID>
+                <svDate>2024-06-08T22:00:00.0Z</svDate>
+                <svcMenu>
+                  <version>1.0</version>
+                  <lang>en</lang>
+                  <objURI>urn:ietf:params:xml:ns:domain-1.0</objURI>
+                  <svcExtension>
+                    <extURI>urn:ietf:params:xml:ns:rgp-1.0</extURI>
+                    <extURI>urn:ietf:params:xml:ns:secDNS-1.1</extURI>
+                    <extURI>urn:ietf:params:xml:ns:launch-1.0</extURI>
+                  </svcExtension>
+                </svcMenu>
+                <dcp>
+                  <access><all/></access>
+                  <statement>
+                    <purpose><admin/><prov/></purpose>
+                    <recipient><ours/><public/></recipient>
+                    <retention><stated/></retention>
+                  </statement>
+                </dcp>
+              </greeting>
+            </epp>
           type: string
         epp.hostModel:
           description: |
@@ -898,6 +970,8 @@ components:
           enum:
           - objects
           - attributes
+          examples:
+          - objects
           type: string
         epp.hostName:
           description: |
@@ -906,13 +980,19 @@ components:
             The server name **MUST** comply with the requirements for valid
             hostnames described in RFC 1123, section 2.1. Additionally, all IDN labels
             in the server name **MUST** comply with IDNA2008.
+          examples:
+          - epp.rsp.tech
           format: hostname
           type: string
         epp.pwd01:
           description: the password used to log in to the EPP server
+          examples:
+          - foo2bar
           type: string
         epp.pwd02:
           description: the password used for transfer tests
+          examples:
+          - foo3bar
           type: string
         epp.registeredContacts:
           description: |
@@ -922,6 +1002,9 @@ components:
             If the value of `general.minimalPublicDataSet` is `false`, this array
             **MUST** contain one member for each TLD in the TLD set. However, if it is
             `false`, the array **MUST** be empty.
+          examples:
+          - - abc123
+            - def321
           items:
             type: string
           type: array
@@ -931,6 +1014,9 @@ components:
             therefore unavailable for registration. The domains **MUST NOT** be under
             the sponsorship of the `epp.clid01` or `epp.clid02` registrars. The array
             **MUST** contain one member for each TLD in the TLD set.
+          examples:
+          - - example.example1
+            - example.example2
           items:
             format: hostname
             type: string
@@ -943,6 +1029,9 @@ components:
             If the value of `epp.hostModel` is `objects`, this array **MUST** contain
             one member for each TLD in the TLD set. However, if it is `attributes`,
             the array **MUST** be empty.
+          examples:
+          - - ns1.example.com
+            - ns2.example.org
           items:
             format: hostname
             type: string
@@ -954,6 +1043,8 @@ components:
         
             If the value of `general.gracePeriodsSupported` is `false`, then this
             input parameter is ignored.
+          examples:
+          - ''
           type: boolean
         epp.secDNSInterfaces:
           description: |
@@ -962,6 +1053,8 @@ components:
           enum:
           - dsData
           - keyData
+          examples:
+          - dsData
           type: string
         epp.serverIssuedClientCertificate01:
           description: |
@@ -971,6 +1064,8 @@ components:
             conjunction with the `epp.clid01` and `epp.pwd01` credentials. If the
             server will accept ICANN's own client certificate, this parameter
             **SHOULD** be empty.
+          examples:
+          - rst_test_client_cert.pem
           type: string
         epp.serverIssuedClientCertificate02:
           description: |
@@ -980,31 +1075,46 @@ components:
             conjunction with the `epp.clid02` and `epp.pwd02` credentials. If the
             server will accept ICANN's own client certificate, this parameter
             **SHOULD** be empty.
+          examples:
+          - rst_test_client_cert.pem
           type: string
         general.minimalPublicDataSet:
           description: |
             if true, then the registry only supports the minimum public data set, and
             does not collect registrant and/or technical contact information from
             registrars.
+          examples:
+          - 1
           type: boolean
         integration.rdeSFTPDirectory:
           description: |
             The directory on the SFTP server where deposit files may be found.
+          examples:
+          - /path/to/deposits
           type: string
         integration.rdeSFTPHostname:
           description: The hostname of the operator's SFTP server.
+          examples:
+          - sftp.rsp.tech
           type: string
         integration.rdeSFTPUsername:
           description: The username that can be used to connect to the SFTP server.
+          examples:
+          - icann
           type: string
         integration.rriACL:
           description: |
             An array of IP addresses from which requests to the RRI will be sent.
+          examples:
+          - - 192.0.2.1
+            - 2001:DB8::22:1
           type: array
         minimumRPMS.claimsTLD:
           description: |
             A TLD, or other registry-class zone, which has been configured to be in
             perpetual trademark claims.
+          examples:
+          - tmclaims.rsp.tech
           type: string
         minimumRPMS.sunriseModels:
           description: |
@@ -1013,14 +1123,20 @@ components:
               * `start-date`
               * `end-date`
               * `both`
+          examples:
+          - start-date
           type: string
         minimumRPMS.sunriseTLD:
           description: |
             A TLD, or other registry-class zone, which has been configured to be in
             perpetual sunrise.
+          examples:
+          - tmclaims.rsp.tech
           type: string
         rdap.baseURLs:
           description: ~
+          examples:
+          - example: https://rdap.example.com/example/
           patternProperties:
             ^[a-z][a-\0-9-]*[a-z]\$:
               format: url
@@ -1031,6 +1147,8 @@ components:
             The domain(s) that will be queried to validate domain responses. This
             input parameter is an object, where the object properties are the TLD
             names and the values domain names.
+          examples:
+          - example: example.example
           patternProperties:
             ^[a-z][a-\0-9-]*[a-z]\$:
               format: hostname
@@ -1041,6 +1159,8 @@ components:
             The entities(s) that will be queried to validate entity responses. This
             input parameter is an object, where the object properties are the TLD
             names and the values entity handles.
+          examples:
+          - example: '9999'
           patternProperties:
             ^[a-z][a-\0-9-]*[a-z]\$:
               type: string
@@ -1050,6 +1170,8 @@ components:
             The nameservers(s) that will be queried to validate nameserver responses.
             This input parameter is an object, where the object properties are the TLD
             names and the values host names.
+          examples:
+          - example: ns1.example.com
           patternProperties:
             ^[a-z][a-\0-9-]*[a-z]\$:
               format: hostname
@@ -1059,33 +1181,51 @@ components:
           description: |
             an RDE deposit file. The TLD to which the deposit relates **MUST** match
             one of the TLDs that are associated with the test object.
+          examples:
+          - example_20231004_FULL_S1_R0.ryde
           type: string
         rde.publicKey:
           description: a PGP public key block
+          examples:
+          - rsp-rde-signing-key.asc
           type: string
         rde.signatureFile:
           description: an ASCII-armoured OpenPGP signature covering the deposit file
+          examples:
+          - example_20231004_FULL_S1_R0.sig
           type: string
         srsgw.eppClid01:
           description: the username used to log in to the SRS Gateway EPP server
+          examples:
+          - clid-01
           type: string
         srsgw.eppClid02:
           description: the username used for transfer tests
+          examples:
+          - clid-02
           type: string
         srsgw.eppHostName:
           description: the fully-qualified domain name of the SRS Gateway EPP server
+          examples:
+          - epp.rsp.tech
           type: string
         srsgw.eppPwd01:
           description: the password used to log in to the SRS Gateway EPP server
+          examples:
+          - foo2bar
           type: string
         srsgw.eppPwd02:
           description: the password used for transfer tests
+          examples:
+          - foo3bar
           type: string
         srsgw.rdapBaseURLs:
           description: |
             The RDAP base URL(s) for the TLD(s). This input parameter is an object,
             where the object properties are the TLD names and the values are strings
             containing the base URL. The URL **MUST** end with a slash ("/").
+          examples:
+          - example: https://rdap.example.com/example/
           type: object
         srsgw.serverIssuedClientCertificate01:
           description: |
