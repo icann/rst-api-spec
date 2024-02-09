@@ -9,7 +9,8 @@ tags:
   - name: IDN table management
 
 info:
-  version: #exec perl bin/generate-version.pl
+  version: 1.#date %Y%j
+
   title: ICANN Registry System Testing (RST) API (VIEW view)
   contact:
     name: ICANN Global Support
@@ -92,6 +93,9 @@ info:
 
     ### Change Log
 
+    * 2024-09-04:
+      * use a date-based version number instead of a commit-based version, ahead
+        of switching to a weekly release cycle
     * 2024-01-31:
       * add this change log.
       * minimise the delta between the internal and external view.
