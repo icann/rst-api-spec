@@ -1,15 +1,9 @@
 #!/usr/bin/perl
 use Data::Mirror qw(mirror_yaml);
-use constant {
-    SPEC_URL => 'https://raw.githubusercontent.com/icann/rst-test-specs/%s/rst-test-specs.yaml',
-};
+use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.yaml';
 use strict;
 
-my $branch = shift(@ARGV) || 'dev';
-
-my $url = sprintf(SPEC_URL, $branch);
-
-my $spec = mirror_yaml($url);
+my $spec = mirror_yaml(SPEC_URL);
 
 my $schema = {};
 
@@ -27,8 +21,10 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
 
     $schema->{$name}->{'description'} = $meta{'Description'};
 
-    # $schema->{$name}->{'examples'} = [$meta{'Example'}] if (exists($meta{'Example'}));
+    $schema->{$name}->{'examples'} = [$meta{'Example'}] if (!defined($schema->{$name}->{'examples'}) && defined($meta{'Example'}));
 }
+
+$YAML::XS::SortKeys = 1;
 
 my $yaml = YAML::XS::Dump($schema);
 $yaml =~ s/^-+\n//g;
