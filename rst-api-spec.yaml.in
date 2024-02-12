@@ -93,7 +93,8 @@ info:
 
     ### Change Log
 
-    * 2024-09-04:
+    * 2024-02-14:
+      * switch to a weekly release cycle.
       * use a date-based version number instead of a commit-based version, ahead
         of switching to a weekly release cycle
     * 2024-01-31:
