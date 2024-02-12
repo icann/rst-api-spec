@@ -67,7 +67,7 @@ info:
     one of these hostnames, it will be permitted to perform operations on that
     object.
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     #### Internal users
 
     Internal users must use a certificate that matches a `TLSA` record
@@ -188,7 +188,7 @@ paths:
            to be cancelled, and changed to a state where input parameters may
            be submitted prior to a re-test. -->
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
         Internal users can:
 
         1. change the `result` property of a test from `fail` or `exception` to
@@ -215,7 +215,7 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/testStatus"
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
         - name: result
           description: the new result for the test.
           in: query
@@ -226,7 +226,7 @@ paths:
         '204':
           description: A successful result.
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     delete:
       tags:
         - Test administration
@@ -356,7 +356,7 @@ paths:
                 type: string
                 fomat: binary
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
   /test/{id}/results/{runID}/log:
     post:
       tags:
@@ -407,7 +407,7 @@ paths:
       operationId: getTests
       parameters:
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
         - name: client
           description: limit results to specific user.
           in: query
@@ -451,7 +451,7 @@ paths:
                 items:
                   $ref: "#/components/schemas/testRequestSubmitted"
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
   /table:
     post:
       tags:
@@ -484,7 +484,7 @@ paths:
 
   /table/{rsp}/{tag}/{version}:
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     put:
       tags:
         - IDN table management
@@ -556,7 +556,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/idnTable"
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     delete:
       tags:
         - IDN table management
@@ -588,7 +588,7 @@ paths:
 
   /tables:
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     get:
       tags:
         - IDN table management
@@ -622,7 +622,7 @@ paths:
 
   /table/{rsp}/{tag}/{version}/labels:
 
-#ifeq VIEW INTERNAL
+#ifdef INTERNAL
     post:
       tags:
         - IDN table management
