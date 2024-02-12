@@ -10,9 +10,8 @@ diagrams: tmpdir
 
 spec: tmpdir
 	@echo Generating YAML files...
-	@gpp -x -DEXTERNAL -DVIEW=EXTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
-	@gpp -x -DINTERNAL -DVIEW=INTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec-internal.yaml
-	@gpp -x -DINTERNAL -DEXTERNAL -DVIEW=DEVELOPER rst-api-spec.yaml.in > tmp/rst-api-spec-developer.yaml
+	@gpp -x -DVIEW=EXTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
+	@gpp -x -DVIEW=INTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec-internal.yaml
 
 pages:
 	@echo Generating pages...
