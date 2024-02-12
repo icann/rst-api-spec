@@ -1,0 +1,33 @@
+name: build-pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-pages:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pages: write
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: build
+        run: docker compose up pages
+
+      - name: package
+        run: tar --directory=_site -z -c -v -f github-pages .
+
+      - name: configure
+        uses: actions/configure-pages@v4
+
+      - name: upload
+        uses: actions/upload-pages-artifact@v3
+
+      - name: deploy
+        uses: actions/deploy-pages@v4
