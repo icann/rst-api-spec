@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  spec:
+    restart: "no"
+    build:
+      context: .
+    volumes:
+      - .:/app
+    command: make -C /app diagrams spec
+
+  pages:
+    extends: spec
+    command: make -C /app pages
