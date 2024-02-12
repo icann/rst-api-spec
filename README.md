@@ -1,36 +1,38 @@
-# ICANN Registry System Testing (RST) API Specification
-
-[![pages-build-deployment](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/icann/rst-api-spec/actions/workflows/pages/pages-build-deployment)
-
 This repository contain the specification for the Registry System Testing (RST)
 API.
 
-The specification is written in YAML and conforms to the [OpenAPI
-3.1.0](https://spec.openapis.org/oas/latest.html) specification.
+The specification is written in YAML and conforms to the [Version 3.1.0 of the
+OpenAPI specification](https://spec.openapis.org/oas/latest.html):
 
-A user-friendly rendering of the API specification is [here](rst-ap-spec.html),
-which is generated using the [Swagger Editor](https://editor-next.swagger.io).
+## API specification
 
-There are actually *two* different YAML files, representing two different
-"views" of the API:
+* [RST-API Specification](https://icann.github.io/rst-api-spec/rst-api-spec.html) ([YAML](rst-api-spec.yaml))
 
-1. [rst-api-spec.yaml](https://icann.github.io/rst-api-spec/rst-api-spec.html)
-   represents the external view of the API, and is limited just to those
-   endpoints that external users (RSPs and registry operators) need to access;
+This represents a view of the API suitable for RSPs and Registry Operators
+(i.e., those who are undergoing registry system testing).
 
-2. [rst-api-spec-internal.yaml](https://icann.github.io/rst-api-spec/rst-api-spec-internal.html)
-   represents ICANN org's view of the API, and includes operations required by
-   internal ICANN systems and the test orchestrator which actually runs the
-   tests. External users (RSPs and registry operators) won't have access to
-   these endpoints (except in OT&E, where some of them *are* available). An HTML
-   rendering of this view is [here](rst-ap-spec-internal.html).
+### Internal ICANN view
 
-Each of these files are generated from
-[rst-api-spec.yaml.in](rst-api-spec.yaml.in), which is the master file which
-includes details of both views, and which is therefore useful for actually
-*implementing* the API. To generate the two views, run `make` *(you will need
-[gpp](https://files.nothingisreal.com/software/gpp/gpp.html) and
-[mermaid-cli](https://github.com/mermaid-js/mermaid-cli))*.
+* [RST-API Specification (internal view)](https://icann.github.io/rst-api-spec/rst-api-spec-internal.html) ([YAML](rst-api-spec-internal.yaml))
+
+This represents ICANN org's view of the API, and includes operations required by
+internal ICANN systems and the test orchestrator which actually runs the tests.
+External users (RSPs and registry operators) won't have access to these
+endpoints (except in OT&E, where some of them *are* available).
+
+## Repository Contents
+
+* [rst-api-spec.yaml.in](https://github.com/icann/rst-api-spec/blob/main/rst-api-spec.yaml.in)
+  is what you need to edit if you want to make changes to the API.
+
+* [Makefile](Makefile) provides a way to generate the build artifacts. It uses
+  [gpp](https://logological.org/gpp) to create the YAML file, [mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
+  to convert the Mermaid files into diagrams, and a Perl script to import input
+  parameter schemas from the [test specs](https://github.com/icann/rst-test-specs).
+
+* If you don't want to install all the dependencies, but have
+  [Docker](https://docker.com) installed, you can use `docker compose up spec`
+  to build the YAML files.
 
 ## Branches
 
@@ -39,7 +41,7 @@ All development is done on the `dev` branch. The `main` branch is updated every
 
 ## See Also
 
-* [RST Test Specifications](https://github.com/icann/rst-test-specs)
+* [RST Test Specifications](https://icann.github.io/rst-test-specs/) ([GitHub repository](https://github.com/icann/rst-test-specs))
 
 ## Copyright Statement
 
