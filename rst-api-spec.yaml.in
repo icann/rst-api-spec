@@ -476,8 +476,6 @@ paths:
           headers:
             location:
               description: the URL of the newly created IDN table object.
-              type: string
-              format: url
 
 #endif
 
