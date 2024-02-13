@@ -13,6 +13,9 @@ spec: tmpdir
 	@gpp -x -DVIEW=EXTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
 	@gpp -x -DVIEW=INTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec-internal.yaml
 
+lint:
+	@openapi-generator validate -i tmp/rst-api-spec-internal.yaml
+
 pages:
 	@echo Generating pages...
 	@bin/build-pages.sh
