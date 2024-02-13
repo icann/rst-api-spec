@@ -14,8 +14,8 @@ pandoc \
     --output="$SITEDIR/index.html" \
     README.md
 
-make diagrams spec
+make spec
 
-cp tmp/*.svg "$SITEDIR/etc/"
+cp etc/*.svg "$SITEDIR/etc/"
 cp tmp/*.yaml "$SITEDIR/"
 cp etc/*.html "$SITEDIR/"

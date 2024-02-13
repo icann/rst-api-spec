@@ -7,7 +7,7 @@ services:
       context: .
     volumes:
       - .:/app
-    command: make -C /app diagrams spec
+    command: make -C /app spec
 
   pages:
     extends: spec
