@@ -480,6 +480,25 @@ paths:
 #endif
 
   /table/{rsp}/{tag}/{version}:
+    parameters:
+      - name: rsp
+        description: the RSP ID.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tag
+        description: the language tag.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: version
+        description: the version.
+        in: path
+        required: true
+        schema:
+          type: string
 
 #ifeq VIEW INTERNAL
     put:
@@ -492,25 +511,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/idnTable"
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: version
-          description: the version.
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '201':
           description: A successful result.
@@ -525,26 +525,6 @@ paths:
 
         External users can only access IDN tables that are linked to test
         objects associated with their credentials.
-
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: version
-          description: the version.
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: A successful result.
@@ -559,25 +539,6 @@ paths:
         - IDN table management
       operationId: deleteIDNTable
       description: This operation deletes an IDN table object.
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: version
-          description: the version.
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '201':
           description: A successful result.
@@ -593,19 +554,6 @@ paths:
       description: |
         This operation returns the IDN tables matching the provided query
         parameters.
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: query
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: A successful result.
@@ -618,6 +566,25 @@ paths:
 #endif
 
   /table/{rsp}/{tag}/{version}/labels:
+    parameters:
+      - name: rsp
+        description: the RSP ID.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tag
+        description: the language tag.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: version
+        description: the version
+        in: path
+        required: true
+        schema:
+          type: string
 
 #ifeq VIEW INTERNAL
     post:
@@ -627,20 +594,6 @@ paths:
       description: |
         This operation adds a new `idnTestLabels` object for the IDN table
         identified by the `{rsp, tag, version}` triple.
-
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: query
-          required: false
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -649,6 +602,7 @@ paths:
       responses:
         '201':
           description: A successful result.
+
     put:
       tags:
         - IDN table management
@@ -656,19 +610,6 @@ paths:
       description: |
         This operation updates an existing `idnTestLabels` object for the IDN
         table identified by the `{rsp, tag, version}` triple.
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: query
-          required: false
-          schema:
-            type: string
       requestBody:
         content:
           application/json:
@@ -689,19 +630,6 @@ paths:
 
         External users can only access test label lists that are linked to IDN
         tables that are linked test objects associated with their credentials.
-      parameters:
-        - name: rsp
-          description: the RSP ID.
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: tag
-          description: the language tag.
-          in: query
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           description: A successful result.
