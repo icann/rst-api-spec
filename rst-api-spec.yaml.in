@@ -107,8 +107,6 @@ servers:
   - url: https://api.rst.ote.icann.org/v1
     description: OT&E server address (NOT FINAL)
 
-mTLS: []
-
 paths:
   /test:
     post:
