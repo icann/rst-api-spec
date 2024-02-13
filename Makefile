@@ -5,8 +5,8 @@ tmpdir:
 
 diagrams: tmpdir
 	@echo Generating SVG diagrams...
-	@mmdc -i etc/test-object-state-machine.mmd -o tmp/test-object-state-machine.svg
-	@mmdc -i etc/workflow.mmd -o tmp/workflow.svg
+	@mmdc -i etc/test-object-state-machine.mmd -o etc/test-object-state-machine.svg
+	@mmdc -i etc/workflow.mmd -o etc/workflow.svg
 
 spec: tmpdir
 	@echo Generating YAML files...
