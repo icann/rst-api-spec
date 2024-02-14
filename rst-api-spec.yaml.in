@@ -94,6 +94,7 @@ info:
     ### Change Log
 
     * 2023-02-21:
+      * remove `DELETE /tests/{id}` endpoint.
       * fix schema definition for the `Location` header in `POST /test`
         responses.
 
@@ -229,27 +230,6 @@ paths:
       responses:
         '204':
           description: A successful result.
-
-#ifeq VIEW INTERNAL
-    delete:
-      tags:
-        - Test administration
-      description: |
-        Internal users can use the `DELETE` method to mark a test as deleted. If
-        successful, it becomes invisible to `GET`, `POST` and `PATCH` requests
-        (status 404) and will not appear in search results.
-      operationId: deleteTest
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: A successful result.
-#endif
 
   /test/{id}/inputs:
     post:
