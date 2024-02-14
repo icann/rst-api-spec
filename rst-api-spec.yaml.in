@@ -9,7 +9,7 @@ tags:
   - name: IDN table management
 
 info:
-  version: 1.#date %Y%j
+  version: "1.#date %Y%j"
 
   title: ICANN Registry System Testing (RST) API (VIEW view)
   contact:
@@ -93,10 +93,15 @@ info:
 
     ### Change Log
 
+    * 2023-02-21:
+      * fix schema definition for the `Location` header in `POST /test`
+        responses.
+
     * 2024-02-14:
       * switch to a weekly release cycle.
       * use a date-based version number instead of a commit-based version, ahead
         of switching to a weekly release cycle
+
     * 2024-01-31:
       * add this change log.
       * minimise the delta between the internal and external view.
@@ -476,6 +481,9 @@ paths:
           headers:
             location:
               description: the URL of the newly created IDN table object.
+              schema:
+                type: string
+                format: url
 
 #endif
 
@@ -783,9 +791,8 @@ components:
             which can be used for authentication.
           type: array
           items:
-            schema:
-              type: string
-              format: hostname
+            type: string
+            format: hostname
           examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
         testPlan:
           description: |
