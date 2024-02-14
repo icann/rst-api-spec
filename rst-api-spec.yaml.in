@@ -67,13 +67,11 @@ info:
     one of these hostnames, it will be permitted to perform operations on that
     object.
 
-#ifeq VIEW INTERNAL
     #### Internal users
 
     Internal users must use a certificate that matches a `TLSA` record
     found at a hard-coded DNS hostname *(the exact name is yet to be
     determined)*.
-#endif
 
     ### HTTP status codes
 
@@ -317,6 +315,8 @@ paths:
         Users can only perform this operation if their certificate
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
+
+        Internal users can perform this operation on any object.
       operationId: getFile
       parameters:
         - name: id
@@ -341,6 +341,7 @@ paths:
                 fomat: binary
 
 #ifeq VIEW INTERNAL
+
   /test/{id}/results/{runID}/log:
     post:
       tags:
