@@ -92,6 +92,9 @@ info:
     ### Change Log
 
     * 2023-02-21:
+#ifeq VIEW INTERNAL
+      * reinstate query parameters for `GET /tables`
+#endif
       * remove `DELETE /tests/{id}` endpoint.
       * fix schema definition for the `Location` header in `POST /test`
         responses.
@@ -163,71 +166,16 @@ paths:
               schema:
                 $ref: "#/components/schemas/testRequestSubmitted"
 
-    patch:
-      tags:
-        - Test administration
-        - Starting and restarting tests
-      description: |
-        This operation allows the certain properties of a test request object to
-        be changed.
+  /test/{id}/status:
+    put:
 
-        Users can only perform this operation if their certificate
-        matches a `TLSA` record published in the DNS at one of the hostnames
-        specified in the `clientIDs` property of the test request object.
+  /test/{id}/result:
+    put:
 
-        External users can only change the status of a test under the following
-        circumstances:
+  /test/{id}/run:
+    post:
 
-        1. If the current status of the test is `completed`, and the `result`
-           property is either `fail` or `exception`, then the status can be
-           changed to `inputs-needed`. The user can then update input
-           parameters and files, and then request a re-test.
-        2. If the current status of the test is `inputs-complete`, then the
-           status can be changed to `ready-to-start`. This signals that the user
-           is ready for the test to begin.
-        <!-- this functionality will not be offered in the MVP
-        3. if the current status of the test is `in-progress`, then the status
-           can be changed to `inputs-needed`. This allows an in-progress test
-           to be cancelled, and changed to a state where input parameters may
-           be submitted prior to a re-test. -->
-
-#ifeq VIEW INTERNAL
-        Internal users can:
-
-        1. change the `result` property of a test from `fail` or `exception` to
-           `pass`, but only when the status of the test is `completed`;
-        2. update the status of a test from `ready-to-start` to `in-progress`
-           (this also updates the `dateStarted` property) and;
-        3. update the status of a test from `in-progress` to `completed`
-           (this also updates the `dateCompleted` property). The `result`
-           property MUST be specified as part of this operation.
-#endif
-
-        * [state diagram](etc/test-object-state-machine.svg)
-      operationId: setTestStatus
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: status
-          description: the new status for the test.
-          in: query
-          required: false
-          schema:
-            $ref: "#/components/schemas/testStatus"
-#ifeq VIEW INTERNAL
-        - name: result
-          description: the new result for the test.
-          in: query
-          schema:
-            $ref: "#/components/schemas/testResult"
-#endif
-      responses:
-        '204':
-          description: A successful result.
+    delete:
 
   /test/{id}/inputs:
     post:
@@ -340,42 +288,6 @@ paths:
                 type: string
                 fomat: binary
 
-#ifeq VIEW INTERNAL
-
-  /test/{id}/results/{runID}/log:
-    post:
-      tags:
-        - Test administration
-      description: |
-        This operation is used to update the object with
-        test results. It will append the provided `testCaseLog` object to
-        the `log` property of the `testRunLog` object identified by the `runID`
-        parameter: if this object does not exist, it will be automatically
-        created and added to the `results` property of the test object.
-      operationId: addResult
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: runID
-          description: the run ID
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/testCaseLog"
-      responses:
-        '201':
-          description: A successful result.
-#endif
-
   /tests:
     get:
       tags:
@@ -391,29 +303,25 @@ paths:
         Internal users will see results for all test objects.
       operationId: getTests
       parameters:
-
-#ifeq VIEW INTERNAL
         - name: client
-          description: limit results to specific user.
+          description: limit results to specific user (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: tld
-          description: limit results to specific TLD.
+          description: limit results to specific TLD (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: applicationID
           description: |
-            limit results to specific application ID.
+            limit results to specific application ID (internal users only).
           in: query
           required: false
           schema:
             type: string
-#endif
-
         - name: status
           description: limit results to those with the given status
           in: query
@@ -436,7 +344,98 @@ paths:
                 items:
                   $ref: "#/components/schemas/testRequestSubmitted"
 
+  /table/{rsp}/{tag}/{version}:
+    parameters:
+      - name: rsp
+        description: the RSP ID.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tag
+        description: the language tag.
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: version
+        description: the version.
+        in: path
+        required: true
+        schema:
+          type: string
+
+    get:
+      tags:
+        - IDN table management
+      operationId: getIDNTable
+      description: |
+        This operation returns information about an IDN table object.
+
+        External users can only access IDN tables that are linked to test
+        objects associated with their credentials.
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/idnTable"
+
 #ifeq VIEW INTERNAL
+    put:
+      tags:
+        - IDN table management
+      operationId: updateIDNTable
+      description: This operation updates an existing IDN table object.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/idnTable"
+      responses:
+        '201':
+          description: A successful result.
+
+    delete:
+      tags:
+        - IDN table management
+      operationId: deleteIDNTable
+      description: This operation deletes an IDN table object.
+      responses:
+        '201':
+          description: A successful result.
+
+  /tables:
+    get:
+      tags:
+        - IDN table management
+      operationId: getIDNTables
+      description: |
+        This operation returns the IDN tables matching the provided query
+        parameters.
+      - name: rsp
+        description: the RSP ID.
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: tag
+        description: the language tag.
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/idnTable"
+
   /table:
     post:
       tags:
@@ -465,93 +464,6 @@ paths:
               schema:
                 type: string
                 format: url
-
-#endif
-
-  /table/{rsp}/{tag}/{version}:
-    parameters:
-      - name: rsp
-        description: the RSP ID.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: tag
-        description: the language tag.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: version
-        description: the version.
-        in: path
-        required: true
-        schema:
-          type: string
-
-#ifeq VIEW INTERNAL
-    put:
-      tags:
-        - IDN table management
-      operationId: updateIDNTable
-      description: This operation updates an existing IDN table object.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/idnTable"
-      responses:
-        '201':
-          description: A successful result.
-#endif
-
-    get:
-      tags:
-        - IDN table management
-      operationId: getIDNTable
-      description: |
-        This operation returns information about an IDN table object.
-
-        External users can only access IDN tables that are linked to test
-        objects associated with their credentials.
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/idnTable"
-
-#ifeq VIEW INTERNAL
-    delete:
-      tags:
-        - IDN table management
-      operationId: deleteIDNTable
-      description: This operation deletes an IDN table object.
-      responses:
-        '201':
-          description: A successful result.
-#endif
-
-  /tables:
-
-#ifeq VIEW INTERNAL
-    get:
-      tags:
-        - IDN table management
-      operationId: getIDNTables
-      description: |
-        This operation returns the IDN tables matching the provided query
-        parameters.
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/json":
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/idnTable"
 #endif
 
   /table/{rsp}/{tag}/{version}/labels:
