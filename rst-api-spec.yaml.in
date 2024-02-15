@@ -93,20 +93,21 @@ info:
 
     * 2023-02-21:
 #ifeq VIEW INTERNAL
-      * reinstate query parameters for `GET /tables`
+      * Change the `client` parameter to `GET /tests` to `rsp`.
+      * Reinstate query parameters for `GET /tables`.
 #endif
-      * remove `DELETE /tests/{id}` endpoint.
-      * fix schema definition for the `Location` header in `POST /test`
+      * Remove `DELETE /tests/{id}` endpoint.
+      * Fix schema definition for the `Location` header in `POST /test`
         responses.
 
     * 2024-02-14:
-      * switch to a weekly release cycle.
-      * use a date-based version number instead of a commit-based version, ahead
-        of switching to a weekly release cycle
+      * Switch to a weekly release cycle.
+      * Use a date-based version number instead of a commit-based version, ahead
+        of switching to a weekly release cycle.
 
     * 2024-01-31:
-      * add this change log.
-      * minimise the delta between the internal and external view.
+      * Add this change log.
+      * Minimise the delta between the internal and external view.
 
 servers:
   - url: https://api.rst.icann.org/v1
@@ -303,33 +304,33 @@ paths:
         Internal users will see results for all test objects.
       operationId: getTests
       parameters:
-        - name: client
-          description: limit results to specific user (internal users only).
+        - name: rsp
+          description: limit results to a specific RSP (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: tld
-          description: limit results to specific TLD (internal users only).
+          description: limit results to a specific TLD (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: applicationID
           description: |
-            limit results to specific application ID (internal users only).
+            limit results to specific a application ID (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: status
-          description: limit results to those with the given status
+          description: limit results to those with the given status.
           in: query
           required: false
           schema:
             $ref: "#/components/schemas/testStatus"
         - name: result
-          description: limit results to those with the given result
+          description: limit results to those with the given result.
           in: query
           required: false
           schema:
