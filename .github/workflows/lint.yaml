@@ -1,0 +1,21 @@
+name: lint
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: build
+        run: docker compose up spec
+
+      - name: lint
+        run: docker compose up lint
