@@ -457,18 +457,19 @@ paths:
       description: |
         This operation returns the IDN tables matching the provided query
         parameters.
-      - name: rsp
-        description: the RSP ID.
-        in: query
-        required: false
-        schema:
-          type: string
-      - name: tag
-        description: the language tag.
-        in: query
-        required: false
-        schema:
-          type: string
+      parameters:
+        - name: rsp
+          description: the RSP ID.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tag
+          description: the language tag.
+          in: query
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: A successful result.
@@ -585,6 +586,7 @@ paths:
                 $ref: "#/components/schemas/idnTestLabels"
 
 components:
+
   securitySchemes:
     mTLS:
       name: mTLS
