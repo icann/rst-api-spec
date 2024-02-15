@@ -722,12 +722,10 @@ components:
            more IDN tables have not yet been loaded into the system. If one or
            more "custom" IDN tables have been specified for the test, then ICANN
            staff may need to prepare these labels.
-        4. The `ready-to-start` value indicates that the RSP has requested a
-           test run, but it has not yet started.
-        5. The `in-progress` value indicates that a test run has started,
+        4. The `in-progress` value indicates that a test run has started,
            but has not yet been completed.
-        6. The `completed` value indicates that the test run has completed.
-        7. The `expired` value indicates that the test did not have a status
+        5. The `completed` value indicates that the test run has completed.
+        6. The `expired` value indicates that the test did not have a status
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
@@ -736,7 +734,6 @@ components:
         - inputs-needed
         - inputs-complete
         - idn-labels-needed
-        - ready-to-start
         - in-progress
         - completed
         - expired
