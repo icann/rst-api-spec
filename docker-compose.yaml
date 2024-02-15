@@ -12,3 +12,10 @@ services:
   pages:
     extends: spec
     command: make -C /app pages
+
+  lint:
+    restart: "no"
+    image: openapitools/openapi-generator-cli
+    volumes:
+      - ./tmp:/local
+    command: validate -i /local/rst-api-spec-internal.yaml
