@@ -316,7 +316,8 @@ paths:
       description: |
         This operation allows an internal user to override the `result` property
         of a test request. The current value of this propert **MUST** be either
-        `exception` or `fail`.
+        `exception` or `fail`. If successful, the `result` property will be
+        changed to `pass`.
       requestBody:
         content:
           'application/x-www-form-urlencoded':
