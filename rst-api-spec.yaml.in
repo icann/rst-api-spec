@@ -299,7 +299,7 @@ paths:
         '201':
           description: A succesful result.
 
-#if VIEW INTERNAL
+#ifeq VIEW INTERNAL
 
   /test/{id}/result:
     parameters:
