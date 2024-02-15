@@ -652,7 +652,7 @@ components:
           description: the version number.
           type: string
           examples: [1.1]
-        custom:
+        isReferenceLGR:
           description: |
             whether the RSP's implementation of the IDN table uses a Second-
             Level Reference Label Generation Rules (LGRs) developed by ICANN.
@@ -681,9 +681,10 @@ components:
             - mayallocatevar
         lgrXML:
           description: |
-            For custom implementations (see the `custom` property), this
+            For custom implementations (see the `isReferenceLGR` property), this
             property **MUST** contain the RSP's LGR in XML format. For standard
-            implementations (where `custom` is `false`) it **MUST** be `null`.
+            implementations (where `isReferenceLGR` is `true`) it **MUST** be
+            `null`.
           type:
             - string
             - "null"
