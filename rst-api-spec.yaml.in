@@ -144,6 +144,13 @@ paths:
                 $ref: "#/components/schemas/testRequestSubmitted"
 
   /test/{id}:
+    parameters:
+      - name: id
+        description: the test ID
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - Retrieving test information
@@ -154,13 +161,6 @@ paths:
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       operationId: getTestInfo
-      parameters:
-        - name: id
-          description: the test ID
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '200':
           description: A successful result.
