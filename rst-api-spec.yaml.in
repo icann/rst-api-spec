@@ -949,26 +949,6 @@ components:
 #exec bin/generate-input-parameter-schema.pl | sed 's/^/        /'
       required: []
 
-    testCaseResult:
-      description: |
-        A string indicating the status of a test case.
-
-        * `pass` - the test passed.
-        * `fail` - the test was not passed.
-        * `exeception` - an error occurred which meant a result could not be
-          determined. This indicates an issue on the RST test system side, not
-          the test subject's.
-        * `skipped` - the test case was not applicable and was not carried
-          out.
-        * `aborted` - the test case was aborted before it could complete.
-      type: string
-      enum:
-        - pass
-        - fail
-        - exeception
-        - skipped
-        - aborted
-
     testRunLog:
       description: an object representing a discreet test run.
       type: object
@@ -1008,10 +988,23 @@ components:
           format: url
           examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-epp-01]
         result:
-          description: the result of the test.
-          schema:
-            $ref: "#/components/schemas/testCaseResult"
-          examples: ["pass"]
+          description: |
+            The result of the test. The possible values are:
+            * `pass` - the test passed.
+            * `fail` - the test was not passed.
+            * `exeception` - an error occurred which meant a result could not be
+              determined. This indicates an issue on the RST test system side,
+              not the test subject's.
+            * `skipped` - the test case was not applicable and was not carried
+              out.
+            * `aborted` - the test case was aborted before it could complete.
+          type: string
+          enum:
+            - pass
+            - fail
+            - exeception
+            - skipped
+            - aborted
         description:
           description: A short description of the outcome of the test.
           type: string
