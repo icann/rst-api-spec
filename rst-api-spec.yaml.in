@@ -129,8 +129,8 @@ paths:
       description: |
         This operation creates a new test request object.
 
-        **OT&E only:** this operation is not available to external users in
-        production, but may be used in OT&E.
+        This operation is not available to external users in production, but may
+        be used in OT&E.
       operationId: createTest
       requestBody:
         content:
@@ -314,8 +314,10 @@ paths:
         - Test administration
       operationId: setTestResult
       description: |
-        This operation allows an internal user to override the `result` property
-        of a test request. The current value of this propert **MUST** be either
+        **Internal clients only**
+
+        This operation allows the `result` property of a test request to be
+        overridden. The current value of this propert **MUST** be either
         `exception` or `fail`. If successful, the `result` property will be
         changed to `pass`.
       requestBody:
@@ -348,7 +350,7 @@ paths:
         matches a `TLSA` record published in the DNS at one of the hostnames
         specified in the `clientIDs` property of the test request object.
 
-        Internal users will see results for all test objects.
+        Internal users will see results for all users.
       operationId: getTests
       parameters:
 
@@ -443,7 +445,10 @@ paths:
       tags:
         - IDN table management
       operationId: updateIDNTable
-      description: This operation updates an existing IDN table object.
+      description: |
+        **Internal clients only**
+
+        This operation updates an existing IDN table object.
       requestBody:
         content:
           application/json:
@@ -457,7 +462,10 @@ paths:
       tags:
         - IDN table management
       operationId: deleteIDNTable
-      description: This operation deletes an IDN table object.
+      description: |
+        **Internal clients only**
+
+        This operation deletes an IDN table object.
       responses:
         '201':
           description: A successful result.
@@ -468,6 +476,8 @@ paths:
         - IDN table management
       operationId: getIDNTables
       description: |
+        **Internal clients only**
+
         This operation returns the IDN tables matching the provided query
         parameters.
       parameters:
@@ -499,6 +509,8 @@ paths:
         - IDN table management
       operationId: createIDNTable
       description: |
+        **Internal clients only**
+
         This operation creates a new IDN table object.
 
         IDN table objects must be created before they can be referenced in a
@@ -550,6 +562,8 @@ paths:
         - IDN table management
       operationId: submitIDNTestLabels
       description: |
+        **Internal clients only**
+
         This operation adds a new `idnTestLabels` object for the IDN table
         identified by the `{rsp, tag, version}` triple.
       requestBody:
@@ -566,6 +580,8 @@ paths:
         - IDN table management
       operationId: updateIDNTestLabels
       description: |
+        **Internal clients only**
+
         This operation updates an existing `idnTestLabels` object for the IDN
         table identified by the `{rsp, tag, version}` triple.
       requestBody:
@@ -936,11 +952,10 @@ components:
             `testRunLog` which contains a number of `testCaseLog` entries.
 
             The `results` property is an array of `testRunLog` objects. This
-            property will initially be an empty array, until the status of the
-            test changes to `in-progress`. When the test run starts, an empty
-            `testRunLog` object will be added to the array. As the test
-            progresses, `testCaseLog` entries will be appended to the
-            `testRunLog` object.
+            property will initially be an empty array, until a test run is
+            started. When the test run starts, an empty `testRunLog` object will
+            be added to the array. As the test progresses, `testCaseLog` entries
+            will be appended to the `testRunLog` object.
           type: array
           items:
             $ref: "#/components/schemas/testRunLog"
