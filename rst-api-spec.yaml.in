@@ -7,7 +7,7 @@ tags:
   - name: Creating test request objects
   - name: Providing input parameters & files
   - name: Retrieving test information
-  - name: Starting and restarting tests
+  - name: Starting test runs
   - name: Test administration
   - name: IDN table management
 
