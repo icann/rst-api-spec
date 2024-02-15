@@ -351,6 +351,9 @@ paths:
         Internal users will see results for all test objects.
       operationId: getTests
       parameters:
+
+#ifeq VIEW INTERNAL
+
         - name: rsp
           description: limit results to a specific RSP (internal users only).
           in: query
@@ -370,6 +373,9 @@ paths:
           required: false
           schema:
             type: string
+
+#endif
+
         - name: status
           description: limit results to those with the given status.
           in: query
