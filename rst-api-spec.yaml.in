@@ -328,8 +328,8 @@ paths:
               properties:
                 pass:
                   type: integer
-                  minimum: 1
-                  maximum: 1
+                  enum:
+                    - 1
       responses:
         '201':
           description: A succesful result.
