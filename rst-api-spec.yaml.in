@@ -1113,24 +1113,22 @@ components:
       type: object
       properties:
         validLabels:
-          description: an array of **valid** IDN labels.
-          $ref: "#/components/schemas/idnTestLabelList"
+          description: |
+            A mapping of **valid** IDN labels to any variant labels thereof.
+          type: object
+          patternProperties:
+            "^[a-z][a-z0-9\-]+[a-z]$":
+              type: array
+              items:
+                type: string
+                pattern: ^[a-z][a-z0-9\-]+[a-z]$
+          examples: [{'xn--8pvxs':['xn--8pvz8d'], 'example':[]}]
         invalidLabels:
-          description: an array of **invalid** IDN labels.
-          $ref: "#/components/schemas/idnTestLabelList"
-        level2VariantTestLabels:
           description: |
-            an array of labels to be used to test Level 2 IDN variant support.
-          $ref: "#/components/schemas/idnTestLabelList"
-        level3VariantTestLabels:
-          description: |
-            an array of labels to be used to test Level 3 IDN variant support.
-          $ref: "#/components/schemas/idnTestLabelList"
-
-    idnTestLabelList:
-      description: an array of IDN test labels.
-      type: array
-      items:
-        type: string
-        pattern: ^xn--[a-z0-9\-]+[a-z0-9]$
-      examples: [["xn--piemrs-s3a", "xn--mgbh0fb", "xn--e1afmkfd", "xn--8pvz8d", "xn--8pvxs"]]
+            A list of **invalid** IDN labels that it should not be possible to
+            register.
+          type: array
+          items:
+            type: string
+            pattern: ^[a-z][a-z0-9\-]+[a-z]$
+          examples: [["xn--piemrs-s3a", "xn--mgbh0fb", "xn--e1afmkfd", "xn--8pvz8d", "xn--8pvxs"]]
