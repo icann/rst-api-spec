@@ -707,6 +707,16 @@ components:
           description: the version number.
           type: string
           examples: [1.1]
+        supportLevel:
+          description: |
+            The level of variant supported offered. Possible values are:
+            * `0` - no variants supported
+            * `1` - variants are blocked
+            * `2` - variants under the same TLD may be allocated
+            * `3` - variants under variant TLDs may be allocated
+          type: integer
+          minimum: 1
+          maximum: 3
 
     tldSet:
       description: |
