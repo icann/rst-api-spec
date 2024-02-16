@@ -764,7 +764,7 @@ components:
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"example":[]}, {"eksempel":[{"tag": "dk", "version": "1.1"}, {"tag": "no", "version": "1.2"}]}, {"xn--8pvz8d":[{"tag": "zh-cn", "version": "1.0"}], "xn--8pvxs": [{"tag": "zh-tw", "version": "1.0"}]}]]
+          examples: [[{"example":[]}, {"eksempel":[{"tag": "dk", "version": "1.1", "supportLevel": 0}, {"tag": "no", "version": "1.2", "supportLevel": 2}]}, {"xn--8pvz8d":[{"tag": "zh-cn", "version": "1.0", "supportLevel": 3}], "xn--8pvxs": [{"tag": "zh-tw", "version": "1.0", "supportLevel": 3}]}]]
         clientIDs:
           description: |
             An array of FQDNs at which one or more `TLSA` records may be found
