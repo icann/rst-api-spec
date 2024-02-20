@@ -95,6 +95,8 @@ info:
     ### Change Log
 
     * 2023-02-21:
+      * The internal and external views are now identical. The separate files
+        will be removed in the next release.
       * Removed redundant `type` properties for types which have an `enum`
         property.
       * Added the `supportLevel` property to the `idnTableRef` type.
