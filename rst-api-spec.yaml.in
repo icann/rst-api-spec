@@ -641,6 +641,14 @@ components:
         identify it, and can be used to populate the corresponding tokens in the
         URL templates of the `getIDNTable()` and `getIDNLabels()` operations.
       type: object
+      required:
+        - id
+        - rsp
+        - tag
+        - version
+        - isReferenceLGR
+        - variantPolicy
+        - testLabels
       properties:
         rsp:
           description: the RSP's unique ID.
@@ -699,6 +707,9 @@ components:
         table objects must be created prior to being referenced in a test
         request.
       type: object
+      required:
+        - id
+        - supportLevel
       properties:
         tag:
           description:
@@ -745,6 +756,9 @@ components:
         This object type is used to define the properties of a new test request
         object. The `testRequestSubmitted` type inherits from it.
       type: object
+      required:
+        - tlds
+        - testPlan
       properties:
         applicationID:
           description: |
@@ -860,6 +874,14 @@ components:
         submitted. It inherits all the properties defined in the
         `testRequest` type.
       type: object
+      required:
+        - tlds
+        - testPlan
+        - testPlanVersion
+        - dateRequested
+        - status
+        - result
+        - inputs
       allOf:
         - $ref: "#/components/schemas/testRequest"
       properties:
@@ -999,6 +1021,12 @@ components:
     testRunLog:
       description: an object representing a discreet test run.
       type: object
+      required:
+        - runID
+        - dateStarted
+        - dateCompleted
+        - result
+        - log
       properties:
         runID:
           description: unique ID for this test run.
@@ -1024,6 +1052,15 @@ components:
     testCaseLog:
       description: A detailed log of an individual test case.
       type: object
+      required:
+        - caseID
+        - caseRef
+        - result
+        - description
+        - dateStarted
+        - dateCompleted
+        - log
+        - context
       properties:
         caseID:
           description: the Test Case ID.
@@ -1087,6 +1124,12 @@ components:
     testCaseLogMessage:
       description: A log message.
       type: object
+      required:
+        - code
+        - codeRef
+        - severity
+        - timestamp
+        - message
       properties:
         code:
           description: the error code (if any).
@@ -1123,6 +1166,9 @@ components:
     idnTestLabels:
       description: An object containing IDN test labels.
       type: object
+      required:
+        - validLabels
+        - invalidLabels
       properties:
         validLabels:
           description: |
