@@ -108,7 +108,7 @@ info:
         * Change the `client` parameter to `GET /tests` to `rsp`.
         * Reinstate query parameters for `GET /tables`.
         * The `PATCH /test/{id}` endpoint has been replaced with `POST
-        /test/{id}/run` and `POST /test/{id}/result`.
+          /test/{id}/run` and `POST /test/{id}/result`.
 
     * 2024-02-14:
       * Switch to a weekly release cycle.
@@ -303,8 +303,6 @@ paths:
         '201':
           description: A succesful result.
 
-#ifeq VIEW INTERNAL
-
   /test/{id}/result:
     parameters:
       - name: id
@@ -338,8 +336,6 @@ paths:
         '201':
           description: A succesful result.
 
-#endif
-
   /tests:
     get:
       tags:
@@ -355,9 +351,6 @@ paths:
         Internal users will see results for all users.
       operationId: getTests
       parameters:
-
-#ifeq VIEW INTERNAL
-
         - name: rsp
           description: limit results to a specific RSP (internal users only).
           in: query
@@ -377,9 +370,6 @@ paths:
           required: false
           schema:
             type: string
-
-#endif
-
         - name: status
           description: limit results to those with the given status.
           in: query
@@ -570,7 +560,6 @@ paths:
         schema:
           type: string
 
-#ifeq VIEW INTERNAL
     post:
       tags:
         - IDN table management
@@ -606,7 +595,6 @@ paths:
       responses:
         '201':
           description: A successful result.
-#endif
 
     get:
       tags:
