@@ -650,6 +650,10 @@ components:
         - variantPolicy
         - testLabels
       properties:
+        id:
+          description: A unique ID for this table.
+          type: string
+          examples: [570cb051-4f60-483a-be35-c03a98a7a846]
         rsp:
           description: the RSP's unique ID.
           type: string
