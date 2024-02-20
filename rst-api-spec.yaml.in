@@ -331,9 +331,7 @@ paths:
                 - pass
               properties:
                 pass:
-                  type: integer
-                  enum:
-                    - 1
+                  const: 1
       responses:
         '201':
           description: A succesful result.
@@ -688,7 +686,6 @@ components:
             * `novar` - no variants are supported/applicable
             * `allblockvar` - all variants are blocked
             * `mayallocatevar` - variants may be allocated
-          type: string
           enum:
             - novar
             - allblockvar
@@ -806,7 +803,6 @@ components:
             The test plan to be followed. A list of test plans and the permitted
             values for this property may be found at
             <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
-          type: string
           enum:
 #exec curl -s https://icann.github.io/rst-test-specs/rst-test-specs.yaml | yq -I 8 '."Test-Plans" | keys' | while read l ; do echo "            $l" ; done
         dueDate:
@@ -841,7 +837,6 @@ components:
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
-      type: string
       enum:
         - inputs-needed
         - inputs-complete
@@ -860,13 +855,11 @@ components:
         2. The `fail` value indicates that at least one test failed.
         3. The `exception` value indicates that an internal issue prevented
            the test run from completing.
-      type:
-        - string
-        - "null"
       enum:
         - pass
         - fail
         - exception
+        - null
       default: null
 
     testRequestSubmitted:
@@ -1060,7 +1053,6 @@ components:
             * `skipped` - the test case was not applicable and was not carried
               out.
             * `aborted` - the test case was aborted before it could complete.
-          type: string
           enum:
             - pass
             - fail
@@ -1121,7 +1113,6 @@ components:
           description: |
             The log level of the message, a subset of the values defined in
             RFC5424.
-          type: string
           enum:
             - WARNING
             - ERROR
