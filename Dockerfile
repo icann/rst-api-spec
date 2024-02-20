@@ -22,7 +22,7 @@ RUN apk add --quiet \
     perl-yaml \
     perl-yaml-libyaml
 
-RUN cpanm --quiet Data::Mirror
+RUN cpanm --notest --quiet Data::Mirror
 
 RUN <<END
 wget -qO - https://github.com/logological/gpp/releases/download/2.28/gpp-2.28.tar.bz2 | tar xj
