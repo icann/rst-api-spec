@@ -394,22 +394,38 @@ paths:
                 items:
                   $ref: "#/components/schemas/testRequestSubmitted"
 
-  /table/{rsp}/{tag}/{version}:
+  /table:
+    post:
+      tags:
+        - IDN table management
+      operationId: createIDNTable
+      description: |
+        This operation creates a new IDN table object.
+
+        IDN table objects must be created before they can be referenced in a
+        test request.
+
+        This operation is not available to external users in production, but may
+        be used in OT&E.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/idnTable"
+      responses:
+        '201':
+          description: A successful result.
+          headers:
+            location:
+              description: the URL of the newly created IDN table object.
+              schema:
+                type: string
+                format: url
+
+  /table/{id}:
     parameters:
-      - name: rsp
-        description: the RSP ID.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: tag
-        description: the language tag.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: version
-        description: the version.
+      - name: id
+        description: the table ID.
         in: path
         required: true
         schema:
@@ -509,115 +525,6 @@ paths:
                 items:
                   $ref: "#/components/schemas/idnTable"
 
-  /table:
-    post:
-      tags:
-        - IDN table management
-      operationId: createIDNTable
-      description: |
-        This operation creates a new IDN table object.
-
-        IDN table objects must be created before they can be referenced in a
-        test request.
-
-        IDN tables are uniquely identified by the triple `{rsp, tag, version}`,
-        and multiple tables with the same RSP, tag and version are not
-        permitted.
-
-        This operation is not available to external users in production, but may
-        be used in OT&E.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/idnTable"
-      responses:
-        '201':
-          description: A successful result.
-          headers:
-            location:
-              description: the URL of the newly created IDN table object.
-              schema:
-                type: string
-                format: url
-
-  /table/{rsp}/{tag}/{version}/labels:
-    parameters:
-      - name: rsp
-        description: the RSP ID.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: tag
-        description: the language tag.
-        in: path
-        required: true
-        schema:
-          type: string
-      - name: version
-        description: the version
-        in: path
-        required: true
-        schema:
-          type: string
-
-    post:
-      tags:
-        - IDN table management
-      operationId: submitIDNTestLabels
-      description: |
-        **Internal users only**
-
-        This operation adds a new `idnTestLabels` object for the IDN table
-        identified by the `{rsp, tag, version}` triple.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/idnTestLabels"
-      responses:
-        '201':
-          description: A successful result.
-
-    put:
-      tags:
-        - IDN table management
-      operationId: updateIDNTestLabels
-      description: |
-        **Internal users only**
-
-        This operation updates an existing `idnTestLabels` object for the IDN
-        table identified by the `{rsp, tag, version}` triple.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/idnTestLabels"
-      responses:
-        '201':
-          description: A successful result.
-
-    get:
-      tags:
-        - IDN table management
-      operationId: getIDNTestLabels
-      description: |
-        This operation returns an `idnTestLabels` object for the IDN table
-        identified by the `{rsp, tag, version}` triple.
-
-        External users can only access test label lists that are linked to IDN
-        tables that are linked test objects associated with their credentials.
-
-        INTERNAL_USER_ACCESS_CONTROL_POLICY
-      responses:
-        '200':
-          description: A successful result.
-          content:
-            "application/json":
-              schema:
-                $ref: "#/components/schemas/idnTestLabels"
-
 components:
 
   securitySchemes:
@@ -702,7 +609,11 @@ components:
             omitted.
           type: string
           examples: [<lgr xmlns="urn:ietf:params:xml:ns:lgr-1.0"><!--...--></lgr>]
-
+        testLabels:
+          description: |
+            The test labels to be used in association with this table.
+          $ref: "#/components/schemas/idnTestLabels"
+            
     idnTableRef:
       description: |
         An `idnTableRef` object provides a reference to an IDN table object. IDN
@@ -713,16 +624,9 @@ components:
         - id
         - supportLevel
       properties:
-        tag:
-          description:
-            the language tag, which must conform to the specification in RFC
-            5646.
+        id:
+          description: The unique ID of the table.
           type: string
-          examples: [und-Arab]
-        version:
-          description: the version number.
-          type: string
-          examples: [1.1]
         supportLevel:
           description: |
             The level of variant supported offered. Possible values are:
@@ -791,7 +695,7 @@ components:
           items:
             $ref: "#/components/schemas/tldSet"
           minItems: 1
-          examples: [[{"example":[]}, {"eksempel":[{"tag": "dk", "version": "1.1", "supportLevel": 0}, {"tag": "no", "version": "1.2", "supportLevel": 2}]}, {"xn--8pvz8d":[{"tag": "zh-cn", "version": "1.0", "supportLevel": 3}], "xn--8pvxs": [{"tag": "zh-tw", "version": "1.0", "supportLevel": 3}]}]]
+          examples: [[{"example":[]}, {"eksempel":[{"id": "570cb051-4f60-483a-be35-c03a98a7a846", "supportLevel": 0}, {"id": "27f33b40-e90e-4a38-94a7-16a7b442951e", "supportLevel": 2}]}, {"xn--8pvz8d":[{"id": "296aa93c-d770-4699-9621-31a7bccb7aca", "supportLevel": 3}], "xn--8pvxs": [{"id": "b67c964a-ea0d-4bbf-aa61-f67c93ebebb6", "supportLevel": 3}]}]]
         clientIDs:
           description: |
             An array of FQDNs at which one or more `TLSA` records may be found
@@ -890,7 +794,7 @@ components:
           description: Unique ID for this test request object.
           type: integer
           format: uint64
-          examples: [987654321]
+          examples: [60f71ce9-2428-4eb0-97e1-e34fb2f63d68]
 
         testPlanVersion:
           description: |
