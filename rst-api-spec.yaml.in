@@ -548,128 +548,7 @@ components:
         associated with test objects.
 
   schemas:
-
-    idnTable:
-      description: |
-        This object describes an IDN table, or more specifically, an RSP's
-        implementation of such a table.
-
-        The `rsp`, `tag` and `version` properties of this object uniquely
-        identify it, and can be used to populate the corresponding tokens in the
-        URL templates of the `getIDNTable()` and `getIDNLabels()` operations.
-      type: object
-      required:
-        - id
-        - rsp
-        - tag
-        - version
-        - isReferenceLGR
-        - variantPolicy
-      properties:
-        id:
-          description: A unique ID for this table.
-          type: string
-          examples: [570cb051-4f60-483a-be35-c03a98a7a846]
-        rsp:
-          description: the RSP's unique ID.
-          type: string
-          examples: [RSP2312-M51]
-        tag:
-          description:
-            the language tag, which must conform to the specification in RFC
-            5646.
-          type: string
-          examples: [und-Arab]
-        version:
-          description: the version number.
-          type: string
-          examples: [1.1]
-        isReferenceLGR:
-          description: |
-            whether the RSP's implementation of the IDN table uses a Second-
-            Level Reference Label Generation Rules (LGRs) developed by ICANN.
-
-            If the value of this property is `false`, then the `lgrXML` property
-            **MUST** be populated with the RSP's LGR in XML format (see RFC
-            7940). If it is `true`, then the `lgrXML` property **MUST** be
-            omitted.
-
-            In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
-            tested in OT&E.
-
-            For more information on ICANN's Second-Level LGRS, please see:
-
-              * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
-          type: boolean
-        variantPolicy:
-          description: |
-            The variant policy supported for this table. The possible values
-            are:
-
-            * `novar` - no variants are supported/applicable
-            * `allblockvar` - all variants are blocked
-            * `mayallocatevar` - variants may be allocated
-          enum:
-            - novar
-            - allblockvar
-            - mayallocatevar
-        lgrXML:
-          description: |
-            For custom implementations (see the `isReferenceLGR` property), this
-            property **MUST** contain the RSP's LGR in XML format. For standard
-            implementations (where `isReferenceLGR` is `true`) it **MUST** be
-            omitted.
-          type: string
-          examples: [<lgr xmlns="urn:ietf:params:xml:ns:lgr-1.0"><!--...--></lgr>]
-        testLabels:
-          description: |
-            The test labels to be used in association with this table. In OT&E,
-            this **MUST** be omitted.
-          $ref: "#/components/schemas/idnTestLabels"
             
-    idnTableRef:
-      description: |
-        An `idnTableRef` object provides a reference to an IDN table object. IDN
-        table objects must be created prior to being referenced in a test
-        request.
-      type: object
-      required:
-        - id
-        - supportLevel
-      properties:
-        id:
-          description: The unique ID of the table.
-          type: string
-        supportLevel:
-          description: |
-            The level of variant supported offered. Possible values are:
-            * `0` - no variants supported
-            * `1` - variants are blocked
-            * `2` - variants under the same TLD may be allocated
-            * `3` - variants under variant TLDs may be allocated
-          type: integer
-          minimum: 0
-          maximum: 3
-
-    tldSet:
-      description: |
-        A `tldSet` object represents one or more logically grouped TLDs (such as
-        those which contain IDN variants).
-
-        A `tldSet` object has property names which are TLD A-labels, and values
-        which are arrays of `idnTableRef` objects.
-
-        If a TLD offers registrations at the third or higher levels, then
-        between one and three second-level "registry-class" domain name(s)
-        should be separately listed, rather than the TLD itself.
-      type: object
-      minProperties: 1
-      patternProperties:
-        "^[a-z][a-z0-9\-]+[a-z]$":
-          type: array
-          items:
-            $ref: "#/components/schemas/idnTableRef"
-
     testRequest:
       description: |
         This object type is used to define the properties of a new test request
@@ -784,6 +663,49 @@ components:
         - exception
         - null
       default: null
+
+    idnTableRef:
+      description: |
+        An `idnTableRef` object provides a reference to an IDN table object. IDN
+        table objects must be created prior to being referenced in a test
+        request.
+      type: object
+      required:
+        - id
+        - supportLevel
+      properties:
+        id:
+          description: The unique ID of the table.
+          type: string
+        supportLevel:
+          description: |
+            The level of variant supported offered. Possible values are:
+            * `0` - no variants supported
+            * `1` - variants are blocked
+            * `2` - variants under the same TLD may be allocated
+            * `3` - variants under variant TLDs may be allocated
+          type: integer
+          minimum: 0
+          maximum: 3
+
+    tldSet:
+      description: |
+        A `tldSet` object represents one or more logically grouped TLDs (such as
+        those which contain IDN variants).
+
+        A `tldSet` object has property names which are TLD A-labels, and values
+        which are arrays of `idnTableRef` objects.
+
+        If a TLD offers registrations at the third or higher levels, then
+        between one and three second-level "registry-class" domain name(s)
+        should be separately listed, rather than the TLD itself.
+      type: object
+      minProperties: 1
+      patternProperties:
+        "^[a-z][a-z0-9\-]+[a-z]$":
+          type: array
+          items:
+            $ref: "#/components/schemas/idnTableRef"
 
     testRequestSubmitted:
       description: |
@@ -1070,6 +992,84 @@ components:
           description: the message.
           type: string
           examples: ["Something informative just happened!", "Something critical just happened!"]
+
+    idnTable:
+      description: |
+        This object describes an IDN table, or more specifically, an RSP's
+        implementation of such a table.
+
+        The `rsp`, `tag` and `version` properties of this object uniquely
+        identify it, and can be used to populate the corresponding tokens in the
+        URL templates of the `getIDNTable()` and `getIDNLabels()` operations.
+      type: object
+      required:
+        - id
+        - rsp
+        - tag
+        - version
+        - isReferenceLGR
+        - variantPolicy
+      properties:
+        id:
+          description: A unique ID for this table.
+          type: string
+          examples: [570cb051-4f60-483a-be35-c03a98a7a846]
+        rsp:
+          description: the RSP's unique ID.
+          type: string
+          examples: [RSP2312-M51]
+        tag:
+          description:
+            the language tag, which must conform to the specification in RFC
+            5646.
+          type: string
+          examples: [und-Arab]
+        version:
+          description: the version number.
+          type: string
+          examples: [1.1]
+        isReferenceLGR:
+          description: |
+            whether the RSP's implementation of the IDN table uses a Second-
+            Level Reference Label Generation Rules (LGRs) developed by ICANN.
+
+            If the value of this property is `false`, then the `lgrXML` property
+            **MUST** be populated with the RSP's LGR in XML format (see RFC
+            7940). If it is `true`, then the `lgrXML` property **MUST** be
+            omitted.
+
+            In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
+            tested in OT&E.
+
+            For more information on ICANN's Second-Level LGRS, please see:
+
+              * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
+          type: boolean
+        variantPolicy:
+          description: |
+            The variant policy supported for this table. The possible values
+            are:
+
+            * `novar` - no variants are supported/applicable
+            * `allblockvar` - all variants are blocked
+            * `mayallocatevar` - variants may be allocated
+          enum:
+            - novar
+            - allblockvar
+            - mayallocatevar
+        lgrXML:
+          description: |
+            For custom implementations (see the `isReferenceLGR` property), this
+            property **MUST** contain the RSP's LGR in XML format. For standard
+            implementations (where `isReferenceLGR` is `true`) it **MUST** be
+            omitted.
+          type: string
+          examples: [<lgr xmlns="urn:ietf:params:xml:ns:lgr-1.0"><!--...--></lgr>]
+        testLabels:
+          description: |
+            The test labels to be used in association with this table. In OT&E,
+            this **MUST** be omitted.
+          $ref: "#/components/schemas/idnTestLabels"
 
     idnTestLabels:
       description: An object containing IDN test labels.
