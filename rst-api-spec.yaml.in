@@ -584,6 +584,9 @@ components:
             7940). If it is `true`, then the `lgrXML` property **MUST** be
             omitted.
 
+            In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
+            tested in OT&E.
+
             For more information on ICANN's Second-Level LGRS, please see:
 
               * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
