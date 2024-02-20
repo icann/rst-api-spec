@@ -95,6 +95,14 @@ info:
     ### Change Log
 
     * 2023-02-21:
+      * Test properties (such as `applicationId` and `rsp`) that were previously
+        ignored in OT&E now **MUST** be omitted.
+      * When IDN table objects are created in OT&E, they **MUST** have a
+        `isReferenceLGR` property that is `true`.
+      * Simplified object schemas by marking properties as required (and others
+        as therefore optional) avoiding the need to have nullable properties.
+      * IDN tables are now referenced by a unique ID rather than the `{rsp, tag,
+        version}` triple.
       * The internal and external views are now identical. The separate files
         will be removed in the next release.
       * Removed redundant `type` properties for types which have an `enum`
@@ -111,6 +119,8 @@ info:
         * Reinstate query parameters for `GET /tables`.
         * The `PATCH /test/{id}` endpoint has been replaced with `POST
           /test/{id}/run` and `POST /test/{id}/result`.
+        * Simplified IDN table management, so that test labels are provided when
+          the table object is created.
 
     * 2024-02-14:
       * Switch to a weekly release cycle.
