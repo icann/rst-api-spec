@@ -95,6 +95,9 @@ info:
     ### Change Log
 
     * 2023-02-21:
+      * Removed redundant `type` properties for types which have an `enum`
+        property.
+      * Added the `supportLevel` property to the `idnTableRef` type.
       * Some IDN table management endpoints are now accessible to external
         clients.
       * Make access control policies clearer and more consistent.
