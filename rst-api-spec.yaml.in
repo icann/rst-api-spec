@@ -101,15 +101,14 @@ info:
       * Some IDN table management endpoints are now accessible to external
         clients.
       * Make access control policies clearer and more consistent.
-#ifeq VIEW INTERNAL
-      * Change the `client` parameter to `GET /tests` to `rsp`.
-      * Reinstate query parameters for `GET /tables`.
-      * The `PATCH /test/{id}` endpoint has been replaced with `POST
-      /test/{id}/run` and `POST /test/{id}/result`.
-#endif
       * Remove `DELETE /tests/{id}` endpoint.
       * Fix schema definition for the `Location` header in `POST /test`
         responses.
+      * Changes only relevant to internal users:
+        * Change the `client` parameter to `GET /tests` to `rsp`.
+        * Reinstate query parameters for `GET /tables`.
+        * The `PATCH /test/{id}` endpoint has been replaced with `POST
+        /test/{id}/run` and `POST /test/{id}/result`.
 
     * 2024-02-14:
       * Switch to a weekly release cycle.
