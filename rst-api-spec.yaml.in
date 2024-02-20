@@ -731,7 +731,7 @@ components:
             * `2` - variants under the same TLD may be allocated
             * `3` - variants under variant TLDs may be allocated
           type: integer
-          minimum: 1
+          minimum: 0
           maximum: 3
 
     tldSet:
