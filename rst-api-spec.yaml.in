@@ -279,7 +279,7 @@ paths:
             "application/octet-stream":
               schema:
                 type: string
-                fomat: binary
+                format: binary
 
   /test/{id}/run:
     parameters:
