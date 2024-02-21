@@ -1,3 +1,4 @@
+#mode quote
 #define EXTERNAL_USER_ACCESS_CONTROL_POLICY Users can only perform this operation if their certificate matches a `TLSA` record published in the DNS at one of the hostnames specified in the `clientIDs` property of the test request object.
 #define INTERNAL_USER_ACCESS_CONTROL_POLICY Internal users can perform this operation on any object.
 
