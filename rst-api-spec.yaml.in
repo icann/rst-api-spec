@@ -344,7 +344,8 @@ paths:
                 - pass
               properties:
                 pass:
-                  const: 1
+                  enum:
+                    - 1
       responses:
         '201':
           description: A succesful result.
