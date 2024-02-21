@@ -18,4 +18,5 @@ make spec
 
 cp etc/*.svg "$SITEDIR/etc/"
 cp tmp/*.yaml "$SITEDIR/"
+cp tmp/*.json "$SITEDIR/"
 cp etc/*.html "$SITEDIR/"

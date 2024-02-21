@@ -6,14 +6,14 @@ OpenAPI specification](https://spec.openapis.org/oas/latest.html):
 
 ## API specification
 
-* [RST-API Specification](https://icann.github.io/rst-api-spec/rst-api-spec.html) ([YAML](rst-api-spec.yaml))
+* [RST-API Specification](https://icann.github.io/rst-api-spec/rst-api-spec.html) ([YAML](rst-api-spec.yaml)) ([JSON](rst-api-spec.json))
 
 This represents a view of the API suitable for RSPs and Registry Operators
 (i.e., those who are undergoing registry system testing).
 
 ### Internal ICANN view
 
-* [RST-API Specification (internal view)](https://icann.github.io/rst-api-spec/rst-api-spec-internal.html) ([YAML](rst-api-spec-internal.yaml))
+* [RST-API Specification (internal view)](https://icann.github.io/rst-api-spec/rst-api-spec-internal.html) ([YAML](rst-api-spec-internal.yaml)) ([JSON](rst-api-spec-internal.json))
 
 This represents ICANN org's view of the API, and includes operations required by
 internal ICANN systems and the test orchestrator which actually runs the tests.
