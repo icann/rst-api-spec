@@ -600,9 +600,9 @@ components:
             }
             ```
 
-            In pre-delegation testing, this property will only contain a single
+            In RSP testing testing, this property will only contain a single
             TLD, but more complex sets of TLDs with variants are supported for
-            RSP testing.
+            pre-delegation testing.
 
             Example of an ASCII TLD with one or more IDN tables:
             ```
