@@ -930,7 +930,7 @@ components:
       required: []
 
     testRunLog:
-      description: an object representing a discreet test run.
+      description: an object representing a discrete test run.
       type: object
       required:
         - runID
