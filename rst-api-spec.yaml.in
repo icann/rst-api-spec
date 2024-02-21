@@ -662,8 +662,6 @@ components:
         - pass
         - fail
         - exception
-        - null
-      default: null
 
     idnTableRef:
       description: |
@@ -772,7 +770,7 @@ components:
           description: The outcome of the test.
           schema:
             $ref: "#/components/schemas/testResult"
-          examples: [null]
+          examples: [pass]
 
         errorCodes:
           description: |
