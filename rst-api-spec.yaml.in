@@ -1,8 +1,8 @@
+openapi: 3.1.0
+
 #mode quote
 #define EXTERNAL_USER_ACCESS_CONTROL_POLICY Users can only perform this operation if their certificate matches a `TLSA` record published in the DNS at one of the hostnames specified in the `clientIDs` property of the test request object.
 #define INTERNAL_USER_ACCESS_CONTROL_POLICY Internal users can perform this operation on any object.
-
-openapi: 3.1.0
 
 tags:
   - name: Creating test request objects
@@ -703,7 +703,7 @@ components:
       type: object
       minProperties: 1
       patternProperties:
-        "^[a-z][a-z0-9\-]+[a-z]$":
+        "^[a-z][a-z0-9\\-]+[a-z]$":
           type: array
           items:
             $ref: "#/components/schemas/idnTableRef"
@@ -1084,11 +1084,11 @@ components:
             A mapping of **valid** IDN labels to any variant labels thereof.
           type: object
           patternProperties:
-            "^[a-z][a-z0-9\-]+[a-z]$":
+            "^[a-z][a-z0-9\\-]+[a-z]$":
               type: array
               items:
                 type: string
-                pattern: ^[a-z][a-z0-9\-]+[a-z]$
+                pattern: ^[a-z][a-z0-9\\-]+[a-z]$
           examples: [{'xn--8pvxs':['xn--8pvz8d'], 'example':[]}]
         invalidLabels:
           description: |
@@ -1097,5 +1097,5 @@ components:
           type: array
           items:
             type: string
-            pattern: ^[a-z][a-z0-9\-]+[a-z]$
+            pattern: ^[a-z][a-z0-9\\-]+[a-z]$
           examples: [["xn--piemrs-s3a", "xn--mgbh0fb", "xn--e1afmkfd", "xn--8pvz8d", "xn--8pvxs"]]
