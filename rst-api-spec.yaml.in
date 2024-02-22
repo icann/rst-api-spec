@@ -15,7 +15,7 @@ tags:
 info:
   version: "1.#date %Y%j"
 
-  title: ICANN Registry System Testing (RST) API
+  title: ICANN Registry System Testing (RST) API (VIEW view)
   contact:
     name: ICANN Global Support
     email: globalsupport@icann.org
@@ -24,11 +24,7 @@ info:
     identifier: BSD-3-Clause
 
   description: |
-
-    _[RST-API Specification Home Page](/)_
-
-    _Last updated: #date %Y-%m-%d_
-
+    **Last updated:** #date %Y-%m-%d
     <br><br>
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
@@ -40,8 +36,8 @@ info:
     Provider](https://www.icann.org/resources/material-subcontracting-arrangement),
     or before the approval of new [registry
     services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)). It
-    will also used by the forthcoming [Registry Service Provider (RSP)
-    Pre-Evaluation Program](https://community.icann.org/display/SPIR/RSP+%7C+Registry+Service+Provider+Pre-Evaluation).
+    will also used by forthcoming Registry Service Provider (RSP) evaluation
+    Program.
 
     ### Workflow overview
 
@@ -100,12 +96,6 @@ info:
     ### Change Log
 
     * 2023-02-28:
-      * As per the last release, only a single YAML file is now built from the
-        source file, that contains both "internal" and "external" endpoints. The
-        "internal" view is no longer published.
-      * The `securitySchemes` property has been removed since code generators
-        don't seem to offer good support for mutual TLS. The requirement for
-        client TLS authentication has not changed, however.
       * To facilitate use of code generators, where the `patternProperties` 
         feature of JSON Schema has been used, these have been changed to avoid
         their use. Some may still be present in the input parameters.
@@ -146,8 +136,6 @@ info:
     * 2024-01-31:
       * Add this change log.
       * Minimise the delta between the internal and external view.
-
-    _Copyright #date %Y ICANN. All rights reserved._
 
 servers:
   - url: https://api.rst.icann.org/v1
@@ -612,9 +600,9 @@ components:
             }
             ```
 
-            In RSP testing testing, this property will only contain a single
+            In pre-delegation testing, this property will only contain a single
             TLD, but more complex sets of TLDs with variants are supported for
-            pre-delegation testing.
+            RSP testing.
 
             Example of an ASCII TLD with one or more IDN tables:
             ```
@@ -942,7 +930,7 @@ components:
       required: []
 
     testRunLog:
-      description: an object representing a discrete test run.
+      description: an object representing a discreet test run.
       type: object
       required:
         - runID

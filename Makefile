@@ -10,12 +10,14 @@ diagrams: tmpdir
 
 spec: tmpdir
 	@echo Generating YAML files...
-	@gpp -x rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
+	@gpp -x -DVIEW=EXTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
+	@gpp -x -DVIEW=INTERNAL rst-api-spec.yaml.in > tmp/rst-api-spec-internal.yaml
 	@echo Generating JSON files...
 	@yq -o=json eval tmp/rst-api-spec.yaml > tmp/rst-api-spec.json
+	@yq -o=json eval tmp/rst-api-spec-internal.yaml > tmp/rst-api-spec-internal.json
 
 lint:
-	@openapi-generator validate -i tmp/rst-api-spec.yaml
+	@openapi-generator validate -i tmp/rst-api-spec-internal.yaml
 
 pages:
 	@echo Generating pages...

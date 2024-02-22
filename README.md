@@ -1,13 +1,29 @@
 This repository contain the specification for the Registry System Testing (RST)
 API.
 
-The specification conforms to the [Version 3.1.0 of the OpenAPI
-specification](https://spec.openapis.org/oas/latest.html).
+The specification is written in YAML and conforms to the [Version 3.1.0 of the
+OpenAPI specification](https://spec.openapis.org/oas/latest.html):
+
+## API specification
+
+* [RST-API Specification](https://icann.github.io/rst-api-spec/rst-api-spec.html) ([YAML](rst-api-spec.yaml)) ([JSON](rst-api-spec.json))
+
+This represents a view of the API suitable for RSPs and Registry Operators
+(i.e., those who are undergoing registry system testing).
+
+### Internal ICANN view
+
+* [RST-API Specification (internal view)](https://icann.github.io/rst-api-spec/rst-api-spec-internal.html) ([YAML](rst-api-spec-internal.yaml)) ([JSON](rst-api-spec-internal.json))
+
+This represents ICANN org's view of the API, and includes operations required by
+internal ICANN systems and the test orchestrator which actually runs the tests.
+External users (RSPs and registry operators) won't have access to these
+endpoints (except in OT&E, where some of them *are* available).
 
 ## Repository Contents
 
 * [rst-api-spec.yaml.in](https://github.com/icann/rst-api-spec/blob/main/rst-api-spec.yaml.in)
-  is what you need to edit if you want to make changes to the API specification.
+  is what you need to edit if you want to make changes to the API.
 
 * [Makefile](Makefile) provides a way to generate the build artifacts. It uses
   [gpp](https://logological.org/gpp) to create the YAML file, [mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
@@ -16,7 +32,7 @@ specification](https://spec.openapis.org/oas/latest.html).
 
 * If you don't want to install all the dependencies, but have
   [Docker](https://docker.com) installed, you can use `docker compose up spec`
-  to build the YAML file, and `docker compose up lint` to validate it.
+  to build the YAML files.
 
 ## Branches
 
