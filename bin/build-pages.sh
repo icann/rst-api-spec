@@ -4,15 +4,14 @@ SITEDIR="_site"
 rm -rf "$SITEDIR"
 mkdir -p "$SITEDIR/etc"
 
-pandoc \
+gpp etc/index.md | pandoc \
     --from markdown \
     --to html \
     --standalone \
     --embed-resources=true \
     --metadata title="ICANN Registry System Testing (RST) API Specification" \
     --css=etc/style.css \
-    --output="$SITEDIR/index.html" \
-    README.md
+    --output="$SITEDIR/index.html"
 
 make spec
 
