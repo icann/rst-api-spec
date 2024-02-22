@@ -125,7 +125,7 @@ testPlan:
     <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
   enum:
 #exec echo importing test plan mnemonics from the RST test specs... 1>&2
-#exec curl -s https://icann.github.io/rst-test-specs/rst-test-specs.yaml | yq -I 8 '."Test-Plans" | keys' | while read l ; do echo "    $l" ; done
+#exec curl --verbose --no-progress-meter https://icann.github.io/rst-test-specs/rst-test-specs.yaml | yq -I 8 '."Test-Plans" | keys' | while read l ; do echo "    $l" ; done
 #exec echo done 1>&2
 
 dueDate:
