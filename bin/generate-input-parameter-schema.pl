@@ -1,12 +1,14 @@
 #!/usr/bin/perl
 use Data::Mirror qw(mirror_yaml);
 use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.yaml';
+use feature qw(say);
 use strict;
 
+say STDERR 'mirroring test specs...';
 my $spec = mirror_yaml(SPEC_URL);
 
+say STDERR 'extracting input parameter schemas...';
 my $schema = {};
-
 while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     my %meta = %{$ref};
 
@@ -24,9 +26,12 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     $schema->{$name}->{'examples'} = [$meta{'Example'}] if (!defined($schema->{$name}->{'examples'}) && defined($meta{'Example'}));
 }
 
+say STDERR 'generating YAML fragment for input parameter schemas...';
 $YAML::XS::SortKeys = 1;
 
 my $yaml = YAML::XS::Dump($schema);
 $yaml =~ s/^-+\n//g;
 
 print $yaml;
+
+say STDERR 'done';
