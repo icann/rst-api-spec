@@ -556,16 +556,6 @@ paths:
 
 components:
 
-  securitySchemes:
-    mTLS:
-      name: mTLS
-      in: header
-      type: mutualTLS
-      description: |
-        Client certificates are required. Authorization to perform operations is
-        determined using `TLSA` records published in the DNS under hostnames
-        associated with test objects.
-
   schemas:
             
     testRequest:
