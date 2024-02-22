@@ -1,0 +1,138 @@
+applicationID:
+  description: |
+    For RSP evaluation, the application ID, otherwise it should be
+    omitted. In OT&E, this **MUST** be omitted.
+  type: string
+  examples: [fd327b44-b818-4f37-9349-a15bc5f230da]
+
+rsp:
+  description: |
+    The RSP's unique ID.
+
+    In OT&E, this **MUST** be omitted, and will be populated using the
+    FQDN of the first `TLSA` record which matches the certificate
+    presented by the client.
+  type: string
+  examples: ["RSP2312-M51", "tlsa.rsp.tech"]
+
+tlds:
+  description: |
+    This structure describes the TLDs to which the test relates. It is
+    an array which contains an array of logically grouped TLDs (such as
+    those with a variant relationship).
+
+    Simple example of an ASCII TLD with no IDN tables:
+    ```
+    {
+      "tlds": [
+        [
+          {
+            "string": "example",
+            "idnTables": []
+          }
+        ]
+      ]
+    }
+    ```
+
+    In RSP testing testing, this property will only contain a single
+    TLD, but more complex sets of TLDs with variants are supported for
+    pre-delegation testing.
+
+    Example of an ASCII TLD with one or more IDN tables:
+    ```
+    {
+      "tlds": [
+        [
+          {
+            "string": "example",
+            "idnTables": [
+              {
+                "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
+                "variantSupportLevel": 0,
+              },
+              {
+                "id": "25eb306b-1fb0-4def-bf01-fa18815f614b",
+                "variantSupportLevel": 0,
+              }
+            ]
+          }
+        ]
+      ]
+    }
+    ```
+
+    Example of a set of variant TLDs:
+    ```
+    {
+      "tlds": [
+        [
+          {
+            "string": "xn--8pvxs",
+            "idnTables": [
+              {
+                "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
+                "variantSupportLevel": 3,
+              }
+            ]
+          },
+          {
+            "string": "xn--8pvz8d",
+            "idnTables": [
+              {
+                "id": "3f60939b-b7bf-46db-9004-126bf08923af",
+                "variantSupportLevel": 3,
+              }
+            ]
+          }
+        ]
+      ]
+    }
+    ```
+
+    All the IDN tables referenced in this property **MUST** already
+    exist when the test object is created. In OT&E, 
+
+    If a TLD offers registrations at the third or higher levels, then at
+    least one second-level "registry-class" domain name(s) should be
+    separately listed, rather than the TLD itself.
+  type: array
+  minItems: 1
+  items:
+    type: array
+    minItems: 1
+    items:
+      $ref: "#/components/schemas/tldInfo"
+
+clientIDs:
+  description: |
+    An array of FQDNs at which one or more `TLSA` records may be found
+    which can be used for authentication.
+
+    In OT&E, this **MUST** be omitted, but the resulting test will be
+    populated with the FQDN of the first `TLSA` record which matches the
+    certificate presented by the client.
+  type: array
+  items:
+    type: string
+    format: hostname
+  examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
+
+testPlan:
+  description: |
+    The test plan to be followed. A list of test plans and the permitted
+    values for this property may be found at
+    <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
+  enum:
+#exec echo importing test plan mnemonics from the RST test specs... 1>&2
+#exec curl -s https://icann.github.io/rst-test-specs/rst-test-specs.yaml | yq -I 8 '."Test-Plans" | keys' | while read l ; do echo "    $l" ; done
+#exec echo done 1>&2
+
+dueDate:
+  description: |
+    The date/time before which the test must be passed. If not provided, the
+    test remains open indefinitely (unless the `completed` status is reached).
+
+    In OT&E, this **MUST** be omitted.
+  type: string
+  format: date-time
