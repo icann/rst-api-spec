@@ -725,15 +725,11 @@ components:
 
         status:
           description: The status of this request.
-          schema:
-            $ref: "#/components/schemas/testStatus"
-          examples: ["inputs-needed"]
+          $ref: "#/components/schemas/testStatus"
 
         result:
           description: The outcome of the test.
-          schema:
-            $ref: "#/components/schemas/testResult"
-          examples: [pass]
+          $ref: "#/components/schemas/testResult"
 
         errorCodes:
           description: |
@@ -747,10 +743,7 @@ components:
 
         inputs:
           description: Any input parameters provided by the user.
-          type: object
-          schema:
-            $ref: "#/components/schemas/inputParameters"
-          examples: [{"example.name": "example.value"}]
+          $ref: "#/components/schemas/inputParameters"
 
         missingInputs:
           description: |
@@ -834,8 +827,7 @@ components:
           format: datetime
         result:
           description: The outcome of the test.
-          schema:
-            $ref: "#/components/schemas/testResult"
+          $ref: "#/components/schemas/testResult"
         log:
           description: an array of test case log objects.
           type: array
