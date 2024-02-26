@@ -7,14 +7,13 @@ specification](https://spec.openapis.org/oas/latest.html).
 * [rst-api-spec.yaml.in](https://github.com/icann/rst-api-spec/blob/main/rst-api-spec.yaml.in)
   is what you need to edit if you want to make changes to the API specification.
 
-* [Makefile](Makefile) provides a way to generate the build artifacts. It uses
-  [gpp](https://logological.org/gpp) to create the YAML file, [mermaid-cli](https://github.com/mermaid-js/mermaid-cli)
-  to convert the Mermaid files into diagrams, and a Perl script to import input
-  parameter schemas from the [test specs](https://github.com/icann/rst-test-specs).
+## Building the specification
 
-* If you don't want to install all the dependencies, but have
-  [Docker](https://docker.com) installed, you can use `docker compose up spec`
-  to build the YAML file, and `docker compose up lint` to validate it.
+The simplest way to build the specification is to run `docker compose up spec`
+(you obviously need Docker). The first run will take a while as it needs to
+build the image, but it will be quite fast after that.
+
+You can also validate the spec (once built) using `docker compose up lint`.
 
 ## Branches
 

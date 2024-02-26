@@ -18,4 +18,4 @@ services:
     image: openapitools/openapi-generator-cli
     volumes:
       - ./tmp:/local
-    command: validate -i /local/rst-api-spec-internal.yaml
+    command: validate -i /local/rst-api-spec.yaml
