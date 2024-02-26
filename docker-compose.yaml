@@ -8,6 +8,8 @@ services:
     volumes:
       - .:/app
     command: make -C /app spec
+    networks:
+      - rst
 
   pages:
     extends: spec
@@ -19,3 +21,7 @@ services:
     volumes:
       - ./tmp:/local
     command: validate -i /local/rst-api-spec.yaml
+
+networks:
+  rst:
+    external: true
