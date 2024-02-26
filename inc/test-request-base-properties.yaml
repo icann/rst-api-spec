@@ -124,7 +124,7 @@ testPlan:
     values for this property may be found at
     <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
   enum:
-#exec bin/generate-test-plan-mnemonics.pl | sed 's/^/    /'
+#exec sed 's/^/    /' tmp/test-plan-mnemonics.yaml
 
 dueDate:
   description: |

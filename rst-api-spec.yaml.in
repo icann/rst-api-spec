@@ -807,7 +807,7 @@ components:
         returning test request object information.
       type: object
       properties:
-#exec bin/generate-input-parameter-schema.pl | sed 's/^/        /'
+#exec sed 's/^/        /' tmp/input-parameters.yaml
       required: []
 
     testRunLog:
