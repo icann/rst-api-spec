@@ -608,7 +608,6 @@ components:
         - in-progress
         - completed
         - expired
-      default: inputs-needed
 
     testResult:
       description: |
@@ -925,7 +924,6 @@ components:
             - WARNING
             - ERROR
             - CRITICAL
-          default: WARNING
         timestamp:
           description: |
             the timestamp when the message was generated.
