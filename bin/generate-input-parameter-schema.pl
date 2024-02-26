@@ -4,7 +4,8 @@ use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.
 use feature qw(say);
 use strict;
 
-say STDERR 'mirroring test specs...';
+my $url = $ENV{'RST_SPEC_URL'} || SPEC_URL;
+printf(STDERR "mirroring test specs from %s...\n", $url);
 my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
 
 say STDERR 'extracting input parameter schemas...';

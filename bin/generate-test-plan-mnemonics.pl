@@ -4,8 +4,9 @@ use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.
 use feature qw(say);
 use strict;
 
-say STDERR 'mirroring test specs...';
-my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
+my $url = $ENV{'RST_SPEC_URL'} || SPEC_URL;
+printf(STDERR "mirroring test specs from %s...\n", $url);
+my $spec = mirror_yaml($url) || die('mirror failed');
 
 say STDERR 'extracting test plan mnemonics...';
 my @plans = sort { $spec->{'Test-Plans'}->{$a}->{'Order'} <=> $spec->{'Test-Plans'}->{$b}->{'Order'} } keys(%{$spec->{'Test-Plans'}});
