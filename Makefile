@@ -8,11 +8,12 @@ diagrams: tmpdir
 	@mmdc -i etc/test-object-state-machine.mmd -o etc/test-object-state-machine.svg
 	@mmdc -i etc/workflow.mmd -o etc/workflow.svg
 
-spec: tmpdir
+includes: tmpdir
 	@echo Generating YAML fragments...
 	@bin/generate-test-plan-mnemonics.pl > tmp/test-plan-mnemonics.yaml
 	@bin/generate-input-parameter-schema.pl > tmp/input-parameters.yaml
-
+	
+spec: tmpdir includes
 	@echo Generating YAML file...
 	@gpp -x rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
 
