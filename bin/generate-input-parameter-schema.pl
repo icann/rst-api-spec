@@ -5,7 +5,7 @@ use feature qw(say);
 use strict;
 
 say STDERR 'mirroring test specs...';
-my $spec = mirror_yaml(SPEC_URL) || die('mirror failed');
+my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
 
 say STDERR 'extracting input parameter schemas...';
 my $schema = {};
