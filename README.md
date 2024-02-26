@@ -9,11 +9,11 @@ specification](https://spec.openapis.org/oas/latest.html).
 
 ## Building the specification
 
-The simplest way to build the specification is to run `docker compose up spec`
+The simplest way to build the specification is to run `docker compose run spec`
 (you obviously need Docker). The first run will take a while as it needs to
 build the image, but it will be quite fast after that.
 
-You can also validate the spec (once built) using `docker compose up lint`.
+You can also validate the spec (once built) using `docker compose run lint`.
 
 ## Branches
 
