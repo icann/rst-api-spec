@@ -3,7 +3,7 @@
 pushd "$(dirname "$(dirname "$0")")" > /dev/null
 
 # build the pages
-docker compose up pages
+docker compose run pages
 
 # launch a local web server on a random non-privileged port that serves the
 # pages
@@ -21,7 +21,7 @@ open "http://$SERVER"
 fswatch -or rst-api-spec.yaml.in README.md etc | while read e ; do
 
   # rebuild the pages
-  docker compose up pages
+  docker compose run pages
 
   # do a lint check for good measure
   make lint
