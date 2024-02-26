@@ -13,13 +13,13 @@ my $schema = {};
 while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     my %meta = %{$ref};
 
-    if (exists($meta{'Schema'})) {
-        $schema->{$name} = $meta{'Schema'};
+    if (!exists($meta{'Schema'})) {
+        printf(STDERR "missing schema for '%s'\n", $name);
+        exit(1);
 
     } else {
-        $schema->{$name} = {
-            'type' => ('file' eq $meta{'Type'} ? 'string' : $meta{'Type'}),
-        };
+        $schema->{$name} = $meta{'Schema'};
+
     }
 
     $schema->{$name}->{'description'} = $meta{'Description'};
