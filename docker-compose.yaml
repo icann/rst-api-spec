@@ -8,8 +8,6 @@ services:
     volumes:
       - .:/app
     command: make -C /app spec
-    networks:
-      - rst
 
   pages:
     extends: spec
