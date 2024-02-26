@@ -100,16 +100,28 @@ info:
     ### Change Log
 
     * 2023-02-28:
+      * To work better with code generators, the following changes have been
+        made:
+        * `testCaseLog` objects:
+          * the `code` and `codeRef` properties are now optional instead of
+            nullable.
+          * the `context` property has been changed so that property values are
+            always strings.
+        * The `securitySchemes` property has been removed, since code generators
+          don't seem to offer good support for mutual TLS. The requirement for
+          client TLS authentication has not changed, however.
+        * All usages of the `patternProperties`  feature of JSON Schema have
+          been changed to avoid their use. Some may still be present in the
+          input parameters.
+      * Changes to IDN table objects:
+        * the `variants` property of entries in the `validLabels` property of
+          `idnTable` objects has been changed to an array of objects, so the
+          corresponding language tag can be included.
+        * the `lgrXML` property of `idnTable` object has been removed.
+        * Renamed the `supportLevel` property to `variantSupportLevel`.
       * As per the last release, only a single YAML file is now built from the
         source file, that contains both "internal" and "external" endpoints. The
         "internal" view is no longer published.
-      * The `securitySchemes` property has been removed since code generators
-        don't seem to offer good support for mutual TLS. The requirement for
-        client TLS authentication has not changed, however.
-      * To facilitate use of code generators, where the `patternProperties` 
-        feature of JSON Schema has been used, these have been changed to avoid
-        their use. Some may still be present in the input parameters.
-      * Renamed the `supportLevel` property to `variantSupportLevel`.
     * 2023-02-21:
       * Test properties (such as `applicationId` and `rsp`) that were previously
         ignored in OT&E now **MUST** be omitted.
@@ -674,7 +686,7 @@ components:
       properties:
 #exec gpp -x inc/test-request-base-properties.yaml | sed 's/^/        /'
 
-        id:
+        testID:
           description: Unique ID for this test request object.
           type: integer
           format: uint64
@@ -893,36 +905,24 @@ components:
             to assist in debugging any issues that may have caused the test case
             to fail or error.
           type: object
-          additionalProperties:
-            type:
-              - string
-              - integer
-              - number
-              - boolean
-              - "null"
-          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": ["192.0.2.32", "fe80::79b5:adbc:141e:b15e"], "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
+          additionalProperties: 
+            type: string
+          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": "192.0.2.32,fe80::79b5:adbc:141e:b15e", "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
     testCaseLogMessage:
       description: A log message.
       type: object
       required:
-        - code
-        - codeRef
         - severity
         - timestamp
         - message
       properties:
         code:
           description: the error code (if any).
-          type:
-            - string
-            - "null"
-          default: null
+          type: string
         codeRef:
           description: a link to a description for the error code (if any).
-          type:
-            - string
-            - "null"
+          type: string
           format: url
           examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-EPP_ERROR_DNS_RESOLUTION_FAILED]
         severity:
@@ -961,10 +961,16 @@ components:
         - isReferenceLGR
         - variantPolicy
       properties:
-        id:
+        tableID:
           description: A unique ID for this table.
           type: string
           examples: [570cb051-4f60-483a-be35-c03a98a7a846]
+        active:
+          description: |
+            indicates whether this table is available for use in testing. If
+            this property is `false`, this table cannot be used in tests.
+          type: boolean
+          default: true
         rsp:
           description: the RSP's unique ID.
           type: string
@@ -983,11 +989,6 @@ components:
           description: |
             whether the RSP's implementation of the IDN table uses a Second-
             Level Reference Label Generation Rules (LGRs) developed by ICANN.
-
-            If the value of this property is `false`, then the `lgrXML` property
-            **MUST** be populated with the RSP's LGR in XML format (see RFC
-            7940). If it is `true`, then the `lgrXML` property **MUST** be
-            omitted.
 
             In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
             tested in OT&E.
@@ -1008,14 +1009,6 @@ components:
             - novar
             - allblockvar
             - mayallocatevar
-        lgrXML:
-          description: |
-            For custom implementations (see the `isReferenceLGR` property), this
-            property **MUST** contain the RSP's LGR in XML format. For standard
-            implementations (where `isReferenceLGR` is `true`) it **MUST** be
-            omitted.
-          type: string
-          examples: [<lgr xmlns="urn:ietf:params:xml:ns:lgr-1.0"><!--...--></lgr>]
         testLabels:
           description: |
             The test labels to be used in association with this table. In OT&E,
@@ -1041,16 +1034,30 @@ components:
               - variants
             properties:
               label:
+                description: the primary label
                 type: string
                 pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
                 examples: [xn--8pvxs]
               variants:
+                description: a list of variant labels
                 type: array
                 minItems: 0
                 items:
-                  type: string
-                  pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
-                  examples: [xn--8pvz8d]
+                  description: a variant label
+                  type: object
+                  required:
+                    - label
+                    - tag
+                  properties:
+                    label:
+                      description: the label
+                      type: string
+                      pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
+                      examples: [xn--8pvz8d]
+                    tag:
+                      description: the language tag that the label is valid in
+                      type: string
+                      examples: [und-Arab]
         invalidLabels:
           description: |
             A list of **invalid** IDN labels that it should not be possible to
