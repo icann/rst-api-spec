@@ -372,6 +372,7 @@ paths:
                 - pass
               properties:
                 pass:
+                  type: integer
                   enum:
                     - 1
       responses:
@@ -600,6 +601,7 @@ components:
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
+      type: string
       enum:
         - inputs-needed
         - inputs-complete
@@ -617,6 +619,7 @@ components:
         2. The `fail` value indicates that at least one test failed.
         3. The `exception` value indicates that an internal issue prevented
            the test run from completing.
+      type: string
       enum:
         - pass
         - fail
@@ -849,6 +852,7 @@ components:
             * `skipped` - the test case was not applicable and was not carried
               out.
             * `aborted` - the test case was aborted before it could complete.
+          type: string
           enum:
             - pass
             - fail
@@ -900,6 +904,7 @@ components:
           description: |
             The log level of the message, a subset of the values defined in
             RFC5424.
+          type: string
           enum:
             - WARNING
             - ERROR
@@ -969,6 +974,7 @@ components:
             * `novar` - no variants are supported/applicable
             * `allblockvar` - all variants are blocked
             * `mayallocatevar` - variants may be allocated
+          type: string
           enum:
             - novar
             - allblockvar
