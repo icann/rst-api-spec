@@ -23,8 +23,6 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     }
 
     $schema->{$name}->{'description'} = $meta{'Description'};
-
-    $schema->{$name}->{'examples'} = [$meta{'Example'}] if (!defined($schema->{$name}->{'examples'}) && defined($meta{'Example'}));
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';

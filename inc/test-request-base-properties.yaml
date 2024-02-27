@@ -3,7 +3,6 @@ applicationID:
     For RSP evaluation, the application ID, otherwise it should be
     omitted. In OT&E, this **MUST** be omitted.
   type: string
-  examples: [fd327b44-b818-4f37-9349-a15bc5f230da]
 
 rsp:
   description: |
@@ -13,7 +12,6 @@ rsp:
     FQDN of the first `TLSA` record which matches the certificate
     presented by the client.
   type: string
-  examples: ["RSP2312-M51", "tlsa.rsp.tech"]
 
 tlds:
   description: |
@@ -116,7 +114,6 @@ clientIDs:
   items:
     type: string
     format: hostname
-  examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
 
 testPlan:
   description: |

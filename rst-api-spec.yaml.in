@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.3
 
 #mode quote
 #define EXTERNAL_USER_ACCESS_CONTROL_POLICY Users can only perform this operation if their certificate matches a `TLSA` record published in the DNS at one of the hostnames specified in the `clientIDs` property of the test request object.
@@ -19,9 +19,6 @@ info:
   contact:
     name: ICANN Global Support
     email: globalsupport@icann.org
-  license:
-    name: BSD 3-Clause "New" or "Revised" License
-    identifier: BSD-3-Clause
 
   description: |
 
@@ -102,6 +99,8 @@ info:
     * 2023-02-28:
       * To work better with code generators, the following changes have been
         made:
+        * The specification conforms to version `3.0.3` of the OpenAPI
+          specification.
         * `testCaseLog` objects:
           * the `code` and `codeRef` properties are now optional instead of
             nullable.
@@ -636,7 +635,6 @@ components:
         id:
           description: The unique ID of the table.
           type: string
-          examples: [ecad7860-66e1-456d-8359-0139d9b19f0e]
         variantSupportLevel:
           description: |
             The level of variant supported offered. Possible values are:
@@ -661,7 +659,6 @@ components:
           description: The TLD (or equivalent registry-class domain name).
           type: string
           format: hostname
-          examples: [example]
         idnTables:
           description: the IDN tables(s) for the TLD.
           type: array
@@ -689,7 +686,6 @@ components:
           description: Unique ID for this test request object.
           type: integer
           format: uint64
-          examples: [60f71ce9-2428-4eb0-97e1-e34fb2f63d68]
 
         testPlanVersion:
           description: |
@@ -700,7 +696,6 @@ components:
             convention.
           type: string
           pattern: ^\\d+(\\.\\d+)+$
-          examples: [3.0.0]
 
         dateRequested:
           description: date/time when this request was submitted.
@@ -723,11 +718,9 @@ components:
           format: date-time
 
         status:
-          description: The status of this request.
           $ref: "#/components/schemas/testStatus"
 
         result:
-          description: The outcome of the test.
           $ref: "#/components/schemas/testResult"
 
         errorCodes:
@@ -738,10 +731,8 @@ components:
           type: array
           items:
             type: string
-          examples: [[EPP_HOSTNAME_NOT_RESOLVED]]
 
         inputs:
-          description: Any input parameters provided by the user.
           $ref: "#/components/schemas/inputParameters"
 
         missingInputs:
@@ -751,7 +742,6 @@ components:
           type: array
           items:
             type: string
-          examples: [["epp.kitchenSink", "rdap.coffeePotURL"]]
 
         files:
           description: A list of any files uploaded.
@@ -762,11 +752,9 @@ components:
               name:
                 description: the file name.
                 type: string
-                examples: [example_20231008_full_S1_R0.ryde]
               type:
                 description: the media type of the file.
                 type: string
-                examples: [application/octet-stream]
               uploaded:
                 description: when the file was uploaded.
                 type: string
@@ -775,7 +763,6 @@ components:
                 description: the URL of the file.
                 type: string
                 format: url
-                examples: [https://api.rst.icann.org/v1/test/987654321/files/example_20231008_full_S1_R0.ryde]
 
         results:
           description: |
@@ -815,7 +802,6 @@ components:
         runID:
           description: unique ID for this test run.
           type: string
-          examples: [33cb14d8-1aa1-4b7c-8f54-8604f45397d6]
         dateStarted:
           description: the date and time the run started.
           type: string
@@ -825,7 +811,6 @@ components:
           type: string
           format: datetime
         result:
-          description: The outcome of the test.
           $ref: "#/components/schemas/testResult"
         log:
           description: an array of test case log objects.
@@ -849,12 +834,10 @@ components:
         caseID:
           description: the Test Case ID.
           type: string
-          examples: [epp-01]
         caseRef:
           description: a link to the test case specification
           type: string
           format: url
-          examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-epp-01]
         result:
           description: |
             The result of the test. The possible values are:
@@ -875,7 +858,6 @@ components:
         description:
           description: A short description of the outcome of the test.
           type: string
-          examples: ["successfully resolved epp.hostname for IPv4 and IPv6"]
         dateStarted:
           description: date/time when the test case started.
           type: string
@@ -898,7 +880,6 @@ components:
           type: object
           additionalProperties: 
             type: string
-          examples: [{"important.note": "the contents of this object are purely illustrative", "host.name": "node01.rst", "host.ips": "192.0.2.32,fe80::79b5:adbc:141e:b15e", "user.name": "rst", "dig.version": "DiG 9.10.6", "host.os": "Linux", "host.arch": "amd64", "epp.hostname": "epp.rsp.tech"}]
 
     testCaseLogMessage:
       description: A log message.
@@ -915,7 +896,6 @@ components:
           description: a link to a description for the error code (if any).
           type: string
           format: url
-          examples: [https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-EPP_ERROR_DNS_RESOLUTION_FAILED]
         severity:
           description: |
             The log level of the message, a subset of the values defined in
@@ -932,16 +912,14 @@ components:
         message:
           description: the message.
           type: string
-          examples: ["Something informative just happened!", "Something critical just happened!"]
 
     idnTable:
       description: |
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
 
-        The `rsp`, `tag` and `version` properties of this object uniquely
-        identify it, and can be used to populate the corresponding tokens in the
-        URL templates of the `getIDNTable()` and `getIDNLabels()` operations.
+        In OT&E, the `isReferenceLGR` property **MUST** be `true`, and the
+        `testLabels` property **MUST** be omitted.
       type: object
       required:
         - id
@@ -954,7 +932,6 @@ components:
         tableID:
           description: A unique ID for this table.
           type: string
-          examples: [570cb051-4f60-483a-be35-c03a98a7a846]
         active:
           description: |
             indicates whether this table is available for use in testing. If
@@ -964,17 +941,14 @@ components:
         rsp:
           description: the RSP's unique ID.
           type: string
-          examples: [RSP2312-M51]
         tag:
           description:
             the language tag, which must conform to the specification in RFC
             5646.
           type: string
-          examples: [und-Arab]
         version:
           description: the version number.
           type: string
-          examples: [1.1]
         isReferenceLGR:
           description: |
             whether the RSP's implementation of the IDN table uses a Second-
@@ -1000,9 +974,6 @@ components:
             - allblockvar
             - mayallocatevar
         testLabels:
-          description: |
-            The test labels to be used in association with this table. In OT&E,
-            this **MUST** be omitted.
           $ref: "#/components/schemas/idnTestLabels"
 
     idnTestLabels:
@@ -1027,7 +998,6 @@ components:
                 description: the primary label
                 type: string
                 pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
-                examples: [xn--8pvxs]
               variants:
                 description: a list of variant labels
                 type: array
@@ -1043,11 +1013,9 @@ components:
                       description: the label
                       type: string
                       pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
-                      examples: [xn--8pvz8d]
                     tag:
                       description: the language tag that the label is valid in
                       type: string
-                      examples: [und-Arab]
         invalidLabels:
           description: |
             A list of **invalid** IDN labels that it should not be possible to
@@ -1057,4 +1025,3 @@ components:
           items:
             type: string
             pattern: ^[a-z][a-z0-9\\-]+[a-z]$
-          examples: [[xn--ls8h]]
