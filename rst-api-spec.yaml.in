@@ -595,15 +595,13 @@ components:
            received, but input parameters are needed before the test can
            begin.
         2. The `inputs-complete` value indicates that all the required
-           input parameters and files have been provided.
-        3. The `idn-labels-needed` value indicates that test labels for one or
-           more IDN tables have not yet been loaded into the system. If one or
-           more "custom" IDN tables have been specified for the test, then ICANN
-           staff may need to prepare these labels.
-        4. The `in-progress` value indicates that a test run has started,
-           but has not yet been completed.
-        5. The `completed` value indicates that the test run has completed.
-        6. The `expired` value indicates that the test did not have a status
+           input parameters and files have been provided. The test is therefore
+           ready to start.
+        3. The `in-progress` value indicates that a test run is in progress.
+        4. The `completed` value indicates that the test run has completed. If
+           a test object has this status, then its `result` property will
+           indicate the outcome of the test.
+        5. The `expired` value indicates that the test did not have a status
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
@@ -611,7 +609,6 @@ components:
       enum:
         - inputs-needed
         - inputs-complete
-        - idn-labels-needed
         - in-progress
         - completed
         - expired
