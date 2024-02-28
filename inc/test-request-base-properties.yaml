@@ -1,19 +1,18 @@
 applicationID:
   description: |
     For RSP evaluation, the application ID, otherwise it should be
-    omitted. In OT&E, this **MUST** be omitted.
+    omitted. In OT&E, this **MUST** be omitted  when creating a new test
+    request.
   type: string
-  examples: [fd327b44-b818-4f37-9349-a15bc5f230da]
 
 rsp:
   description: |
     The RSP's unique ID.
 
-    In OT&E, this **MUST** be omitted, and will be populated using the
-    FQDN of the first `TLSA` record which matches the certificate
-    presented by the client.
+    In OT&E, this **MUST** be omitted when creating a new test request, and will
+    be populated using the FQDN of the first `TLSA` record which matches the
+    certificate presented by the client.
   type: string
-  examples: ["RSP2312-M51", "tlsa.rsp.tech"]
 
 tlds:
   description: |
@@ -35,9 +34,8 @@ tlds:
     }
     ```
 
-    In RSP testing testing, this property will only contain a single
-    TLD, but more complex sets of TLDs with variants are supported for
-    pre-delegation testing.
+    In RSP testing, this property will only contain a single TLD, but more
+    complex sets of TLDs with variants are supported for pre-delegation testing.
 
     Example of an ASCII TLD with one or more IDN tables:
     ```
@@ -91,7 +89,9 @@ tlds:
     ```
 
     All the IDN tables referenced in this property **MUST** already
-    exist when the test object is created. In OT&E, 
+    exist when the test object is created. In OT&E, users can create IDN table
+    obejcts, but these **MUST** correspond to Second-Level Reference LGRs:
+    custom IDN tables cannot be used.
 
     If a TLD offers registrations at the third or higher levels, then at
     least one second-level "registry-class" domain name(s) should be
@@ -109,20 +109,20 @@ clientIDs:
     An array of FQDNs at which one or more `TLSA` records may be found
     which can be used for authentication.
 
-    In OT&E, this **MUST** be omitted, but the resulting test will be
-    populated with the FQDN of the first `TLSA` record which matches the
-    certificate presented by the client.
+    In OT&E, this **MUST** be omitted when creating a new test request, but the
+    resulting test will be populated with the FQDN of the first `TLSA` record
+    which matches the certificate presented by the client.
   type: array
   items:
     type: string
     format: hostname
-  examples: [[tlsa.rsp.tech, tlsb.rsp.tech]]
 
 testPlan:
   description: |
     The test plan to be followed. A list of test plans and the permitted
     values for this property may be found at
     <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
+  type: string
   enum:
 #exec sed 's/^/    /' tmp/test-plan-mnemonics.yaml
 
@@ -131,6 +131,6 @@ dueDate:
     The date/time before which the test must be passed. If not provided, the
     test remains open indefinitely (unless the `completed` status is reached).
 
-    In OT&E, this **MUST** be omitted.
+    In OT&E, this **MUST** be omitted when creating a new test request.
   type: string
   format: date-time
