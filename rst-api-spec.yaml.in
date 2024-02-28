@@ -616,7 +616,7 @@ components:
 
         1. The `pass` value indicates that the test run completed with no
            errors.
-        2. The `fail` value indicates that at least one test failed.
+        2. The `fail` value indicates that at least one test case failed.
         3. The `exception` value indicates that an internal issue prevented
            the test run from completing.
       type: string
@@ -686,7 +686,7 @@ components:
 #exec gpp -x inc/test-request-base-properties.yaml | sed 's/^/        /'
 
         testID:
-          description: Unique ID for this test request object.
+          description: The unique ID for this test request object.
           type: integer
           format: uint64
 
