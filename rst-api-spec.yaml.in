@@ -97,11 +97,20 @@ info:
     ### Change Log
 
     * 2023-02-28:
+      * As per the last release, only a single YAML file is now built from the
+        source file, that contains both "internal" and "external" endpoints. The
+        "internal" view is no longer published.
       * To work better with code generators, the following changes have been
         made:
-        * The specification conforms to version `3.0.3` of the OpenAPI
-          specification.
-        * `testCaseLog` objects:
+        * The specification now conforms to [v3.0.3](https://spec.openapis.org/oas/v3.0.3)
+          of the OpenAPI specification instead of v3.1.0. This means that many
+          aspects of the API specification and object schemas (including those
+          of input parameters) have been changed to avoid using features only
+          available in v3.1.0 of the OpenAPI spec. This includes the `examples`
+          property for all JSON types, which means that the examples shown in
+          the HTML representation of the API spec are now less useful than they
+          were previously.
+        * The following changes have been made to `testCaseLog` objects:
           * the `code` and `codeRef` properties are now optional instead of
             nullable.
           * the `context` property has been changed so that property values are
@@ -118,9 +127,11 @@ info:
           corresponding language tag can be included.
         * the `lgrXML` property of `idnTable` object has been removed.
         * Renamed the `supportLevel` property to `variantSupportLevel`.
-      * As per the last release, only a single YAML file is now built from the
-        source file, that contains both "internal" and "external" endpoints. The
-        "internal" view is no longer published.
+        * The operation to create a new IDN table object uses `idnTableRequest`
+          as the request body payload, which does not allow for inclusion of
+          server-generated object properties.
+        * In OT&E, only Reference Second-Level LGRs can be used.
+      * `type` properties for `enum` types have been reinstated.
     * 2023-02-21:
       * Test properties (such as `applicationId` and `rsp`) that were previously
         ignored in OT&E now **MUST** be omitted.
@@ -132,8 +143,6 @@ info:
         version}` triple.
       * The internal and external views are now identical. The separate files
         will be removed in the next release.
-      * Removed redundant `type` properties for types which have an `enum`
-        property.
       * Added the `supportLevel` property to the `idnTableRef` type.
       * Some IDN table management endpoints are now accessible to external
         clients.

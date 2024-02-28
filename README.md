@@ -1,6 +1,6 @@
 This repository contains the specification for the Registry System Testing (RST)
-API. The specification conforms to the [Version 3.1.0 of the OpenAPI
-specification](https://spec.openapis.org/oas/latest.html).
+API. The specification conforms to the [Version 3.0.3 of the OpenAPI
+specification](https://spec.openapis.org/oas/v3.0.3).
 
 ## Repository Contents
 
