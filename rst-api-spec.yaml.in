@@ -189,6 +189,12 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/testRequestSubmitted"
+          headers:
+            location:
+              description: the URL of the newly created test request object.
+              schema:
+                type: string
+                format: url
 
   /test/{id}:
     parameters:
