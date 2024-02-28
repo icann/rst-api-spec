@@ -452,7 +452,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/idnTable"
+              $ref: "#/components/schemas/idnTableRequest"
       responses:
         '201':
           description: A successful result.
@@ -507,7 +507,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/idnTable"
+              $ref: "#/components/schemas/idnTableRequest"
       responses:
         '201':
           description: A successful result.
@@ -918,7 +918,7 @@ components:
           description: the message.
           type: string
 
-    idnTable:
+    idnTableRequest:
       description: |
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
@@ -927,7 +927,21 @@ components:
         `testLabels` property **MUST** be omitted.
       type: object
       required:
-        - id
+        - tag
+        - version
+        - isReferenceLGR
+        - variantPolicy
+      properties:
+#exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
+
+    idnTable:
+      description: |
+        This object describes an IDN table, or more specifically, an RSP's
+        implementation of such a table.
+      type: object
+      required:
+        - tableID
+        - active
         - rsp
         - tag
         - version
@@ -937,50 +951,7 @@ components:
         tableID:
           description: A unique ID for this table.
           type: string
-        active:
-          description: |
-            indicates whether this table is available for use in testing. If
-            this property is `false`, this table cannot be used in tests.
-          type: boolean
-          default: true
-        rsp:
-          description: the RSP's unique ID.
-          type: string
-        tag:
-          description:
-            the language tag, which must conform to the specification in RFC
-            5646.
-          type: string
-        version:
-          description: the version number.
-          type: string
-        isReferenceLGR:
-          description: |
-            whether the RSP's implementation of the IDN table uses a Second-
-            Level Reference Label Generation Rules (LGRs) developed by ICANN.
-
-            In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
-            tested in OT&E.
-
-            For more information on ICANN's Second-Level LGRS, please see:
-
-              * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
-          type: boolean
-        variantPolicy:
-          description: |
-            The variant policy supported for this table. The possible values
-            are:
-
-            * `novar` - no variants are supported/applicable
-            * `allblockvar` - all variants are blocked
-            * `mayallocatevar` - variants may be allocated
-          type: string
-          enum:
-            - novar
-            - allblockvar
-            - mayallocatevar
-        testLabels:
-          $ref: "#/components/schemas/idnTestLabels"
+#exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
     idnTestLabels:
       description: An object containing IDN test labels.
