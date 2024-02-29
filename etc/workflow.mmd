@@ -27,64 +27,32 @@ sequenceDiagram
 
         Deactivate RSP Portal
     and
-        par IDN Table Label Management
-            opt Custom IDN test labels
-                RST-API->>IDN Team: email notice of missing test labels
-                IDN Team->>RST-API: submit labels<br>[submitIDNLabels()]
-            end
-        and
-            loop Applicant self-<br>administers the test
-                Activate Applicant
-                Applicant->>RST-API: submit input parameters<br>[setTestInputParameters()]
-                Note right of RST-API: store parameters
-                Applicant->>RST-API: upload files<br>[uploadFile()]
-                Note right of RST-API: store files
-                Applicant->>RST-API: initiate test<br>[setTestStatus()]
-                Note right of RST-API: set test status to "ready-to-start"
-                Deactivate Applicant
-                par Test run
-                    loop 1m
-                        Activate RST-TOS
-                        RST-TOS->>RST-API: query for<br>"ready" tests<br>[getTestInfo()]
-                        RST-API->>RST-TOS: respond with<br>list of tests
-                        loop for each test
-                            Note right of RST-TOS: generate<br>test case sequence
-                            loop for each test case
-                                RST-TOS->>RST-API: request input<br>parameters<br>[getTestInfo()]
-                                RST-API->>RST-TOS: respond with<br>input parameters
-                                RST-TOS->>RST-API: request files<br>[getFile()]
-                                RST-API->>RST-TOS: respond with file data
-                                Note right of RST-TOS: run test case
-                                RST-TOS->>RST-API: submit test case log<br>[addResult()]
-                                Note left of RST-API: append case log<br>to test results
-                                critical Check test case result
-                                option Pass|Skip|Abort
-                                    note right of RST-TOS: proceed to<br>next test case
-                                option Fail
-                                    note right of RST-TOS: exit loop
-                                option Exception
-                                    note right of RST-TOS: notify ops and <br>exit loop
-                                end
-                            end
-                            RST-TOS->>RST-API: update test result<br>[setTestStatus()]
-                            Note left of RST-API: set test status to "completed"<br>and result to pass|fail|exception
-                        end
-                        Deactivate RST-TOS
+        loop Applicant self-<br>administers the test
+            Activate Applicant
+            Applicant->>RST-API: submit input parameters<br>[setTestInputParameters()]
+            Note right of RST-API: store parameters
+            Applicant->>RST-API: upload files<br>[uploadFile()]
+            Note right of RST-API: store files
+            Applicant->>RST-API: initiate test<br>[startTestRun()]
+            Deactivate Applicant
+            par Test run
+                Activate RST-TOS
+                note right of RST-TOS: run test plan
+                RST-TOS->>RST-API: update test result<br>[setTestStatus()]
+                Deactivate RST-TOS
+            and
+                loop
+                    Activate Applicant
+                    Applicant->>RST-API: poll for results<br>[getTestInfo()]
+                    critical Check test result
+                    option Pass
+                        Note left of Applicant: outer loop ends,<br>workflow is complete
+                    option Fail
+                        note left of Applicant: applicant resolves issue<br>and outer loop repeats
+                    option Exception
+                        Note left of Applicant: ICANN resolves issue,<br>notifies Applicant<br>out-of-band. Outer<br>loop repeats
                     end
-                and
-                    loop
-                        Activate Applicant
-                        Applicant->>RST-API: poll for results<br>[getTestInfo()]
-                        critical Check test result
-                        option Pass
-                            Note left of Applicant: outer loop ends
-                        option Fail
-                            note left of Applicant: applicant resolves issue and<br>outer loop repeats
-                        option Exception
-                            Note left of Applicant: ICANN resolves issue<br>and notifies Applicant<br>out-of-band, and<br>outer loop repeats
-                        end
-                        Deactivate Applicant
-                    end
+                    Deactivate Applicant
                 end
             end
         end
