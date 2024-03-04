@@ -98,7 +98,7 @@ info:
 
     * 2024-03-06:
       * the `caseId` property of the `testCaseLog` object, and the `code`
-        property of the `testCaseLogMessae` object are now enums, which are
+        property of the `testCaseLogMessage` object are now enums, which are
         generated from the test specs.
     * 2024-02-28:
       * As per the last release, only a single YAML file is now built from the
