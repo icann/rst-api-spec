@@ -12,6 +12,8 @@ includes: tmpdir
 	@echo Generating YAML fragments...
 	@bin/generate-test-plan-mnemonics.pl > tmp/test-plan-mnemonics.yaml
 	@bin/generate-input-parameter-schema.pl > tmp/input-parameters.yaml
+	@bin/generate-test-cases.pl > tmp/test-cases.yaml
+	@bin/generate-error-codes.pl > tmp/error-codes.yaml
 	
 spec: tmpdir includes
 	@echo Generating YAML file...
