@@ -96,7 +96,11 @@ info:
 
     ### Change Log
 
-    * 2023-02-28:
+    * 2024-03-06:
+      * the `caseId` property of the `testCaseLog` object, and the `code`
+        property of the `testCaseLogMessae` object are now enums, which are
+        generated from the test specs.
+    * 2024-02-28:
       * As per the last release, only a single YAML file is now built from the
         source file, that contains both "internal" and "external" endpoints. The
         "internal" view is no longer published.
@@ -132,7 +136,7 @@ info:
           server-generated object properties.
         * In OT&E, only Reference Second-Level LGRs can be used.
       * `type` properties for `enum` types have been reinstated.
-    * 2023-02-21:
+    * 2024-02-21:
       * Test properties (such as `applicationId` and `rsp`) that were previously
         ignored in OT&E now **MUST** be omitted.
       * When IDN table objects are created in OT&E, they **MUST** have a
@@ -849,6 +853,9 @@ components:
         caseID:
           description: the Test Case ID.
           type: string
+          enum:
+#exec sed 's/^/            /' tmp/test-cases.yaml
+
         caseRef:
           description: a link to the test case specification
           type: string
@@ -908,6 +915,9 @@ components:
         code:
           description: the error code (if any).
           type: string
+          enum:
+#exec sed 's/^/            /' tmp/error-codes.yaml
+
         codeRef:
           description: a link to a description for the error code (if any).
           type: string
