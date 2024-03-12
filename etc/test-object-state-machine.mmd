@@ -3,8 +3,8 @@ flowchart TD
     A[inputs-needed] -->|"setTestInputParameters()"| B{inputs<br>complete?}
     B -->|N| A
     B -->|Y| C[inputs-complete]
-    C -->|"setTestStatus()"| E1[in-progress]
-    E1 --> |"setTestStatus()"| G{Pass?}
+    C -->|"startTestRun()"| E1[in-progress]
+    E1 --> G{Pass?}
     G --> |Y| H[completed]
     G --> |N| I{Expired?}
     I --> |N| A
