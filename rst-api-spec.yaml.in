@@ -96,6 +96,10 @@ info:
 
     ### Change Log
 
+    * 2024-03-13:
+      * Variant labels in an IDN table may have exceptional allocation policies
+        when allocated in the same TLD as the primary label, or in a variant
+        TLD.
     * 2024-03-06:
       * the `caseId` property of the `testCaseLog` object, and the `code`
         property of the `testCaseLogMessage` object are now enums, which are
@@ -994,27 +998,59 @@ components:
               - variants
             properties:
               label:
-                description: the primary label
+                description: The primary label.
                 type: string
                 pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
               variants:
-                description: a list of variant labels
+                description: A list of variant labels.
                 type: array
                 minItems: 0
                 items:
-                  description: a variant label
+                  description: A variant label.
                   type: object
                   required:
                     - label
                     - tag
                   properties:
                     label:
-                      description: the label
+                      description: The label.
                       type: string
                       pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
                     tag:
-                      description: the language tag that the label is valid in
+                      description: |
+                        The language tag that the label is valid in.
                       type: string
+                    variantPolicy:
+                      description: |
+                        A variant label may have an allocation policy which
+                        overrides that of the IDN table it is associated with,
+                        and this policy may be different depending on whether
+                        the label is being considered for allocation in the same
+                        TLD as that of the primary label, or in a variant TLD.
+                        If this property is not defined for a variant label,
+                        the it inherits the allocation policy of the IDN table.
+                      type: object
+                      required:
+                        - inSameTLD
+                        - inVariantTLD
+                      properties:
+                        inSameTLD:
+                          description: |
+                            The allocation policy for the variant label in the
+                            same TLD as the primary label.
+                          type: string
+                          enum:
+                            - allblockvar
+                            - mayallocatevar
+                        inVariantTLD:
+                          description: |
+                            The allocation policy for the variant label in a
+                            variant TLD.
+                          type: string
+                          enum:
+                            - allblockvar
+                            - mayallocatevar
+
         invalidLabels:
           description: |
             A list of **invalid** IDN labels that it should not be possible to
