@@ -96,6 +96,9 @@ info:
 
     ### Change Log
 
+    * 2024-03-20:
+      * the `id` property of `testRequestSubmitted` objects is now a string, not
+        and integer.
     * 2024-03-13:
       * Variant labels in an IDN table may have exceptional allocation policies
         when allocated in the same TLD as the primary label, or in a variant
@@ -707,8 +710,7 @@ components:
 
         testID:
           description: The unique ID for this test request object.
-          type: integer
-          format: uint64
+          type: string
 
         testPlanVersion:
           description: |
