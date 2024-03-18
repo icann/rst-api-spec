@@ -871,7 +871,7 @@ components:
             The result of the test. The possible values are:
             * `pass` - the test passed.
             * `fail` - the test was not passed.
-            * `exeception` - an error occurred which meant a result could not be
+            * `exception` - an error occurred which meant a result could not be
               determined. This indicates an issue on the RST test system side,
               not the test subject's.
             * `skipped` - the test case was not applicable and was not carried
@@ -881,7 +881,7 @@ components:
           enum:
             - pass
             - fail
-            - exeception
+            - exception
             - skipped
             - aborted
         description:
