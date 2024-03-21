@@ -1,2 +1,5 @@
 tmp
 _site
+.openapi-generator
+.openapi-generator-ignore
+index.html
