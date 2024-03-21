@@ -22,6 +22,11 @@ spec: tmpdir includes
 	@echo Generating JSON file...
 	@yq -o=json eval tmp/rst-api-spec.yaml > tmp/rst-api-spec.json
 
+static-html:
+	@echo Generating static HTML file...
+	@openapi-generator generate -g html -i tmp/rst-api-spec.yaml >/dev/null
+	@mv index.html tmp/rst-api-spec.html
+
 lint:
 	@openapi-generator validate -i tmp/rst-api-spec.yaml
 
