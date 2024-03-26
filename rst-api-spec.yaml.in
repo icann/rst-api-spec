@@ -22,7 +22,7 @@ info:
 
   description: |
 
-    _[RST-API Specification Home Page](/)_
+    _[RST-API Specification Home Page](https://icann.github.io/rst-api-spec/)_
 
     _Last updated: #date %Y-%m-%d_
 
@@ -46,7 +46,7 @@ info:
     scheduled, configured, and executed, in the context of the RSP Evaluation
     Program:
 
-    * [High-level workflow](etc/workflow.svg)
+    * [High-level workflow](https://icann.github.io/rst-api-spec/etc/workflow.svg)
 
     ### State diagram
 
@@ -54,7 +54,7 @@ info:
     schema below) indicating its position in the test lifecycle. The following
     state diagram describes this lifecycle:
 
-    * [State diagram](etc/test-object-state-machine.svg)
+    * [State diagram](https://icann.github.io/rst-api-spec/etc/test-object-state-machine.svg)
 
     ### Role-based access control
 
