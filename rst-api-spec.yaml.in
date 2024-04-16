@@ -765,6 +765,8 @@ components:
           type: array
           items:
             type: string
+            enum:
+#exec sed 's/^/              /' tmp/error-codes.yaml
 
         inputs:
           $ref: "#/components/schemas/inputParameters"
