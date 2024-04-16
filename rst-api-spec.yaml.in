@@ -96,6 +96,8 @@ info:
 
     ### Change Log
 
+    * 2024-04-16:
+      * Added the `idnOnly` property to `tldInfo` objects.
     * 2024-03-20:
       * the `id` property of `testRequestSubmitted` objects is now a string, not
         and integer.
@@ -690,6 +692,13 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/idnTableRef"
+        idnOnly:
+          description: |
+            A boolean vaue that indicates whether only IDN domains may be
+            registered under this TLD. If the value is `false` then domains that
+            only use the ASCII range are also permitted.
+          type: boolean
+          default: false
 
     testRequestSubmitted:
       description: |
