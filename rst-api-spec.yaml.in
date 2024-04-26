@@ -86,6 +86,7 @@ info:
         used whenever there is an error.
       * Clarified that input parameters can still be submitted when a test
         has the `inputs-complete` status.
+      * Added the `heartbeat` operation to test that the service is up.
     * 2024-03-20:
       * The `id` property of `testRequestSubmitted` objects is now a string, not
         and integer.
@@ -177,6 +178,18 @@ servers:
     description: OT&E server address (NOT FINAL)
 
 paths:
+  /heartbeat:
+    get:
+      tags:
+        - Checking that the server is up
+      description: |
+        This operation can be used to determine if the server is up.
+      operationId: heartbeat
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '201':
+          description: A successful result.
+
   /test:
     post:
       tags:
