@@ -78,28 +78,16 @@ info:
     found at a hard-coded DNS hostname *(the exact name is yet to be
     determined)*.
 
-    ### HTTP status codes
-
-    In addition to the HTTP status codes described in the operations
-    specifications below, all operations may respond to requests with one of the
-    following HTTP status codes:
-
-    * **400:** returned when the server receives a malformed request.
-    * **403:** returned when the access control policy prevents access.
-    * **404:** returned when the resource does not exist.
-    * **405:** returned when the request method is invalid.
-    * **409:** returned when the client attempts to overwrite an resource that
-      already exists.
-    * **429:** returned when the client has exceeded rate limits.
-    * **504:** returned when an intermediate proxy experiences an error.
-    * **500:** returned when there has been an internal server error.
-
     ### Change Log
 
-    * 2024-04-16:
+    * 2024-XX-YY:
       * Added the `idnOnly` property to `tldInfo` objects.
+      * Defined a new `rstError` object type which describes the response body
+        used whenever there is an error.
+      * Clarified that input parameters can still be submitted when a test
+        has the `inputs-complete` status.
     * 2024-03-20:
-      * the `id` property of `testRequestSubmitted` objects is now a string, not
+      * The `id` property of `testRequestSubmitted` objects is now a string, not
         and integer.
     * 2024-03-13:
       * Variant labels in an IDN table may have exceptional allocation policies
@@ -124,9 +112,9 @@ info:
           the HTML representation of the API spec are now less useful than they
           were previously.
         * The following changes have been made to `testCaseLog` objects:
-          * the `code` and `codeRef` properties are now optional instead of
+          * The `code` and `codeRef` properties are now optional instead of
             nullable.
-          * the `context` property has been changed so that property values are
+          * The `context` property has been changed so that property values are
             always strings.
         * The `securitySchemes` property has been removed, since code generators
           don't seem to offer good support for mutual TLS. The requirement for
@@ -135,10 +123,10 @@ info:
           been changed to avoid their use. Some may still be present in the
           input parameters.
       * Changes to IDN table objects:
-        * the `variants` property of entries in the `validLabels` property of
+        * The `variants` property of entries in the `validLabels` property of
           `idnTable` objects has been changed to an array of objects, so the
           corresponding language tag can be included.
-        * the `lgrXML` property of `idnTable` object has been removed.
+        * The `lgrXML` property of `idnTable` object has been removed.
         * Renamed the `supportLevel` property to `variantSupportLevel`.
         * The operation to create a new IDN table object uses `idnTableRequest`
           as the request body payload, which does not allow for inclusion of
@@ -205,6 +193,7 @@ paths:
             schema:
               $ref: "#/components/schemas/testRequest"
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -237,6 +226,7 @@ paths:
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       operationId: getTestInfo
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -278,6 +268,7 @@ paths:
             schema:
               $ref: "#/components/schemas/inputParameters"
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A successful result.
 
@@ -316,6 +307,7 @@ paths:
                     type: string
                     format: binary
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A successful result.
 
@@ -344,6 +336,7 @@ paths:
           schema:
             type: string
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -369,6 +362,7 @@ paths:
         object's status property is `inputs-complete`, a `201` status will be
         returned; otherwise a `400` status will be returned.
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A succesful result.
 
@@ -404,6 +398,7 @@ paths:
                   enum:
                     - 1
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A succesful result.
 
@@ -454,6 +449,7 @@ paths:
           schema:
             $ref: "#/components/schemas/testResult"
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -482,6 +478,7 @@ paths:
             schema:
               $ref: "#/components/schemas/idnTableRequest"
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A successful result.
           headers:
@@ -512,6 +509,7 @@ paths:
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -537,6 +535,7 @@ paths:
             schema:
               $ref: "#/components/schemas/idnTableRequest"
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
           description: A successful result.
 
@@ -585,6 +584,7 @@ paths:
           schema:
             type: string
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
           description: A successful result.
           content:
@@ -597,7 +597,25 @@ paths:
 components:
 
   schemas:
-            
+
+    rstError:
+      description: |
+        This object type represents error messages returned in responses to
+        requests that could not be successfully completed.
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          description: The HTTP status.
+          type: integer
+          enum:
+#exec gpp -x inc/http-errors.yaml | yq -r '. | keys' | tr -d "'" | sed 's/^/            /'
+        message:
+          description: A human-readable description of the error.
+          type: string
+
     testRequest:
       description: |
         This object type is used to define the properties of a new test request
@@ -618,7 +636,8 @@ components:
            begin.
         2. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided. The test is therefore
-           ready to start.
+           ready to start. It is still possible to update input parameters if
+           the test has this status.
         3. The `in-progress` value indicates that a test run is in progress.
         4. The `completed` value indicates that the test run has completed. If
            a test object has this status, then its `result` property will

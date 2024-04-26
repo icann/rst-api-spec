@@ -1,0 +1,63 @@
+'400':
+    description: |
+      This response indicates that the server received a malformed request.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'403':
+    description: |
+      This response indicates that the access control policy prevents access.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'404':
+    description: This response indicates that the resource does not exist.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'405':
+    description: This response indicates that the request method is invalid.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'409':
+    description: |
+      This response indicates that the client has attempted to overwrite a
+      resource that already exists.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'429':
+    description: |
+      This response indicates that the client has exceeded rate limits.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'504':
+    description: |
+      This response indicates that an intermediate proxy experienced an error.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
+'500':
+    description: |
+      This response indicates that there has been an internal server error.
+    content:
+      "application/json":
+        schema:
+          $ref: "#/components/schemas/rstError"
+
