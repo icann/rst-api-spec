@@ -15,16 +15,19 @@ rsp:
     and will be populated using the FQDN of the first `TLSA` record
     which matches the certificate presented by the client.
   type: string
+  example: RSPI2404-M51
 
 tag:
   description:
     the language tag, which must conform to the specification in RFC
     5646.
   type: string
+  example: ar-Arab
 
 version:
   description: the version number.
   type: string
+  example: "1.0"
 
 isReferenceLGR:
   description: |
