@@ -23,6 +23,7 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     }
 
     $schema->{$name}->{'description'} = $meta{'Description'};
+    $schema->{$name}->{'example'} = $meta{'Example'} if (exists($meta{'Example'}));
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';
