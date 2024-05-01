@@ -628,6 +628,7 @@ components:
         message:
           description: A human-readable description of the error.
           type: string
+          example: "Bad request"
 
     testRequest:
       description: |
@@ -719,6 +720,7 @@ components:
           description: The TLD (or equivalent registry-class domain name).
           type: string
           format: hostname
+          example: example
         idnTables:
           description: the IDN tables(s) for the TLD.
           type: array
@@ -752,6 +754,7 @@ components:
         testID:
           description: The unique ID for this test request object.
           type: string
+          example: 3aebd167-c275-45b6-842a-2680ed80422b
 
         testPlanVersion:
           description: |
@@ -762,6 +765,7 @@ components:
             convention.
           type: string
           pattern: ^\\d+(\\.\\d+)+$
+          example: "3.1.2024096"
 
         dateRequested:
           description: date/time when this request was submitted.
@@ -870,6 +874,8 @@ components:
         runID:
           description: unique ID for this test run.
           type: string
+          example: 3ed892dd-2b29-4f59-b024-653345067547
+
         dateStarted:
           description: the date and time the run started.
           type: string
@@ -906,9 +912,11 @@ components:
 #exec sed 's/^/            /' tmp/test-cases.yaml
 
         caseRef:
-          description: a link to the test case specification
+          description: A link to the test case specification.
           type: string
           format: url
+          example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-dns-address01
+
         result:
           description: |
             The result of the test. The possible values are:
@@ -930,6 +938,7 @@ components:
         description:
           description: A short description of the outcome of the test.
           type: string
+          example: All nameserver IP addresses are globally routable.
         dateStarted:
           description: date/time when the test case started.
           type: string
@@ -952,6 +961,10 @@ components:
           type: object
           additionalProperties: 
             type: string
+          example:
+            SOURCE_IP: 192.0.2.128
+            DNS_RCODE: SERVFAIL
+            EDNS0_NSID: URAP-TM4LVG-2JDX6F
 
     testCaseLogMessage:
       description: A log message.
@@ -971,6 +984,8 @@ components:
           description: a link to a description for the error code (if any).
           type: string
           format: url
+          example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-DNSSEC_DNS_QUERY_ERROR
+
         severity:
           description: |
             The log level of the message, a subset of the values defined in
@@ -988,6 +1003,7 @@ components:
         message:
           description: the message.
           type: string
+          example: An error occurred while performing DNS query(s).
 
     idnTableRequest:
       description: |
