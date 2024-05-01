@@ -881,11 +881,11 @@ components:
         dateStarted:
           description: the date and time the run started.
           type: string
-          format: datetime
+          format: date-time
         dateCompleted:
           description: the date and time the run finished.
           type: string
-          format: datetime
+          format: date-time
         result:
           $ref: "#/components/schemas/testResult"
         log:
