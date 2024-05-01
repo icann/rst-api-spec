@@ -42,19 +42,18 @@ isReferenceLGR:
       * <https://www.icann.org/resources/pages/second-level-lgr-2015-06-21-en>
   type: boolean
 
-variantPolicy:
+permittedVariantPolicies:
   description: |
-    The variant policy supported for this table. The possible values
-    are:
+    The variant policies supported for this table. This is an array of strings
+    whose permitted values are:
 
     * `novar` - no variants are supported/applicable
     * `allblockvar` - all variants are blocked
     * `mayallocatevar` - variants may be allocated
-  type: string
-  enum:
-    - novar
-    - allblockvar
-    - mayallocatevar
+  type: array
+  minItems: 0
+  items:
+    $ref: "#/components/schemas/variantPolicy"
 
 testLabels:
   $ref: "#/components/schemas/idnTestLabels"

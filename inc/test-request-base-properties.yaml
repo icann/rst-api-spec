@@ -49,11 +49,11 @@ tlds:
             "idnTables": [
               {
                 "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
-                "variantSupportLevel": 0,
+                "variantPolicy": "novar"
               },
               {
                 "id": "25eb306b-1fb0-4def-bf01-fa18815f614b",
-                "variantSupportLevel": 0,
+                "variantPolicy": "novar"
               }
             ]
           }
@@ -72,7 +72,7 @@ tlds:
             "idnTables": [
               {
                 "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
-                "variantSupportLevel": 3,
+                "variantPolicy": "mayallocatevar"
               }
             ]
           },
@@ -81,7 +81,7 @@ tlds:
             "idnTables": [
               {
                 "id": "3f60939b-b7bf-46db-9004-126bf08923af",
-                "variantSupportLevel": 3,
+                "variantPolicy": "mayallocatevar"
               }
             ]
           }

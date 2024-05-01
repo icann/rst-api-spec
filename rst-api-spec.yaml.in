@@ -81,6 +81,11 @@ info:
     ### Change Log
 
     * 2024-XX-YY:
+      * Significant overhaul of the structure of the `idnTableRef`,
+        `idnTableRequest` and `idnTable` schemas, based on internal discussions
+        regarding requirements for IDN variants. A reference implementation of
+        the algorithm for computing lists of test domains is also [available in
+        the GitHub repository](https://github.com/icann/rst-api-spec/blob/dev/etc/idn-test-reference.js).
       * Added the `idnOnly` property to `tldInfo` objects.
       * Defined a new `rstError` object type which describes the response body
         used whenever there is an error.
@@ -691,21 +696,14 @@ components:
       type: object
       required:
         - id
-        - variantSupportLevel
+        - variantPolicy
       properties:
         id:
           description: The unique ID of the table.
           type: string
-        variantSupportLevel:
-          description: |
-            The level of variant supported offered. Possible values are:
-            * `0` - no variants supported
-            * `1` - variants are blocked
-            * `2` - variants under the same TLD may be allocated
-            * `3` - variants under variant TLDs may be allocated
-          type: integer
-          minimum: 0
-          maximum: 3
+          example: c76e47a4-b1c5-40a8-94ae-30f0f60f7ec4
+        variantPolicy:
+          $ref: "#/components/schemas/variantPolicy"
 
     tldInfo:
       description: |
@@ -1019,7 +1017,7 @@ components:
         - tag
         - version
         - isReferenceLGR
-        - variantPolicy
+        - permittedVariantPolicies
       properties:
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
@@ -1035,91 +1033,102 @@ components:
         - tag
         - version
         - isReferenceLGR
-        - variantPolicy
+        - permittedVariantPolicies
       properties:
         tableID:
           description: A unique ID for this table.
           type: string
+          example: 3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
+
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
     idnTestLabels:
       description: An object containing IDN test labels.
       type: object
       required:
-        - validLabels
-        - invalidLabels
+        - allocatableLabels
+        - unallocatableLabels
       properties:
-        validLabels:
+        allocatableLabels:
           description: |
-            A mapping of **valid** IDN labels to any variant labels thereof.
+            A list of **allocatable** IDN labels, and any variant labels
+            thereof.
+          type: array
+          minItems: 0
+          items:
+            $ref: "#/components/schemas/idnTestLabel"
+
+        unallocatableLabels:
+          description: |
+            A list of **unallocatable** IDN labels that it should not be
+            possible to register.
           type: array
           minItems: 1
           items:
-            type: object
-            required:
-              - label
-              - variants
-            properties:
-              label:
-                description: The primary label.
-                type: string
-                pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
-              variants:
-                description: A list of variant labels.
-                type: array
-                minItems: 0
-                items:
-                  description: A variant label.
-                  type: object
-                  required:
-                    - label
-                    - tag
-                  properties:
-                    label:
-                      description: The label.
-                      type: string
-                      pattern: "^[a-z][a-z0-9\\-]+[a-z]$"
-                    tag:
-                      description: |
-                        The language tag that the label is valid in.
-                      type: string
-                    variantPolicy:
-                      description: |
-                        A variant label may have an allocation policy which
-                        overrides that of the IDN table it is associated with,
-                        and this policy may be different depending on whether
-                        the label is being considered for allocation in the same
-                        TLD as that of the primary label, or in a variant TLD.
-                        If this property is not defined for a variant label,
-                        the it inherits the allocation policy of the IDN table.
-                      type: object
-                      required:
-                        - inSameTLD
-                        - inVariantTLD
-                      properties:
-                        inSameTLD:
-                          description: |
-                            The allocation policy for the variant label in the
-                            same TLD as the primary label.
-                          type: string
-                          enum:
-                            - allblockvar
-                            - mayallocatevar
-                        inVariantTLD:
-                          description: |
-                            The allocation policy for the variant label in a
-                            variant TLD.
-                          type: string
-                          enum:
-                            - allblockvar
-                            - mayallocatevar
+            description: An IDN label in either A-label or U-label format.
+            type: string
+            example: xn--g28h
 
-        invalidLabels:
+    idnTestLabel:
+      description: |
+        An object describing an allocatable IDN test label and any variants.
+      type: object
+      required:
+        - label
+        - variantTLDAllocatability
+        - variants
+
+      properties:
+        label:
+          description: The primary label in either A-label or U-label format.
+          type: string
+          example: "اِختِصاص"
+
+        variantTLDAllocatability:
           description: |
-            A list of **invalid** IDN labels that it should not be possible to
-            register.
+            A list of language tags that this label is valid in, in addition to
+            the table in question. In the context of a set of variant TLDs, this
+            property may be used to determine which other TLDs in the set this
+            label may be allocated in.
           type: array
-          minItems: 1
+          minItems: 0
           items:
             type: string
-            pattern: ^[a-z][a-z0-9\\-]+[a-z]$
+            example: und-Arab
+
+        variants:
+          description: A list of variant labels (if any).
+          type: array
+          minItems: 0
+          items:
+            $ref: "#/components/schemas/idnVariantLabel"
+
+    idnVariantLabel:
+      description: A variant label.
+      type: object
+      required:
+        - label
+        - variantTLDAllocatability
+      properties:
+        label:
+          description: The variant label in either A-label or U-label format.
+          type: string
+          example: "دامنه"
+        variantTLDAllocatability:
+          description: |
+            The language tag that the label is valid in. In the context of a set
+            of variant TLDs, this property may be used to determine the other
+            TLDs in the set this label may be allocated in.
+          type: array
+          minItems: 0
+          items:
+            type: string
+            example: fa-Arab
+
+    variantPolicy:
+      description: TODO.
+      type: string
+      enum:
+        - novar
+        - allblockvar
+        - mayallocatevar
