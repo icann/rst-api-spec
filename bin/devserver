@@ -24,7 +24,7 @@ fswatch -or rst-api-spec.yaml.in README.md etc | while read e ; do
   docker compose run pages
 
   # do a lint check for good measure
-  make lint
+  docker compose run lint
 
 done
 
