@@ -814,6 +814,8 @@ components:
           type: array
           items:
             type: string
+            enum:
+#exec yq '. | keys' tmp/input-parameters.yaml | sed 's/^/              /'
 
         files:
           description: A list of any files uploaded.
