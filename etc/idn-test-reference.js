@@ -150,6 +150,29 @@ test.getAllTags = function(tldSet) {
 };
 
 //
+// EPP tests go in here
+//
+var eppTests = {};
+
+//
+// multiple tests for the same domain are an error since we can't create a
+// domain twice.
+//
+eppTests.add = function(domain, expectedResult, primaryDomain) {
+    if (this.hasOwnProperty(domain)) {
+        console.error(
+            "Error: attempt to create a duplicate test for "
+            + domain.toUpperCase()
+        );
+
+        process.exit(1);
+    }
+
+    this[domain] = { expectedResult: expectedResult };
+    if (primaryDomain) this[domain].primaryDomain = primaryDomain;
+}
+
+//
 // iterate over all TLD sets in the test 
 //
 test.tlds.forEach(function(tldSet) {
@@ -179,7 +202,7 @@ test.tlds.forEach(function(tldSet) {
                     + "')"
                 );
 
-                return;
+                process.exit(1);
             }
 
             //
@@ -188,7 +211,7 @@ test.tlds.forEach(function(tldSet) {
             table.testLabels.unallocatableLabels.forEach(function(label) {
                 const domain = [label, tld.string].join(".").toUpperCase();
 
-                report("Domain " + domain + ": EPP <create> command MUST NOT succeed");
+                eppTests.add(domain, false);
             });
 
             //
@@ -197,7 +220,7 @@ test.tlds.forEach(function(tldSet) {
             table.testLabels.allocatableLabels.forEach(function(label) {
                 const domain = [label.label, tld.string].join(".").toUpperCase();
 
-                report("Domain " + domain + ": EPP <create> command MUST succeed");
+                eppTests.add(domain, true);
 
                 //
                 // this phase checks that the server correctly handles whether
@@ -224,10 +247,10 @@ test.tlds.forEach(function(tldSet) {
                         // fail
                         //
                         if ("mayallocatevar" && tableRef.variantPolicy && label.variantTLDAllocatability.includes(tag)) {
-                            report("Domain " + vdomain + ": EPP <create> command MUST succeed for the same registrar/registrant as " + domain);
+                            eppTests.add(vdomain, true, domain);
 
                         } else {
-                            report('Domain ' + vdomain + ': EPP <create> command MUST NOT succeed');
+                            eppTests.add(vdomain, false);
 
                         }
                     });
@@ -257,13 +280,12 @@ test.tlds.forEach(function(tldSet) {
                             // it should fail
                             //
                             if ("mayallocatevar" && oTableRef.variantPolicy && vLabel.variantTLDAllocatability.includes(oTable.tag)) {
-                                report("Domain " + vdomain + ": EPP <create> command MUST succeed for the same registrar/registrant as " + domain);
+                                eppTests.add(vdomain, true, domain);
 
                             } else {
-                                report('Domain ' + vdomain + ': EPP <create> command MUST NOT succeed');
+                                eppTests.add(vdomain, false);
 
                             }
-
                         });
                     });
                 });
@@ -272,11 +294,17 @@ test.tlds.forEach(function(tldSet) {
     });
 });
 
-//
-// this wraps console.log to show line numbers
-//
-function report(str) {
-    const e = new Error();
-    var line = e.stack.split("\n")[2].replace(/^[ \t]+ at /, '').replace(/:\d+$/, '');
-    console.log(line + " : " + str);
-}
+Object.keys(eppTests).filter((k) => k != 'add').forEach(function(domain) {
+    const eppTest = eppTests[domain];
+
+    if (!eppTest.expectedResult) {
+        console.log(domain + ": EPP <create> command MUST NOT succeed");
+
+    } else if (eppTest.hasOwnProperty("primaryDomain")) {
+        console.log(domain + ": EPP <create> command MUST succeed for the same registrar/registrant as " + eppTest.primaryDomain);
+
+    } else {
+        console.log(domain + ": EPP <create> command MUST succeed");
+
+    }
+});
