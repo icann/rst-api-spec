@@ -1084,6 +1084,11 @@ components:
           type: string
           example: "اِختِصاص"
 
+        remark:
+          description: Useful remarks about the label.
+          type: string
+          example: This is an illustrative example.
+
         variantTLDAllocatability:
           description: |
             A list of language tags that this label is valid in, in addition to
@@ -1114,11 +1119,20 @@ components:
           description: The variant label in either A-label or U-label format.
           type: string
           example: "دامنه"
+
+        remark:
+          description: Useful remarks about the label.
+          type: string
+          example: This is an illustrative example.
+
         variantTLDAllocatability:
           description: |
-            The language tag that the label is valid in. In the context of a set
-            of variant TLDs, this property may be used to determine the other
-            TLDs in the set this label may be allocated in.
+            The language tags that the label is allocatable in. This may include
+            the IDN table in which the primary label is allocatable. In the
+            context of a set of variant TLDs, this property may be used to
+            determine the other TLDs in the set this label may be allocated in
+            (otherwise it MUST be blocked). This array MAY be empty, in which
+            case the variant label MUST be blocked in all TLDs in the set.
           type: array
           minItems: 0
           items:
@@ -1126,7 +1140,7 @@ components:
             example: fa-Arab
 
     variantPolicy:
-      description: TODO.
+      description: indicates the policy that should be applied to IDN variants.
       type: string
       enum:
         - novar
