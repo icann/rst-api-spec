@@ -202,6 +202,7 @@ test.tlds.forEach(function(tldSet) {
                 //
                 // this phase checks that the server correctly handles whether
                 // the primary label is allocatable in variant TLDs.
+                //
 
                 //
                 //
@@ -238,15 +239,15 @@ test.tlds.forEach(function(tldSet) {
                 label.variants.forEach(function (vLabel) {
 
                     //
-                    // iterate over all the *other* TLDs in the TLD set
+                    // iterate over the TLDs in the TLD set
                     //
-                    tldSet.filter((oTld) => oTld.string != tld.string).forEach(function(oTld) {
+                    tldSet.forEach(function(oTld) {
                         const vdomain = [vLabel.label, oTld.string].join(".").toUpperCase();
 
                         //
-                        // iterate over all the *other* IDN tables this TLD uses
+                        // iterate over all the IDN tables this TLD uses
                         //
-                        oTld.idnTables.filter((oTableRef) => oTableRef.id != tableRef.id).forEach(function(oTableRef) {
+                        oTld.idnTables.forEach(function(oTableRef) {
                             const oTable = tables[oTableRef.id];
 
                             //
