@@ -1,0 +1,29 @@
+active: true
+rsp: FOOBAR123
+tag: zh
+version: 1.0
+isReferenceLGR: true
+permittedVariantPolicies: ["allblockvar", "mayallocatevar"]
+testLabels:
+  allocatableLabels:
+    - label: xn--vw0aa359b
+      variantTLDAllocatability: ["und-Hani", "und-Hant", "und-Hans"]
+      variants: []
+    - label: xn--a-hk7cx6o
+      variantTLDAllocatability: ["und-Hani", "und-Hant", "und-Hans"]
+      variants: []
+    - label: xn--d06ac89ea
+      variantTLDAllocatability: ["und-Hani", "und-Hant", "und-Hans"]
+      variants:
+        - label: xn--b06aage
+          variantTLDAllocatability: ["zh", "und-Hani", "und-Hant", "und-Hans"]
+        - label: xn--b06aed06h
+          variantTLDAllocatability: []
+        - label: xn--b06aed95h
+          variantTLDAllocatability: []
+  unallocatableLabels:
+    - xn-----c57faca
+    - xn----o69ca
+    - xn----n69ca
+    - xn--1ov696cjoe
+    - xn--88j811vj7d
