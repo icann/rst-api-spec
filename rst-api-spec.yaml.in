@@ -80,7 +80,7 @@ info:
 
     ### Change Log
 
-    * 2024-XX-YY:
+    * 2024-15-16:
       * Significant overhaul of the structure of the `idnTableRef`,
         `idnTableRequest` and `idnTable` schemas, based on internal discussions
         regarding requirements for IDN variants. A reference implementation of
