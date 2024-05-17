@@ -80,7 +80,9 @@ info:
 
     ### Change Log
 
-    * 2024-15-16:
+    * 2024-05-22:
+      * added the `errorCode` property to `rstError` objects.
+    * 2024-05-16:
       * Significant overhaul of the structure of the `idnTableRef`,
         `idnTableRequest` and `idnTable` schemas, based on internal discussions
         regarding requirements for IDN variants. A reference implementation of
@@ -636,6 +638,9 @@ components:
           type: integer
           enum:
 #exec gpp -x inc/http-errors.yaml | yq -r '. | keys' | tr -d "'" | sed 's/^/            /'
+        errorCode:
+          description: The application-specific error code.
+          type: integer
         message:
           description: A human-readable description of the error.
           type: string
