@@ -159,9 +159,9 @@ var eppTests = {};
 // domain twice.
 //
 eppTests.add = function(domain, expectedResult, primaryDomain) {
-    if (this.hasOwnProperty(domain)) {
+    if (this.hasOwnProperty(domain) && this[domain].expectedResult != expectedResult) {
         console.error(
-            "Error: attempt to create a duplicate test for "
+            "Error: attempt to create a duplicate test with a different result for "
             + domain.toUpperCase()
         );
 
