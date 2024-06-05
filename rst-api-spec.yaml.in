@@ -1109,7 +1109,7 @@ components:
             A list of variant labels (if any).
 
             If a TLD is not subject to rules relating to the allocatability of
-            IDN variants, then this array should be empty.
+            IDN variants, then this array **MUST** be empty.
           type: array
           minItems: 0
           items:
