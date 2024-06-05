@@ -80,8 +80,11 @@ info:
 
     ### Change Log
 
-    * 2024-05-22:
+    * 2024-06-05:
       * added the `errorCode` property to `rstError` objects.
+      * As per Public Comment feedback, clarified that for TLDs that are not
+        subject to rules relating to the allocatability of IDN variants, the
+        `variants` property of `idnTestLabel` objects **MUST** be empty.
     * 2024-05-16:
       * Significant overhaul of the structure of the `idnTableRef`,
         `idnTableRequest` and `idnTable` schemas, based on internal discussions
