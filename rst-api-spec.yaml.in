@@ -1105,7 +1105,11 @@ components:
             example: und-Arab
 
         variants:
-          description: A list of variant labels (if any).
+          description: |
+            A list of variant labels (if any).
+
+            If a TLD is not subject to rules relating to the allocatability of
+            IDN variants, then this array should be empty.
           type: array
           minItems: 0
           items:
