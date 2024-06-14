@@ -367,7 +367,7 @@ paths:
         '200':
           description: A successful result.
           content:
-            "application/octet-stream":
+            "*":
               schema:
                 type: string
                 format: binary
