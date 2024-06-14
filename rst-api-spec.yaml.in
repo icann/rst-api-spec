@@ -636,7 +636,7 @@ paths:
       parameters:
         - name: file
           description: the name of the resource.
-          in: url
+          in: path
           required: true
           schema:
             type: string
