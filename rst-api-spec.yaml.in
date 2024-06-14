@@ -80,6 +80,8 @@ info:
 
     ### Change Log
 
+    * 2024-06-19:
+      * added the `/v1/resource/{file}` endpoint.
     * 2024-06-05:
       * added the `errorCode` property to `rstError` objects.
       * As per Public Comment feedback, clarified that for TLDs that are not
@@ -622,6 +624,33 @@ paths:
                 minItems: 0
                 items:
                   $ref: "#/components/schemas/idnTable"
+
+  /v1/resource/{file}:
+    get:
+      operationId: getResource
+      description: |
+        This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
+        which may be useful in preparing registry systems for testing.
+
+        There is no authentication on this endpoint.
+      parameters:
+        - name: file
+          description: the name of the resource.
+          in: url
+          required: true
+          schema:
+            type: string
+            enum:
+#exec bin/generate-resource-names.pl | sed 's/^/        /'
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '200':
+          description: A successful result.
+          content:
+            "*":
+              schema:
+                type: string
+                format: binary
 
 components:
 
