@@ -644,6 +644,7 @@ components:
         errorCode:
           description: The application-specific error code.
           type: integer
+          example: 1400
         message:
           description: A human-readable description of the error.
           type: string
