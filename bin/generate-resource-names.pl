@@ -39,7 +39,7 @@ if (scalar(@names) < 1) {
 
 say STDERR 'generating YAML fragment for resource names...';
 my $yaml = YAML::XS::Dump([sort(uniq(@names))]);
-$yaml =~ s/^-+ //g;
+$yaml =~ s/^-+\n//g;
 
 print $yaml;
 
