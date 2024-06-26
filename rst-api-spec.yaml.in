@@ -641,7 +641,7 @@ paths:
           schema:
             type: string
             enum:
-#exec bin/generate-resource-names.pl | sed 's/^/        /'
+#exec bin/generate-resource-names.pl | sed 's/^/              /'
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
