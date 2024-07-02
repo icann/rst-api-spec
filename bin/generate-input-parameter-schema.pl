@@ -23,28 +23,6 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
 
     $schema->{$name}->{'description'} = $meta{'Description'};
     $schema->{$name}->{'example'} = $meta{'Example'} if (exists($meta{'Example'}));
-
-    if ('url' eq $schema->{$name}->{format}) {
-        $schema->{$name}->{'x-constraints'} = '@ValidUrl';
-    }
-
-    if ('hostname' eq $schema->{$name}->{format}) {
-        $schema->{$name}->{'x-constraints'} = '@ValidHostname';
-    }
-
-    if ('array' eq $schema->{$name}->{type}) {
-        if ('hostname' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidHostnameList';
-        }
-
-        if ('ipv4' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidIpv4List';
-        }
-
-        if ('ipv6' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidIpv6List';
-        }
-    }
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';
