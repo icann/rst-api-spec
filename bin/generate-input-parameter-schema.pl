@@ -24,27 +24,7 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     $schema->{$name}->{'description'} = $meta{'Description'};
     $schema->{$name}->{'example'} = $meta{'Example'} if (exists($meta{'Example'}));
 
-    if ('url' eq $schema->{$name}->{format}) {
-        $schema->{$name}->{'x-constraints'} = '@ValidUrl';
-    }
-
-    if ('hostname' eq $schema->{$name}->{format}) {
-        $schema->{$name}->{'x-constraints'} = '@ValidHostname';
-    }
-
-    if ('array' eq $schema->{$name}->{type}) {
-        if ('hostname' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidHostnameList';
-        }
-
-        if ('ipv4' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidIpv4List';
-        }
-
-        if ('ipv6' eq $schema->{$name}->{items}->{format}) {
-            $schema->{$name}->{'x-constraints'} = '@ValidIpv6List';
-        }
-    }
+    add_constraints($schema->{$name});
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';
@@ -56,3 +36,34 @@ $yaml =~ s/^-+\n//g;
 print $yaml;
 
 say STDERR 'done';
+
+sub add_constraints {
+    my $schema = shift;
+
+    if ('url' eq $schema->{format}) {
+        $schema->{'x-constraints'} = '@ValidUrl';
+
+    } elsif ('hostname' eq $schema->{format}) {
+        $schema->{'x-constraints'} = '@ValidHostname';
+
+    } elsif ('array' eq $schema->{type}) {
+        if ('hostname' eq $schema->{items}->{format}) {
+            $schema->{'x-constraints'} = '@ValidHostnameList';
+
+        } elsif ('ipv4' eq $schema->{items}->{format}) {
+            $schema->{'x-constraints'} = '@ValidIpv4List';
+
+        } elsif ('ipv6' eq $schema->{items}->{format}) {
+            $schema->{'x-constraints'} = '@ValidIpv6List';
+
+        } else {
+            add_constraints($schema->{items}) if ($schema->{items});
+
+        }
+
+    } elsif ('object' eq $schema->{type}) {
+        foreach my $property (keys(%{$schema->{properties}})) {
+            add_constraints($schema->{properties}->{$property});
+        }
+    }
+}
