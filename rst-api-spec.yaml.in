@@ -80,10 +80,13 @@ info:
 
     ### Change Log
 
-    * 2024-07-02:
+    * 2024-07-03:
       * `x-constraints` properties have been added to input parameter schemas,
         where appropriate, to facilitate automated validation in Java
         applications.
+      * When creating tests in the OT&E environment, the `rsp` and `clientIDs`
+        **MUST** now be specified and **MUST** contain the FQDN at which a TLSA
+        record that validates the client certificate is published.
     * 2024-06-26:
       * added the `/v1/resource/{file}` endpoint.
     * 2024-06-05:
