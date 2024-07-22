@@ -106,7 +106,7 @@ info:
       * Clarified that input parameters can still be submitted when a test
         has the `inputs-complete` status.
       * Added the `heartbeat` operation to test that the service is up.
-      * Moved the `/v1` prefix from the `servers` part of the spec into the 
+      * Moved the `/v1` prefix from the `servers` part of the spec into the
         individual `paths`.
       * Extract the schema for files included in `testRequestSubmitted` into
         `fileRef`.
@@ -693,6 +693,7 @@ components:
       type: object
       required:
         - tlds
+        - clientIDs
         - testPlan
       properties:
 #exec gpp -x inc/test-request-base-properties.yaml | sed 's/^/        /'
@@ -792,6 +793,7 @@ components:
       type: object
       required:
         - tlds
+        - clientIDs
         - testPlan
         - testPlanVersion
         - dateRequested
@@ -1002,7 +1004,7 @@ components:
             to assist in debugging any issues that may have caused the test case
             to fail or error.
           type: object
-          additionalProperties: 
+          additionalProperties:
             type: string
           example:
             SOURCE_IP: 192.0.2.128
