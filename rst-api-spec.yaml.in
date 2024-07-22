@@ -693,6 +693,7 @@ components:
       type: object
       required:
         - tlds
+        - rsp
         - clientIDs
         - testPlan
       properties:
@@ -793,6 +794,7 @@ components:
       type: object
       required:
         - tlds
+        - rsp
         - clientIDs
         - testPlan
         - testPlanVersion
