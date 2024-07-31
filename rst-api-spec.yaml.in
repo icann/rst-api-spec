@@ -80,6 +80,9 @@ info:
 
     ### Change Log
 
+    * 2024-07-31:
+      * Fixed the JSON examples in the description of the `tlds` property of
+        `testRequest` and `testRequestSubmitted` objects.
     * 2024-07-03:
       * `x-constraints` properties have been added to input parameter schemas,
         where appropriate, to facilitate automated validation in Java
