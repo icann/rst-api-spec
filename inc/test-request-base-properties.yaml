@@ -27,7 +27,7 @@ tlds:
       "tlds": [
         [
           {
-            "string": "example",
+            "name": "example",
             "idnTables": []
           }
         ]
@@ -44,7 +44,7 @@ tlds:
       "tlds": [
         [
           {
-            "string": "example",
+            "name": "example",
             "idnTables": [
               {
                 "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
@@ -67,7 +67,7 @@ tlds:
       "tlds": [
         [
           {
-            "string": "xn--8pvxs",
+            "name": "xn--8pvxs",
             "idnTables": [
               {
                 "id": "06e6ab5b-0e7a-4ff2-8e67-d6320e5ef4b7",
@@ -76,7 +76,7 @@ tlds:
             ]
           },
           {
-            "string": "xn--8pvz8d",
+            "name": "xn--8pvz8d",
             "idnTables": [
               {
                 "id": "3f60939b-b7bf-46db-9004-126bf08923af",
