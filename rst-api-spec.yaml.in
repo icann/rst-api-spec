@@ -803,6 +803,8 @@ components:
       type: object
       required:
         - testID
+        - status
+        - result
         - tlds
         - href
       properties:
@@ -814,6 +816,10 @@ components:
           description: The RSP's unique ID.
           type: string
           example: RSPI2404-M51
+        status:
+          $ref: "#/components/schemas/testStatus"
+        result:
+          $ref: "#/components/schemas/testResult"
         href:
           description: The URL for this test request object.
           type: string
