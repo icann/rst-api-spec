@@ -966,6 +966,7 @@ components:
           description: A link to the test case specification.
           type: string
           format: url
+          x-constraints: "@ValidUrl"
           example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-dns-address01
 
         result:
@@ -1036,6 +1037,7 @@ components:
           description: a link to a description for the error code (if any).
           type: string
           format: url
+          x-constraints: "@ValidUrl"
           example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-DNSSEC_DNS_QUERY_ERROR
 
         severity:
@@ -1224,3 +1226,4 @@ components:
           type: string
           format: url
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/files/example.txt
+          x-constraints: "@ValidUrl"
