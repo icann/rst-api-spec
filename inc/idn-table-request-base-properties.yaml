@@ -1,6 +1,6 @@
 active:
   description: |
-    indicates whether this table is available for use in testing. If
+    Indicates whether this table is available for use in testing. If
     this property is `false`, this table cannot be used in tests.
 
     In OT&E, this **MUST** be omitted when creating a new test request.
@@ -25,13 +25,13 @@ tag:
   example: ar-Arab
 
 version:
-  description: the version number.
+  description: The version number.
   type: string
   example: "1.0"
 
 isReferenceLGR:
   description: |
-    whether the RSP's implementation of the IDN table uses a Second-
+    Whether the RSP's implementation of the IDN table uses a Second-
     Level Reference Label Generation Rules (LGRs) developed by ICANN.
 
     In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
