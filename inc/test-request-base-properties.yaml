@@ -111,7 +111,8 @@ clientIDs:
     which can be used for authentication.
 
     In OT&E, this **MUST** contain the Fully-Qualified Domain Name where a TLSA
-    record that validates the client certificate is published.
+    record that validates the client certificate is published, and **MAY**
+    contain other IDs.
   type: array
   minItems: 1
   items:
