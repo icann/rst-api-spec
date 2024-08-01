@@ -840,6 +840,7 @@ components:
       required:
         - tlds
         - rsp
+        - createdBy
         - clientIDs
         - testPlan
         - testPlanVersion
@@ -849,6 +850,13 @@ components:
         - inputs
       properties:
 #exec gpp -x inc/test-request-base-properties.yaml | sed 's/^/        /'
+
+        createdBy:
+          description: The ID of the client that created this object.
+          type: string
+          format: hostname
+          x-constraints: "@ValidHostname"
+          example: tlsa.rsp.example
 
         testID:
           description: The unique ID for this test request object.
