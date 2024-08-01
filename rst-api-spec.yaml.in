@@ -80,6 +80,10 @@ info:
 
     ### Change Log
 
+    * 2024-08-07:
+        * The response to `GET /v1/tests` and `GET /v1/tables` requests now
+          include summaries of the matching objects (`testRequestSearchResult`
+          and `idnTableSearchResult`), rather than the full objects.
     * 2024-07-31:
       * Fixed the JSON examples in the description of the `tlds` property of
         `testRequest` and `testRequestSubmitted` objects.
@@ -498,7 +502,7 @@ paths:
                 type: array
                 minItems: 0
                 items:
-                  $ref: "#/components/schemas/testRequestSubmitted"
+                  $ref: "#/components/schemas/testRequestSearchResult"
 
   /v1/table:
     post:
@@ -635,7 +639,7 @@ paths:
                 type: array
                 minItems: 0
                 items:
-                  $ref: "#/components/schemas/idnTable"
+                  $ref: "#/components/schemas/idnTableSearchResult"
 
   /v1/resource/{file}:
     get:
@@ -790,6 +794,40 @@ components:
             only use the ASCII range are also permitted.
           type: boolean
           default: false
+
+    testRequestSearchResult:
+      description: |
+        An abbreviated representation of a test object that is included in
+        search result.
+      type: object
+      required:
+        - testID
+        - tlds
+        - href
+      properties:
+        testID:
+          description: The unique ID for this test request object.
+          type: string
+          example: 3aebd167-c275-45b6-842a-2680ed80422b
+        rsp:
+          description: The RSP's unique ID.
+          type: string
+          example: RSPI2404-M51
+        href:
+          description: The URL for this test request object.
+          type: string
+          format: url
+          x-constraints: "@ValidUrl"
+          example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b
+        tlds:
+          description: A flat list of the TLD(s) for this test.
+          type: array
+          minItems: 1
+          x-constraints: "@ValidHostnameList"
+          items:
+            type: string
+            format: hostname
+            example: example
 
     testRequestSubmitted:
       description: |
@@ -1095,6 +1133,40 @@ components:
           example: 3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
 
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
+
+    idnTableSearchResult:
+      description: |
+        An abbreviated representation of an IDN table object that is included in
+        search result.
+      required:
+        - tableID
+        - href
+        - rsp
+        - tag
+        - version
+      properties:
+        tableID:
+          description: A unique ID for this table.
+          type: string
+          example: 3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
+        href:
+          description: The URL for this object.
+          type: string
+          format: url
+          x-constraints: "@ValidUrl"
+          example: /v1/table/3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
+        rsp:
+          description: The RSP ID.
+          type: string
+          example: RSPI2404-M51
+        tag:
+          description: The language tag.
+          type: string
+          example: ar-Arab
+        version:
+          description: The version number.
+          type: string
+          example: "1.0"
 
     idnTestLabels:
       description: An object containing IDN test labels.
