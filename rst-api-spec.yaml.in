@@ -245,6 +245,7 @@ paths:
               schema:
                 type: string
                 format: url
+                x-constraints: "@ValidUrl"
 
   /v1/test/{id}:
     parameters:
@@ -527,6 +528,7 @@ paths:
               schema:
                 type: string
                 format: url
+                x-constraints: "@ValidUrl"
 
   /v1/table/{id}:
     parameters:
