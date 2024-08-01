@@ -18,8 +18,8 @@ rsp:
   example: RSPI2404-M51
 
 tag:
-  description:
-    the language tag, which must conform to the specification in RFC
+  description: |
+    The language tag, which must conform to the specification in RFC
     5646.
   type: string
   example: ar-Arab
