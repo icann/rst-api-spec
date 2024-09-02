@@ -999,7 +999,6 @@ components:
       required:
         - runID
         - dateStarted
-        - dateCompleted
         - result
         - log
       properties:
@@ -1007,13 +1006,14 @@ components:
           description: unique ID for this test run.
           type: string
           example: 3ed892dd-2b29-4f59-b024-653345067547
-
         dateStarted:
           description: the date and time the run started.
           type: string
           format: date-time
         dateCompleted:
-          description: the date and time the run finished.
+          description: |
+            The date and time the run finished. For `in-progress` runs, this
+            property will be omitted.
           type: string
           format: date-time
         result:
