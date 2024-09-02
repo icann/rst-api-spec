@@ -410,6 +410,34 @@ paths:
         '201':
           description: A succesful result.
 
+  /v1/test/{id}/run/{runID}:
+    parameters:
+      - name: id
+        description: the test ID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: runID
+        description: the test run ID
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Retrieving test information
+      operationId: getTestRun
+      description: This operation retrieves details of a test run.
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '200':
+          description: A successful result.
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/testRunLog"
+
   /v1/test/{id}/result:
     parameters:
       - name: id
