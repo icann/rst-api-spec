@@ -85,6 +85,7 @@ info:
         requests, which will instead include a link to a `GET /v1/test/{id}/{runID}`
         sub-resource.
       * added `cancelled` to the `testResult` enum.
+      * allow administrators to change the status of a test to `cancelled`.
     * 2024-08-07:
       * The response to `GET /v1/tests` and `GET /v1/tables` requests now
         include summaries of the matching objects (`testRequestSearchResult`
@@ -460,20 +461,21 @@ paths:
 
         This operation allows the `result` property of a test request to be
         overridden. The current value of this propert **MUST** be either
-        `exception` or `fail`. If successful, the `result` property will be
-        changed to `pass`.
+        `exception` or `fail`.
       requestBody:
         content:
           'application/x-www-form-urlencoded':
             schema:
               type: object
               required:
-                - pass
+                - result
               properties:
-                pass:
-                  type: integer
+                result:
+                  description: The new result for the test.
+                  type: string
                   enum:
-                    - 1
+                    - pass
+                    - cancelled
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
