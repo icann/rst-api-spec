@@ -84,6 +84,7 @@ info:
       * Full test run information is no longer in responses to `GET /v1/test/{id}`
         requests, which will instead include a link to a `GET /v1/test/{id}/{runID}`
         sub-resource.
+      * added `cancelled` to the `testResult` enum.
     * 2024-08-07:
       * The response to `GET /v1/tests` and `GET /v1/tables` requests now
         include summaries of the matching objects (`testRequestSearchResult`
@@ -769,18 +770,24 @@ components:
 
     testResult:
       description: |
-        A string indicating the result of a test request object.
+        A string indicating the result of a test run.
 
-        1. The `pass` value indicates that the test run completed with no
+        1. The `in-progress` value indicates that the test run has not yet
+           finished.
+        2. The `pass` value indicates that the test run completed with no
            errors.
-        2. The `fail` value indicates that at least one test case failed.
-        3. The `exception` value indicates that an internal issue prevented
+        3. The `fail` value indicates that at least one test case failed.
+        4. The `exception` value indicates that an internal issue prevented
            the test run from completing.
+        5. The `cancelled` value indicates that the test was cancelled by an
+           administrator.
       type: string
       enum:
+        - in-progress
         - pass
         - fail
         - exception
+        - cancelled
 
     idnTableRef:
       description: |
