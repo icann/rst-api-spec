@@ -80,10 +80,14 @@ info:
 
     ### Change Log
 
+    * 2024-09-04:
+      * Full test run information is no longer in responses to `GET /v1/test/{id}`
+        requests, which will instead include a link to a `GET /v1/test/{id}/{runID}`
+        sub-resource.
     * 2024-08-07:
-        * The response to `GET /v1/tests` and `GET /v1/tables` requests now
-          include summaries of the matching objects (`testRequestSearchResult`
-          and `idnTableSearchResult`), rather than the full objects.
+      * The response to `GET /v1/tests` and `GET /v1/tables` requests now
+        include summaries of the matching objects (`testRequestSearchResult`
+        and `idnTableSearchResult`), rather than the full objects.
     * 2024-07-31:
       * Fixed the JSON examples in the description of the `tlds` property of
         `testRequest` and `testRequestSubmitted` objects.
@@ -969,18 +973,41 @@ components:
 
         results:
           description: |
-            A test may result in multiple "runs". Each run is represented by a
-            `testRunLog` which contains a number of `testCaseLog` entries.
-
-            The `results` property is an array of `testRunLog` objects. This
-            property will initially be an empty array, until a test run is
-            started. When the test run starts, an empty `testRunLog` object will
-            be added to the array. As the test progresses, `testCaseLog` entries
-            will be appended to the `testRunLog` object.
+            The `results` property is an array of objects. It property will
+            initially be an empty array, until a test run is started.
           type: array
           minItems: 0
           items:
-            $ref: "#/components/schemas/testRunLog"
+            type: object
+            description: |
+             An abbreviated representation of a test run.
+            required:
+              - runID
+              - dateStarted
+              - dateCompleted
+              - result
+              - href
+            properties:
+              runID:
+                description: unique ID for this test run.
+                type: string
+                example: 3ed892dd-2b29-4f59-b024-653345067547
+              dateStarted:
+                description: the date and time the run started.
+                type: string
+                format: date-time
+              dateCompleted:
+                description: the date and time the run started.
+                type: string
+                format: date-time
+              result:
+                $ref: "#/components/schemas/testResult"
+              href:
+                description: The URL of the test run log.
+                type: string
+                format: url
+                x-constraints: "@ValidUrl"
+                example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/run/3ed892dd-2b29-4f59-b024-653345067547
 
     inputParameters:
       description: |
