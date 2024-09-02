@@ -86,6 +86,8 @@ info:
         sub-resource.
       * added `cancelled` to the `testResult` enum.
       * allow administrators to change the status of a test to `cancelled`.
+      * added the `INFO` severity to the enum of allowed values for the
+        `severity` property of `testCaseLogMessage` objects.
     * 2024-08-07:
       * The response to `GET /v1/tests` and `GET /v1/tables` requests now
         include summaries of the matching objects (`testRequestSearchResult`
@@ -1164,6 +1166,7 @@ components:
             RFC5424.
           type: string
           enum:
+            - INFO
             - WARNING
             - ERROR
             - CRITICAL
