@@ -21,10 +21,10 @@ open "http://$SERVER"
 fswatch -or rst-api-spec.yaml.in README.md etc | while read e ; do
 
   # rebuild the pages
-  docker compose run -T pages
+  docker compose run pages
 
   # do a lint check for good measure
-  docker compose run -T lint
+  docker compose run lint
 
 done
 
