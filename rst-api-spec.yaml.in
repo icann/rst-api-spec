@@ -88,6 +88,8 @@ info:
       * allow administrators to change the status of a test to `cancelled`.
       * added the `INFO` severity to the enum of allowed values for the
         `severity` property of `testCaseLogMessage` objects.
+      * the `context` property of `testCaseLog` objects has been removed, the
+        information will be included in the `log` property instead.
     * 2024-08-07:
       * The response to `GET /v1/tests` and `GET /v1/tables` requests now
         include summaries of the matching objects (`testRequestSearchResult`
@@ -1074,7 +1076,6 @@ components:
         - dateStarted
         - dateCompleted
         - log
-        - context
       properties:
         caseID:
           description: the Test Case ID.
@@ -1125,19 +1126,6 @@ components:
           minItems: 0
           items:
             $ref: "#/components/schemas/testCaseLogMessage"
-        context:
-          description: |
-            an object containing context parameters (eg input parameters,
-            software versions, environment variables, etc). These are intended
-            to assist in debugging any issues that may have caused the test case
-            to fail or error.
-          type: object
-          additionalProperties:
-            type: string
-          example:
-            SOURCE_IP: 192.0.2.128
-            DNS_RCODE: SERVFAIL
-            EDNS0_NSID: URAP-TM4LVG-2JDX6F
 
     testCaseLogMessage:
       description: A log message.
