@@ -86,6 +86,10 @@ info:
         sub-resource.
       * added `cancelled` to the `testResult` enum.
       * allow administrators to change the status of a test to `cancelled`.
+      * added the `INFO` severity to the enum of allowed values for the
+        `severity` property of `testCaseLogMessage` objects.
+      * the `context` property of `testCaseLog` objects has been removed, the
+        information will be included in the `log` property instead.
     * 2024-08-07:
       * The response to `GET /v1/tests` and `GET /v1/tables` requests now
         include summaries of the matching objects (`testRequestSearchResult`
@@ -209,7 +213,7 @@ info:
 
 servers:
   - url: https://rst-api.icann.org
-    description: production server address
+    description: Production server address
   - url: https://rst-api-ote.icann.org
     description: OT&E server address
 
@@ -251,7 +255,7 @@ paths:
                 $ref: "#/components/schemas/testRequestSubmitted"
           headers:
             location:
-              description: the URL of the newly created test request object.
+              description: The URL of the newly created test request object.
               schema:
                 type: string
                 format: url
@@ -260,7 +264,7 @@ paths:
   /v1/test/{id}:
     parameters:
       - name: id
-        description: the test ID
+        description: The test ID
         in: path
         required: true
         schema:
@@ -307,7 +311,7 @@ paths:
       operationId: setTestInputParameters
       parameters:
         - name: id
-          description: the test ID
+          description: The test ID
           in: path
           required: true
           schema:
@@ -340,7 +344,7 @@ paths:
       operationId: uploadFile
       parameters:
         - name: id
-          description: the test ID
+          description: The test ID
           in: path
           required: true
           schema:
@@ -374,13 +378,13 @@ paths:
       operationId: getFile
       parameters:
         - name: id
-          description: the test ID
+          description: The test ID
           in: path
           required: true
           schema:
             type: string
         - name: file
-          description: the file name
+          description: The file name
           in: path
           required: true
           schema:
@@ -398,7 +402,7 @@ paths:
   /v1/test/{id}/run:
     parameters:
       - name: id
-        description: the test ID
+        description: The test ID
         in: path
         required: true
         schema:
@@ -419,13 +423,13 @@ paths:
   /v1/test/{id}/run/{runID}:
     parameters:
       - name: id
-        description: the test ID
+        description: The test ID
         in: path
         required: true
         schema:
           type: string
       - name: runID
-        description: the test run ID
+        description: The test run ID
         in: path
         required: true
         schema:
@@ -447,7 +451,7 @@ paths:
   /v1/test/{id}/result:
     parameters:
       - name: id
-        description: the test ID
+        description: The test ID
         in: path
         required: true
         schema:
@@ -563,7 +567,7 @@ paths:
           description: A successful result.
           headers:
             location:
-              description: the URL of the newly created IDN table object.
+              description: The URL of the newly created IDN table object.
               schema:
                 type: string
                 format: url
@@ -572,7 +576,7 @@ paths:
   /v1/table/{id}:
     parameters:
       - name: id
-        description: the table ID.
+        description: The table ID.
         in: path
         required: true
         schema:
@@ -653,13 +657,13 @@ paths:
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       parameters:
         - name: rsp
-          description: the RSP ID (internal users only).
+          description: The RSP ID (internal users only).
           in: query
           required: false
           schema:
             type: string
         - name: tag
-          description: the language tag.
+          description: The language tag.
           in: query
           required: false
           schema:
@@ -686,7 +690,7 @@ paths:
         There is no authentication on this endpoint.
       parameters:
         - name: file
-          description: the name of the resource.
+          description: The name of the resource.
           in: path
           required: true
           schema:
@@ -824,7 +828,7 @@ components:
           example: example
           x-constraints: "@ValidHostname"
         idnTables:
-          description: the IDN tables(s) for the TLD.
+          description: The IDN tables(s) for the TLD.
           type: array
           minItems: 0
           items:
@@ -949,7 +953,7 @@ components:
 
         errorCodes:
           description: |
-            if the result of the test is a fail or an error, then this property
+            If the result of the test is a fail or an error, then this property
             will contain any `ERROR` or `CRITICAL` error codes generated by the
             test run. Otherwise it will be omitted.
           type: array
@@ -1002,11 +1006,11 @@ components:
                 type: string
                 example: 3ed892dd-2b29-4f59-b024-653345067547
               dateStarted:
-                description: the date and time the run started.
+                description: The date and time the run started.
                 type: string
                 format: date-time
               dateCompleted:
-                description: the date and time the run started.
+                description: The date and time the run started.
                 type: string
                 format: date-time
               result:
@@ -1030,7 +1034,7 @@ components:
       required: []
 
     testRunLog:
-      description: an object representing a discrete test run.
+      description: An object representing a discrete test run.
       type: object
       required:
         - runID
@@ -1043,7 +1047,7 @@ components:
           type: string
           example: 3ed892dd-2b29-4f59-b024-653345067547
         dateStarted:
-          description: the date and time the run started.
+          description: The date and time the run started.
           type: string
           format: date-time
         dateCompleted:
@@ -1072,10 +1076,9 @@ components:
         - dateStarted
         - dateCompleted
         - log
-        - context
       properties:
         caseID:
-          description: the Test Case ID.
+          description: The Test Case ID.
           type: string
           enum:
 #exec sed 's/^/            /' tmp/test-cases.yaml
@@ -1123,19 +1126,6 @@ components:
           minItems: 0
           items:
             $ref: "#/components/schemas/testCaseLogMessage"
-        context:
-          description: |
-            an object containing context parameters (eg input parameters,
-            software versions, environment variables, etc). These are intended
-            to assist in debugging any issues that may have caused the test case
-            to fail or error.
-          type: object
-          additionalProperties:
-            type: string
-          example:
-            SOURCE_IP: 192.0.2.128
-            DNS_RCODE: SERVFAIL
-            EDNS0_NSID: URAP-TM4LVG-2JDX6F
 
     testCaseLogMessage:
       description: A log message.
@@ -1146,7 +1136,7 @@ components:
         - message
       properties:
         code:
-          description: the error code (if any).
+          description: The error code (if any).
           type: string
           enum:
 #exec sed 's/^/            /' tmp/error-codes.yaml
@@ -1164,16 +1154,16 @@ components:
             RFC5424.
           type: string
           enum:
+            - INFO
             - WARNING
             - ERROR
             - CRITICAL
         timestamp:
-          description: |
-            the timestamp when the message was generated.
+          description: The timestamp when the message was generated.
           type: string
           format: date-time
         message:
-          description: the message.
+          description: The message.
           type: string
           example: An error occurred while performing DNS query(s).
 
@@ -1362,11 +1352,11 @@ components:
       type: object
       properties:
         name:
-          description: the file name.
+          description: The file name.
           type: string
           example: example.txt
         type:
-          description: the media type of the file.
+          description: The media type of the file.
           type: string
           example: text/plain
         uploaded:
@@ -1374,7 +1364,7 @@ components:
           type: string
           format: date-time
         href:
-          description: the URL of the file.
+          description: The URL of the file.
           type: string
           format: url
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/files/example.txt
