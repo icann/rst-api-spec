@@ -80,6 +80,8 @@ info:
 
     ### Change Log
 
+    * 2024-09-12: Clarified access control rules for IDN table objects so users
+      can always access the objects they created.
     * 2024-09-04:
       * Full test run information is no longer in responses to `GET /v1/test/{id}`
         requests, which will instead include a link to a `GET /v1/test/{id}/{runID}`
@@ -590,7 +592,7 @@ paths:
         This operation returns information about an IDN table object.
 
         External users can only access IDN tables that are linked to test
-        objects associated with their credentials.
+        objects associated with their credentials, or which they created.
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       responses:
@@ -652,7 +654,7 @@ paths:
         parameters.
 
         External users can only access IDN tables that are linked to test
-        objects associated with their credentials.
+        objects associated with their credentials, or which they created.
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       parameters:
