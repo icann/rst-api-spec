@@ -80,6 +80,14 @@ info:
 
     ### Change Log
 
+    * 2024-09-17: The following endpoints responded with a `201` HTTP status,
+      when `204` should have been used:
+      * `GET /v1/heartbeat`
+      * `POST /v1/test/{id}/inputs`
+      * `POST /v1/test/{id}/files`
+      * `POST /v1/test/{id}/result`
+      * `PUT /v1/table/{id}`
+      * `DELETE /v1/table/{id}`
     * 2024-09-12: Clarified access control rules for IDN table objects so users
       can always access the objects they created.
     * 2024-09-04:
@@ -229,7 +237,7 @@ paths:
       operationId: heartbeat
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
-        '201':
+        '204':
           description: A successful result.
 
   /v1/test:
@@ -325,7 +333,7 @@ paths:
               $ref: "#/components/schemas/inputParameters"
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
-        '201':
+        '204':
           description: A successful result.
 
   /v1/test/{id}/files:
@@ -364,7 +372,7 @@ paths:
                     format: binary
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
-        '201':
+        '204':
           description: A successful result.
 
   /v1/test/{id}/file/{file}:
@@ -484,7 +492,7 @@ paths:
                     - cancelled
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
-        '201':
+        '204':
           description: A succesful result.
 
   /v1/tests:
@@ -623,7 +631,7 @@ paths:
               $ref: "#/components/schemas/idnTableRequest"
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
-        '201':
+        '204':
           description: A successful result.
 
     delete:
@@ -641,7 +649,7 @@ paths:
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       responses:
-        '201':
+        '204':
           description: A successful result.
 
   /v1/tables:
