@@ -29,13 +29,27 @@ version:
   type: string
   example: "1.0"
 
+eppSafeCodePoints:
+  description: |
+    A list of code points that are "safe" for the purposes of pseudo-random
+    generate of domain names in TLDs that use this table.
+
+    Some test cases require the generation and creation of domain names with
+    pseudo-randomly generated names. In TLDs whose value of the `idnOnly`
+    property is `false`, ASCII letters and digits will be used. However, for
+    TLDs for which this value is `true`, this list provides a set of characters
+    that can be used to generate domain names.
+  type: array
+  minItems: 4
+  items:
+    type: string
+    pattern: ^U+[0-9a-f]{4}$
+    example: U+0047
+
 isReferenceLGR:
   description: |
     Whether the RSP's implementation of the IDN table uses a Second-
     Level Reference Label Generation Rules (LGRs) developed by ICANN.
-
-    In OT&E, this value **MUST** be `true`, as custom LGRs cannot be
-    tested in OT&E.
 
     For more information on ICANN's Second-Level LGRS, please see:
 
