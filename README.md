@@ -1,5 +1,6 @@
-This repository contains the specification for the Registry System Testing (RST)
-API. The specification conforms to the [Version 3.0.3 of the OpenAPI
+This repository contains the specification for the [Registry System Testing
+(RST)](https://icann.org/resources/registry-system-testing-v2.0) API. The
+specification conforms to the [Version 3.0.3 of the OpenAPI
 specification](https://spec.openapis.org/oas/v3.0.3).
 
 ## Repository Contents
