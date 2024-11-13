@@ -1,5 +1,6 @@
-This site hosts the specification for ICANN's Registry System Testing (RST)
-API. The specification conforms to the [Version 3.0.3 of the OpenAPI
+This site hosts the specification for ICANN's [Registry System Testing
+(RST)](https://icann.org/resources/registry-system-testing-v2.0) API. The
+specification conforms to the [Version 3.0.3 of the OpenAPI
 specification](https://spec.openapis.org/oas/v3.0.3).
 
 It is updated once per week (on Wednesdays) from the [GitHub
@@ -18,5 +19,5 @@ repository](https://github.com/icann/rst-api-spec).
 
 ## Copyright Statement
 
-This repository is (c) #date %Y Internet Corporation for Assigned Names and 
+This repository is (c) #date %Y Internet Corporation for Assigned Names and
 Numbers (ICANN). All rights reserved.

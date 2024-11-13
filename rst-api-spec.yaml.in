@@ -80,6 +80,13 @@ info:
 
     ### Change Log
 
+    * 2024-11-13:
+      * The `eppSafeCodePoints` property has been added to the `idnTable` and
+        `idnTableRequest` object types, to faciliate EPP testing in TLDs which
+        have an `idnOnly` property of `true`.
+      * The requirement that the `isReferenceLGR` property of IDN table objects
+        **MUST** be `true` has been removed.
+
     * 2024-09-17: The following endpoints responded with a `201` HTTP status,
       when `204` should have been used:
       * `GET /v1/heartbeat`

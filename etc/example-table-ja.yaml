@@ -4,6 +4,9 @@ tag: und-Jpan
 version: 1.0
 isReferenceLGR: true
 permittedVariantPolicies: ["mayallocatevar", "allblockvar"]
+eppSafeCodePoints:
+  - U+1234
+  - U+4311
 testLabels:
   allocatableLabels:
     - label: xn--k8jxa7fxfp465a
