@@ -16,6 +16,6 @@ gpp etc/index.md | pandoc \
 make spec
 
 cp etc/*.svg "$SITEDIR/etc/"
-cp tmp/*.yaml "$SITEDIR/"
-cp tmp/*.json "$SITEDIR/"
-cp etc/*.html "$SITEDIR/"
+cp tmp/rst-api-spec.yaml "$SITEDIR/"
+cp tmp/rst-api-spec.json "$SITEDIR/"
+cp etc/rst-api-spec.html "$SITEDIR/"
