@@ -37,13 +37,17 @@ info:
 
     ### Change Log
 
+    * 2024-11-27:
+      * Added the `files-needed` status to test requests to indicate that one or
+        more files that must be uploaded before a test run can be started.
+      * Added the `missingFiles` property to test objects to provide a list of
+        any files that must be uploaded before a test run can be started.
     * 2024-11-13:
       * The `eppSafeCodePoints` property has been added to the `idnTable` and
         `idnTableRequest` object types, to faciliate EPP testing in TLDs which
         have an `idnOnly` property of `true`.
       * The requirement that the `isReferenceLGR` property of IDN table objects
         **MUST** be `true` has been removed.
-
     * 2024-09-17: The following endpoints responded with a `201` HTTP status,
       when `204` should have been used:
       * `GET /v1/heartbeat`
@@ -735,23 +739,29 @@ components:
         A string indicating the status of a test request object.
 
         1. The `inputs-needed` value indicates that the request has been
-           received, but input parameters are needed before the test can
-           begin.
-        2. The `inputs-complete` value indicates that all the required
+           received, but one or more input parameters are needed before a test
+           run can begin. The `missingInputs` property of the test indicates
+           which input parameters are missing.
+        2. The `files-needed` value indicates that the request has been
+           received, but one or more files are needed before the a test run can
+           begin. The `missingFiles` property of the test indicates which files
+           are missing.
+        3. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided. The test is therefore
            ready to start. It is still possible to update input parameters if
            the test has this status.
-        3. The `in-progress` value indicates that a test run is in progress.
-        4. The `completed` value indicates that the test run has completed. If
+        4. The `in-progress` value indicates that a test run is in progress.
+        5. The `completed` value indicates that the test run has completed. If
            a test object has this status, then its `result` property will
            indicate the outcome of the test.
-        5. The `expired` value indicates that the test did not have a status
+        6. The `expired` value indicates that the test did not have a status
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
       type: string
       enum:
         - inputs-needed
+        - files-needed
         - inputs-complete
         - in-progress
         - completed
@@ -966,6 +976,13 @@ components:
           minItems: 0
           items:
             $ref: "#/components/schemas/fileRef"
+
+        missingFiles:
+          description: A list of any files that have not yet been uploaded.
+          type: array
+          minItems: 0
+          items:
+            type: string
 
         results:
           description: |
