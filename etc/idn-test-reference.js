@@ -173,7 +173,7 @@ eppTests.add = function(domain, expectedResult, primaryDomain) {
 }
 
 //
-// iterate over all TLD sets in the test 
+// iterate over all TLD sets in the test
 //
 test.tlds.forEach(function(tldSet) {
 
@@ -195,7 +195,7 @@ test.tlds.forEach(function(tldSet) {
             if (!table.permittedVariantPolicies.includes(tableRef.variantPolicy)) {
                 console.error(
                     "Error: variant policy '" + tableRef.variantPolicy
-                    + "' is not valid for table '" + table.tag 
+                    + "' is not valid for table '" + table.tag
                     + "' (permitted values: '" + table
                         .permittedVariantPolicies
                         .join("', '")
@@ -246,7 +246,7 @@ test.tlds.forEach(function(tldSet) {
                         // domain <create> should succeed. Otherwise it should
                         // fail
                         //
-                        if ("mayallocatevar" && tableRef.variantPolicy && label.variantTLDAllocatability.includes(tag)) {
+                        if ("mayallocatevar" == tableRef.variantPolicy && label.variantTLDAllocatability.includes(tag)) {
                             eppTests.add(vdomain, true, domain);
 
                         } else {
@@ -279,7 +279,7 @@ test.tlds.forEach(function(tldSet) {
                             // the  domain <create> should succeed. Otherwise
                             // it should fail
                             //
-                            if ("mayallocatevar" && oTableRef.variantPolicy && vLabel.variantTLDAllocatability.includes(oTable.tag)) {
+                            if ("mayallocatevar" == oTableRef.variantPolicy && vLabel.variantTLDAllocatability.includes(oTable.tag)) {
                                 eppTests.add(vdomain, true, domain);
 
                             } else {
