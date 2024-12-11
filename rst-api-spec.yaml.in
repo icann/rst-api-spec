@@ -37,6 +37,9 @@ info:
 
     ### Change Log
 
+    * 2024-12-11:
+       * Fixed the regular expression used to validate members of the
+         `eppSafeCodePoints` property of IDN table objects.
     * 2024-11-27:
       * Added the `files-needed` status to test requests to indicate that one or
         more files that must be uploaded before a test run can be started.
