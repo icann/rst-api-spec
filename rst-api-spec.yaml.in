@@ -822,7 +822,6 @@ components:
           type: string
           format: hostname
           example: example
-          x-constraints: "@ValidHostname"
         idnTables:
           description: The IDN tables(s) for the TLD.
           type: array
@@ -871,11 +870,9 @@ components:
           description: A flat list of the TLD(s) for this test.
           type: array
           minItems: 1
-          x-constraints: "@ValidHostnameList"
           items:
             type: string
             format: hostname
-            x-constraints: "@ValidHostname"
             example: example
 
     testRequestSubmitted:
