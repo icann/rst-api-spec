@@ -43,14 +43,8 @@ sub add_constraints {
     if ('url' eq $schema->{format}) {
         $schema->{'x-constraints'} = '@ValidUrl';
 
-    } elsif ('hostname' eq $schema->{format}) {
-        $schema->{'x-constraints'} = '@ValidHostname';
-
     } elsif ('array' eq $schema->{type}) {
-        if ('hostname' eq $schema->{items}->{format}) {
-            $schema->{'x-constraints'} = '@ValidHostnameList';
-
-        } elsif ('ipv4' eq $schema->{items}->{format}) {
+        if ('ipv4' eq $schema->{items}->{format}) {
             $schema->{'x-constraints'} = '@ValidIpv4List';
 
         } elsif ('ipv6' eq $schema->{items}->{format}) {
