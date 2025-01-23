@@ -774,18 +774,21 @@ components:
 
     testResult:
       description: |
-        A string indicating the result of a test run.
+        A nullable string indicating the result of a test run.
 
-        1. The `in-progress` value indicates that the test run has not yet
+        1. If no test run has been requested for a test object, this property
+           will be `null`.
+        2. The `in-progress` value indicates that the test run has not yet
            finished.
-        2. The `pass` value indicates that the test run completed with no
+        3. The `pass` value indicates that the test run completed with no
            errors.
-        3. The `fail` value indicates that at least one test case failed.
-        4. The `exception` value indicates that an internal issue prevented
+        4. The `fail` value indicates that at least one test case failed.
+        5. The `exception` value indicates that an internal issue prevented
            the test run from completing.
-        5. The `cancelled` value indicates that the test was cancelled by an
+        6. The `cancelled` value indicates that the test was cancelled by an
            administrator.
       type: string
+      nullable: true
       enum:
         - in-progress
         - pass
@@ -1104,7 +1107,6 @@ components:
               out.
             * `aborted` - the test case was aborted before it could complete.
           type: string
-          nullable: true
           enum:
             - pass
             - fail
