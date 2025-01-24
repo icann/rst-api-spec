@@ -40,10 +40,10 @@ eppSafeCodePoints:
     TLDs for which this value is `true`, this list provides a set of characters
     that can be used to generate domain names.
   type: array
-  minItems: 4
+  minItems: 3
   items:
     type: string
-    pattern: ^U+[0-9a-f]{4}$
+    pattern: ^U\\+[0-9a-f]{4}$
     example: U+0047
 
 isReferenceLGR:

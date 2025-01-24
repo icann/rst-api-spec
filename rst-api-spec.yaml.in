@@ -31,74 +31,38 @@ info:
     email: globalsupport@icann.org
 
   description: |
-
-    _[RST-API Specification Home Page](https://icann.github.io/rst-api-spec/)_
-
-    _Last updated: #date %Y-%m-%d_
-
-    <br><br>
     The Registry System Testing (RST-API) provides a
     [RESTful](https://en.wikipedia.org/wiki/REST) interface to ICANN's [Registry
-    System Testing](https://www.icann.org/resources/registry-system-testing)
+    System Testing](https://www.icann.org/resources/registry-system-testing-v2.0)
     platform, which is used to conduct conformance tests of [critical registry
     functions](https://www.icann.org/registry-transition-processes-en#:~:text=Critical%20Functions:,registry%20data%20escrow)
     at various points during the lifecycle of a gTLD (before initial delegation,
     before the [transition to a new Registry Service
     Provider](https://www.icann.org/resources/material-subcontracting-arrangement),
-    or before the approval of new [registry
-    services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)). It
-    will also used by the forthcoming [Registry Service Provider (RSP)
-    Pre-Evaluation Program](https://community.icann.org/display/SPIR/RSP+%7C+Registry+Service+Provider+Pre-Evaluation).
+    before the approval of new [registry
+    services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)), and
+    during [RSP evaluation](https://newgtldprogram.icann.org/en/application-rounds/round2/rsp).
 
-    ### Workflow overview
-
-    The sequence diagram below describes the process by which tests are
-    scheduled, configured, and executed, in the context of the RSP Evaluation
-    Program:
-
-    * [High-level workflow](https://icann.github.io/rst-api-spec/etc/workflow.svg)
-
-    ### State diagram
-
-    Each test request object has a `status` property (see the `testStatus`
-    schema below) indicating its position in the test lifecycle. The following
-    state diagram describes this lifecycle:
-
-    * [State diagram](https://icann.github.io/rst-api-spec/etc/test-object-state-machine.svg)
-
-    ### Role-based access control
-
-    This API implements Role-Based Access Control, where access to certain
-    operations is restricted based on the role that is assigned to a user. For
-    example, external users cannot create new test request objects in the
-    production environment, but can in OT&E.
-
-    ### Authentication
-
-    All access to the API is authenticated using TLS certificates that are
-    authenticated using `TLSA` records published in the DNS. Test request
-    objects are associated with DNS hostnames; if a user presents a
-    certificate which matches one of the `TLSA` records published in the DNS at
-    one of these hostnames, it will be permitted to perform operations on that
-    object.
-
-    #### Internal users
-
-    Internal users must use a certificate that matches a `TLSA` record
-    found at a hard-coded DNS hostname *(the exact name is yet to be
-    determined)*.
+    _Last updated: #date %Y-%m-%d_.
 
     ### Change Log
 
-    * 2024-11-20: The tags have been revised to be more useful for code
-      generators.
+    * 2025-01-28:
+      * The `result` property of test objects is now nullable.
+    * 2024-12-11:
+      * Fixed the regular expression used to validate members of the
+        `eppSafeCodePoints` property of IDN table objects.
+    * 2024-11-27:
+      * Added the `files-needed` status to test requests to indicate that one or
+        more files that must be uploaded before a test run can be started.
+      * Added the `missingFiles` property to test objects to provide a list of
+        any files that must be uploaded before a test run can be started.
     * 2024-11-13:
       * The `eppSafeCodePoints` property has been added to the `idnTable` and
         `idnTableRequest` object types, to faciliate EPP testing in TLDs which
         have an `idnOnly` property of `true`.
       * The requirement that the `isReferenceLGR` property of IDN table objects
         **MUST** be `true` has been removed.
-
     * 2024-09-17: The following endpoints responded with a `201` HTTP status,
       when `204` should have been used:
       * `GET /v1/heartbeat`
@@ -238,7 +202,16 @@ info:
       * Add this change log.
       * Minimise the delta between the internal and external view.
 
+    ### Authentication
+
+    All access to the API is authenticated using TLS certificates that are
+    authenticated using `TLSA` records published in the DNS. For more
+    information, please consult [the RST v2.0 page on the ICANN
+    website](https://www.icann.org/resources/registry-system-testing-v2.0/#authentication-and-access-control).
+
     _Copyright #date %Y ICANN. All rights reserved._
+
+    _[RST-API Specification Home Page](https://icann.github.io/rst-api-spec/)_
 
 servers:
   - url: https://rst-api.icann.org
@@ -783,23 +756,29 @@ components:
         A string indicating the status of a test request object.
 
         1. The `inputs-needed` value indicates that the request has been
-           received, but input parameters are needed before the test can
-           begin.
-        2. The `inputs-complete` value indicates that all the required
+           received, but one or more input parameters are needed before a test
+           run can begin. The `missingInputs` property of the test indicates
+           which input parameters are missing.
+        2. The `files-needed` value indicates that the request has been
+           received, but one or more files are needed before the a test run can
+           begin. The `missingFiles` property of the test indicates which files
+           are missing.
+        3. The `inputs-complete` value indicates that all the required
            input parameters and files have been provided. The test is therefore
            ready to start. It is still possible to update input parameters if
            the test has this status.
-        3. The `in-progress` value indicates that a test run is in progress.
-        4. The `completed` value indicates that the test run has completed. If
+        4. The `in-progress` value indicates that a test run is in progress.
+        5. The `completed` value indicates that the test run has completed. If
            a test object has this status, then its `result` property will
            indicate the outcome of the test.
-        5. The `expired` value indicates that the test did not have a status
+        6. The `expired` value indicates that the test did not have a status
            of `completed` when the `dueDate` was reached.
 
         * [State diagram](etc/test-object-state-machine.svg)
       type: string
       enum:
         - inputs-needed
+        - files-needed
         - inputs-complete
         - in-progress
         - completed
@@ -807,18 +786,21 @@ components:
 
     testResult:
       description: |
-        A string indicating the result of a test run.
+        A nullable string indicating the result of a test run.
 
-        1. The `in-progress` value indicates that the test run has not yet
+        1. If no test run has been requested for a test object, this property
+           will be `null`.
+        2. The `in-progress` value indicates that the test run has not yet
            finished.
-        2. The `pass` value indicates that the test run completed with no
+        3. The `pass` value indicates that the test run completed with no
            errors.
-        3. The `fail` value indicates that at least one test case failed.
-        4. The `exception` value indicates that an internal issue prevented
+        4. The `fail` value indicates that at least one test case failed.
+        5. The `exception` value indicates that an internal issue prevented
            the test run from completing.
-        5. The `cancelled` value indicates that the test was cancelled by an
+        6. The `cancelled` value indicates that the test was cancelled by an
            administrator.
       type: string
+      nullable: true
       enum:
         - in-progress
         - pass
@@ -857,7 +839,6 @@ components:
           type: string
           format: hostname
           example: example
-          x-constraints: "@ValidHostname"
         idnTables:
           description: The IDN tables(s) for the TLD.
           type: array
@@ -906,11 +887,9 @@ components:
           description: A flat list of the TLD(s) for this test.
           type: array
           minItems: 1
-          x-constraints: "@ValidHostnameList"
           items:
             type: string
             format: hostname
-            x-constraints: "@ValidHostname"
             example: example
 
     testRequestSubmitted:
@@ -1014,6 +993,13 @@ components:
           minItems: 0
           items:
             $ref: "#/components/schemas/fileRef"
+
+        missingFiles:
+          description: A list of any files that have not yet been uploaded.
+          type: array
+          minItems: 0
+          items:
+            type: string
 
         results:
           description: |
