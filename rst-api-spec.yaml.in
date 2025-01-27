@@ -5,6 +5,7 @@ openapi: 3.0.3
 #define INTERNAL_USER_ACCESS_CONTROL_POLICY Internal users can perform this operation on any object.
 
 tags:
+  - name: Checking that the server is up
   - name: Creating test request objects
   - name: Providing input parameters & files
   - name: Retrieving test information
@@ -674,6 +675,8 @@ paths:
 
   /v1/resource/{file}:
     get:
+      tags:
+        - Providing input parameters & files
       operationId: getResource
       description: |
         This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
