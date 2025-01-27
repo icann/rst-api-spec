@@ -26,7 +26,7 @@ while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
     $schema->{$name}->{'description'} = $meta{'Description'};
     $schema->{$name}->{'example'} = $meta{'Example'} if (exists($meta{'Example'}));
 
-    add_constraints($schema->{$name});
+    munge_schema($schema->{$name});
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';
@@ -39,7 +39,7 @@ print $yaml;
 
 say STDERR 'done';
 
-sub add_constraints {
+sub munge_schema {
     my $schema = shift;
 
     if ('url' eq $schema->{format}) {
@@ -53,13 +53,13 @@ sub add_constraints {
             $schema->{'x-constraints'} = '@ValidIpv6List';
 
         } else {
-            add_constraints($schema->{items}) if ($schema->{items});
+            munge_schema($schema->{items}) if ($schema->{items});
 
         }
 
     } elsif ('object' eq $schema->{type}) {
         foreach my $property (keys(%{$schema->{properties}})) {
-            add_constraints($schema->{properties}->{$property});
+            munge_schema($schema->{properties}->{$property});
         }
     }
 }
