@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use URI;
 use File::Basename qw(dirname);
 use File::Spec;

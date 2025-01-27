@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use Data::Mirror qw(mirror_yaml);
 use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.yaml';
 use feature qw(say);
