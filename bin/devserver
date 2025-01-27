@@ -18,7 +18,7 @@ open "http://$SERVER"
 
 # watch for changes to source files
 # this is also macOS only, on Linux, use inotifywatch
-fswatch -or rst-api-spec.yaml.in README.md etc | while read e ; do
+fswatch -or rst-api-spec.yaml.in README.md etc bin | while read e ; do
 
   # rebuild the pages
   docker compose run -T pages
