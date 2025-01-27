@@ -4,6 +4,8 @@ use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.
 use feature qw(say);
 use strict;
 
+$YAML::XS::Boolean = q{JSON::PP};
+
 say STDERR 'mirroring test specs...';
 my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
 
