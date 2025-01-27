@@ -923,7 +923,7 @@ components:
             and follows the [Semantic Versioning](https://semver.org)
             convention.
           type: string
-          pattern: ^\\d+(\\.\\d+)+$
+          pattern: "^\\d+(\\.\\d+)+$"
           example: "3.1.2024096"
 
         dateRequested:
