@@ -42,6 +42,10 @@ say STDERR 'done';
 sub munge_schema {
     my $schema = shift;
 
+    if (!exists($schema->{example}) && exists($schema->{default})) {
+        $schema->{example} = $schema->{default};
+    }
+
     if ('url' eq $schema->{format}) {
         $schema->{'x-constraints'} = '@ValidUrl';
 
