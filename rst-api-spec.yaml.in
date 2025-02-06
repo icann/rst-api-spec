@@ -1042,10 +1042,15 @@ components:
       required: []
 
     testRunLog:
-      description: An object representing a discrete test run.
+      description: |
+        An object representing a discrete test run.
+
+        The `inputs` property of this object is a snapshot of the input
+        parameters at the time the test run began.
       type: object
       required:
         - runID
+        - inputs
         - dateStarted
         - result
         - log
@@ -1054,6 +1059,8 @@ components:
           description: unique ID for this test run.
           type: string
           example: 3ed892dd-2b29-4f59-b024-653345067547
+        inputs:
+          $ref: "#/components/schemas/inputParameters"
         dateStarted:
           description: The date and time the run started.
           type: string
