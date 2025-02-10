@@ -2,7 +2,7 @@
   "active": true,
   "rsp": "FOOBAR123",
   "tag": "hi",
-  "version": 1,
+  "version": "1.0",
   "isReferenceLGR": true,
   "permittedVariantPolicies": [
     "allblockvar"
