@@ -43,7 +43,7 @@ eppSafeCodePoints:
   minItems: 3
   items:
     type: string
-    pattern: ^U\\+[0-9a-f]{4}$
+    pattern: ^U\\+[0-9a-fA-F]{4}$
     example: U+0047
 
 isReferenceLGR:

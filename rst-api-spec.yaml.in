@@ -38,6 +38,8 @@ info:
 
     ### Change Log
 
+    * 2025-02-13:
+      * Allow uppercase hex in `eppSafeCodePoints`.
     * 2025-01-28:
       * The `result` property of test objects is now nullable.
     * 2024-12-11:
