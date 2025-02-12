@@ -47,7 +47,7 @@ eppSafeCodePoints:
   minItems: 3
   items:
     type: string
-    pattern: |
+    pattern: >-
       ^U\\+[0-9a-fA-F]+(?: U\\+[0-9a-fA-F]+)*$
     example: U+0047
 
