@@ -38,7 +38,7 @@ info:
 
     ### Change Log
 
-    * 2025-02-123:
+    * 2025-02-12:
       * The `eppSafeCodePoints` property in `idnTable` and `idnTableRequest`
         objects has been updated to allow a sequence of code points, to support
         scripts such as Thaana which have context rules that mean that random
