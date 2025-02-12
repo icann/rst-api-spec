@@ -38,8 +38,11 @@ info:
 
     ### Change Log
 
-    * 2025-02-13:
-      * Allow uppercase hex in `eppSafeCodePoints`.
+    * 2025-02-123:
+      * The `eppSafeCodePoints` property in `idnTable` and `idnTableRequest`
+        objects has been updated to allow a sequence of code points, to support
+        scripts such as Thaana which have context rules that mean that random
+        selection of code points could result in invalid labels.
     * 2025-01-28:
       * The `result` property of test objects is now nullable.
     * 2024-12-11:

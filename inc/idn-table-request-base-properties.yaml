@@ -31,19 +31,23 @@ version:
 
 eppSafeCodePoints:
   description: |
-    A list of code points that are "safe" for the purposes of pseudo-random
-    generate of domain names in TLDs that use this table.
+    A list of sequences that are "safe" for the purposes of pseudo-random
+    generation of domain names in TLDs that use this table.
 
     Some test cases require the generation and creation of domain names with
     pseudo-randomly generated names. In TLDs whose value of the `idnOnly`
-    property is `false`, ASCII letters and digits will be used. However, for
-    TLDs for which this value is `true`, this list provides a set of characters
-    that can be used to generate domain names.
+    property is `false`, ASCII letters and digits will be used.
+
+    However, for TLDs for which this value is `true`, this list provides a set
+    of characters that can be used to generate domain names.
+
+    Each item in the array is a string containing one or more code points,
+    separated by spaces.
   type: array
   minItems: 3
   items:
     type: string
-    pattern: ^U\\+[0-9a-fA-F]{4}$
+    pattern: "^U\\+[0-9a-fA-F]+(?: U\\+[0-9a-fA-F]+)*$"
     example: U+0047
 
 isReferenceLGR:
