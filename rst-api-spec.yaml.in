@@ -38,7 +38,7 @@ info:
 
     ### Change Log
 
-    * 2025-02-19:
+    * 2025-02-14:
       * The `testResult` type has been changed to remove the `nullable` setting
         as this was found to cause problems with code generators. Instead, a
         new (and default) value of `not-started` has been added to the enum.
