@@ -38,6 +38,10 @@ info:
 
     ### Change Log
 
+    * 2025-02-19:
+      * The `testResult` type has been changed to remove the `nullable` setting
+        as this was found to cause problems with code generators. Instead, a
+        new (and default) value of `not-started` has been added to the enum.
     * 2025-02-12:
       * The `eppSafeCodePoints` property in `idnTable` and `idnTableRequest`
         objects has been updated to allow a sequence of code points, to support
@@ -782,10 +786,10 @@ components:
 
     testResult:
       description: |
-        A nullable string indicating the result of a test run.
+        A string indicating the result of a test run.
 
         1. If no test run has been requested for a test object, this property
-           will be `null`.
+           will be `not-started`.
         2. The `in-progress` value indicates that the test run has not yet
            finished.
         3. The `pass` value indicates that the test run completed with no
@@ -796,8 +800,9 @@ components:
         6. The `cancelled` value indicates that the test was cancelled by an
            administrator.
       type: string
-      nullable: true
+      default: not-started
       enum:
+        - not-started
         - in-progress
         - pass
         - fail
