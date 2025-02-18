@@ -800,7 +800,6 @@ components:
         6. The `cancelled` value indicates that the test was cancelled by an
            administrator.
       type: string
-      default: not-started
       enum:
         - not-started
         - in-progress
