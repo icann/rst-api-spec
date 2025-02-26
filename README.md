@@ -24,8 +24,9 @@ All development is done on the `dev` branch. The `main` branch is updated every
 ## See Also
 
 * [RST Test Specifications](https://icann.github.io/rst-test-specs/) ([GitHub repository](https://github.com/icann/rst-test-specs))
+* [IDN test labels for RST v2.0](https://github.com/icann/rst-idn-test-labels)
 
 ## Copyright Statement
 
-This repository is (c) 2024 Internet Corporation for Assigned Names and Numbers
+This repository is (c) 2025 Internet Corporation for Assigned Names and Numbers
 (ICANN). All rights reserved.

@@ -16,6 +16,7 @@ repository](https://github.com/icann/rst-api-spec).
 
 * [RST Test Specifications](https://icann.github.io/rst-test-specs/)
   ([GitHub repository](https://github.com/icann/rst-test-specs))
+* [IDN test labels for RST v2.0](https://github.com/icann/rst-idn-test-labels)
 
 ## Copyright Statement
 
