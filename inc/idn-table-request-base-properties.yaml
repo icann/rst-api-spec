@@ -1,12 +1,3 @@
-active:
-  description: |
-    Indicates whether this table is available for use in testing. If
-    this property is `false`, this table cannot be used in tests.
-
-    In OT&E, this **MUST** be omitted when creating a new test request.
-  type: boolean
-  default: true
-
 rsp:
   description: |
     The RSP's unique ID.

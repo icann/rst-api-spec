@@ -1218,6 +1218,14 @@ components:
           description: A unique ID for this table.
           type: string
           example: 3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
+        active:
+          description: |
+            Indicates whether this table is available for use in testing. If
+            this property is `false`, this table cannot be used in tests.
+
+            In OT&E, this **MUST** be omitted when creating a new IDN table.
+          type: boolean
+          default: true
 
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
