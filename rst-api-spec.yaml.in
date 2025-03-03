@@ -1194,6 +1194,7 @@ components:
         - version
         - isReferenceLGR
         - permittedVariantPolicies
+        - testLabels
       properties:
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
@@ -1210,6 +1211,7 @@ components:
         - version
         - isReferenceLGR
         - permittedVariantPolicies
+        - testLabels
       properties:
         tableID:
           description: A unique ID for this table.
