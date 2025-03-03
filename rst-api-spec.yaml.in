@@ -38,6 +38,9 @@ info:
 
     ### Change Log
 
+    * 2025-03-05:
+      * Removed the `active` property from `idnTableRequest` objects, and made
+        the `testLabels` propoerty required.
     * 2025-02-14:
       * The `testResult` type has been changed to remove the `nullable` setting
         as this was found to cause problems with code generators. Instead, a
