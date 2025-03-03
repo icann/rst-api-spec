@@ -1188,9 +1188,6 @@ components:
       description: |
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
-
-        In OT&E, the `isReferenceLGR` property **MUST** be `true`, and the
-        `testLabels` property **MUST** be omitted.
       type: object
       required:
         - tag

@@ -2,7 +2,7 @@ rsp:
   description: |
     The RSP's unique ID.
 
-    In OT&E, this **MUST** be omitted when creating a new test request,
+    In OT&E, this **MUST** be omitted when creating a new IDN table,
     and will be populated using the FQDN of the first `TLSA` record
     which matches the certificate presented by the client.
   type: string
@@ -10,8 +10,8 @@ rsp:
 
 tag:
   description: |
-    The language tag, which must conform to the specification in RFC
-    5646.
+    The language tag, which **MUST** conform to the specification in [RFC
+    5646](https://www.rfc-editor.org/rfc/rfc5646.html).
   type: string
   example: ar-Arab
 
