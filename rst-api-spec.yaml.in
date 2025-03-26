@@ -14,7 +14,7 @@ tags:
   - name: IDN table management
 
 info:
-  version: "1.#date %Y%j"
+  version: #include tmp/version.txt
 
   title: ICANN Registry System Testing (RST) API
   contact:
