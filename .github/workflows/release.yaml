@@ -29,5 +29,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
-            _site/rst-api-spec.yaml
-            _site/rst-api-spec.json
+            tmp/rst-api-spec.yaml
+            tmp/rst-api-spec.json
