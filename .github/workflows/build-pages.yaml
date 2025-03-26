@@ -1,10 +1,9 @@
 name: build-pages
 
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  release:
+    types:
+      - published
 
 jobs:
   build-pages:
@@ -17,8 +16,14 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: get release
+        id: get_release
+        uses: joutvhu/get-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: build
-        run: docker compose run pages
+        run: docker compose run --env RELEASE=${{ steps.get_release.outputs.tag_name }} pages
 
       - name: package
         run: tar --directory=_site -z -c -v -f github-pages .
@@ -31,3 +36,11 @@ jobs:
 
       - name: deploy
         uses: actions/deploy-pages@v4
+
+      - name: release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: |
+            _site/rst-api-spec.yaml
+            _site/rst-api-spec.json
