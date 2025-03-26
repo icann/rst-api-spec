@@ -14,8 +14,11 @@ includes: tmpdir
 	@bin/generate-input-parameter-schema.pl > tmp/input-parameters.yaml
 	@bin/generate-test-cases.pl > tmp/test-cases.yaml
 	@bin/generate-error-codes.pl > tmp/error-codes.yaml
-	
+
 spec: tmpdir includes
+	@echo Computing version...
+	@bin/generate-version.sh > tmp/version.txt
+
 	@echo Generating YAML file...
 	@gpp -x rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
 
