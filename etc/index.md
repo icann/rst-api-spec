@@ -1,11 +1,14 @@
 This site hosts the specification for ICANN's [Registry System Testing
-(RST)](https://icann.org/resources/registry-system-testing-v2.0/) API. The
-specification conforms to the [Version 3.0.3 of the OpenAPI
-specification](https://spec.openapis.org/oas/v3.0.3).
+(RST)](https://icann.org/resources/registry-system-testing-v2.0/) API.
 
-* [RST-API Specification RELEASE](rst-api-spec.html?version=RELEASE)
-  ([YAML](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.yaml))
-  ([JSON](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.json))
+* [**Click here to access the RST API Specification RELEASE**](rst-api-spec.html?version=RELEASE)
+
+Additional resources:
+
+* [YAML](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.yaml)
+  and
+  [JSON](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.json)
+  versions of the API spec, suitable for use with code generators.
 * [List of releases](https://github.com/icann/rst-api-spec/releases)
 * [GitHub repository](https://github.com/icann/rst-api-spec/)
 
@@ -17,4 +20,4 @@ specification](https://spec.openapis.org/oas/v3.0.3).
 
 ## License
 
-#exec pandoc --from markdown --to html < LICENSE
+#include ../LICENSE
