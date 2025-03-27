@@ -16,11 +16,6 @@ build the image, but it will be quite fast after that.
 
 You can also validate the spec (once built) using `docker compose run lint`.
 
-## Branches
-
-All development is done on the `dev` branch. The `main` branch is updated every
- Wednesday from the `dev` branch.
-
 ## See Also
 
 * [RST Test Specifications](https://icann.github.io/rst-test-specs/) ([GitHub repository](https://github.com/icann/rst-test-specs))
