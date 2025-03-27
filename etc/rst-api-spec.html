@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="SwaggerUI">
     <title>ICANN Registry System Testing (RST) API</title>
-    <link rel="stylesheet" href="/swagger-ui/swagger-ui.css">
+    <link rel="stylesheet" href="./swagger-ui/swagger-ui.css">
     <style>
       html,body,p,ul,ol,li,table,tr,td,th,div {
         line-height: 1.5em !important;
@@ -21,15 +21,15 @@
   </head>
   <body>
     <div id="swagger-ui"></div>
-    <script src="/swagger-ui/swagger-ui-bundle.js"></script>
-    <script src="/swagger-ui/swagger-ui-standalone-preset.js"></script>
+    <script src="./swagger-ui/swagger-ui-bundle.js"></script>
+    <script src="./swagger-ui/swagger-ui-standalone-preset.js"></script>
     <script>
       const version = new URL(document.location).searchParams.get("version") ?? "RELEASE";
 
       window.onload = function() {
 
         window.ui = SwaggerUIBundle({
-          url: new URL(`rst-api-spec-${version}.yaml`, window.location).toString(),
+          url: new URL(`./rst-api-spec-${version}.yaml`, window.location).toString(),
           dom_id: '#swagger-ui',
           deepLinking: true,
         });
