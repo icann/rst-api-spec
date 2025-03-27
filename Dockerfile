@@ -9,6 +9,7 @@ RUN apk update
 RUN apk add --quiet \
     git \
     curl \
+    jq \
     yq \
     make \
     gcc \
