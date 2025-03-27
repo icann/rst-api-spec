@@ -7,6 +7,7 @@ RUN ln -s /home/mermaidcli/node_modules/.bin/mmdc /usr/local/bin/
 RUN apk update
 
 RUN apk add --quiet \
+    git \
     curl \
     yq \
     make \
