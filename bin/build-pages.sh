@@ -28,8 +28,9 @@ gpp -x "-DRELEASE=$CURRENT_RELEASE" etc/index.md | pandoc \
 
 echo "Syncing spec files..."
 git tag | grep "^v" | while read RELEASE ; do
-    curl --silent --fail --location --output "$SITEDIR/rst-api-spec-$RELEASE.yaml" "https://github.com/icann/rst-api-spec/releases/download/$RELEASE/rst-api-spec.yaml"
-    curl --silent --fail --location --output "$SITEDIR/rst-api-spec-$RELEASE.json" "https://github.com/icann/rst-api-spec/releases/download/$RELEASE/rst-api-spec.json"
+    for extn in yaml json ; do
+        curl --silent --fail --location --output "$SITEDIR/rst-api-spec-$RELEASE.$extn" "https://github.com/icann/rst-api-spec/releases/download/$CURRENT_RELEASE/rst-api-spec.$extn"
+    done
 done
 
 echo "Creating Swagger UI file..."
