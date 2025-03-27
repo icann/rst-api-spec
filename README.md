@@ -1,3 +1,6 @@
+> [!TIP]
+> [Click here to go directly to the current RST API specification.](https://icann.github.io/rst-test-specs/rst-test-specs.html)
+
 This repository contains the specification for the [Registry System Testing
 (RST)](https://icann.org/resources/registry-system-testing-v2.0) API. The
 specification conforms to the [Version 3.0.3 of the OpenAPI
