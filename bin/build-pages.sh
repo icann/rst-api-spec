@@ -8,6 +8,12 @@ git config --global --add safe.directory /app
 
 CURRENT_RELEASE="$(git tag | tail -1)"
 
+if [ -z "$CURRENT_RELEASE" ] ; then
+    echo "No release tag found! Tag list follows..."
+    git tag --list
+    exit 1
+fi
+
 echo "Current release is $CURRENT_RELEASE"
 
 echo "Creating index file..."
