@@ -24,8 +24,10 @@
     <script src="https://unpkg.com/swagger-ui-dist@5.0/swagger-ui-bundle.js" crossorigin></script>
     <script>
       window.onload = () => {
+        const version = new URL(document.location).searchParams.get("version") ?? "RELEASE";
+
         window.ui = SwaggerUIBundle({
-          url: new URL("rst-api-spec.yaml", window.location).toString(),
+          url: new URL(`rst-api-spec-${version}.yaml`, window.location).toString(),
           dom_id: '#swagger-ui',
         });
       };
