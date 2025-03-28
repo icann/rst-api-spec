@@ -530,8 +530,6 @@ paths:
       description: |
         This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
         which may be useful in preparing registry systems for testing.
-
-        There is no authentication on this endpoint.
       parameters:
         - name: file
           description: The name of the resource.
