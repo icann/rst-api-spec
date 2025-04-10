@@ -66,6 +66,9 @@ paths:
         - Checking that the server is up
       description: |
         This operation can be used to determine if the server is up.
+
+        Only authenticated clients can access this resource.
+
       operationId: heartbeat
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
@@ -531,7 +534,7 @@ paths:
         This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
         which may be useful in preparing registry systems for testing.
 
-        There is no authentication on this endpoint.
+        Only authenticated clients can access resources.
       parameters:
         - name: file
           description: The name of the resource.
