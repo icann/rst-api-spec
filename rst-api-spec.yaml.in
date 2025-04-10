@@ -36,6 +36,11 @@ info:
 
     ### Change Log
 
+    * v2025.02 (2025-04-10):
+      * Update documentation for the `/v1/heartbeat` and `/v1/resource/{file}`
+        endpoints, as due to a technical limitation, they can only be accessed
+        by authenticated clients.
+
     * v2025.01 (2025-03-27):
       * This is the first stable release of the RST v2.0 API specification.
         There are no changes to the spec other than the version number.
