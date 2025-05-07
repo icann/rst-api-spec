@@ -939,7 +939,6 @@ components:
         - result
         - description
         - dateStarted
-        - dateCompleted
         - log
       properties:
         caseID:
