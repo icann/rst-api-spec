@@ -36,6 +36,19 @@ info:
 
     ### Change Log
 
+    * v2024.03 (2024-07-09):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.04 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.04)
+        (see [#7](https://github.com/icann/rst-api-spec/issues/7)).
+
+      * The `description` property has been removed from the `testCaseLog`
+        schema (see [#12](https://github.com/icann/rst-api-spec/issues/12)).
+
+      * Correct documentation of the `POST /v1/test` endpoint to confirm that
+        the `rsp` property **MUST** be omitted (see
+        [#10](https://github.com/icann/rst-api-spec/issues/10)).
+
     * v2025.02 (2025-04-10):
       * Update documentation for the `/v1/heartbeat` and `/v1/resource/{file}`
         endpoints, as due to a technical limitation, they can only be accessed
