@@ -1,9 +1,3 @@
-#
-# this variable determines which version of the RST test spec is used when
-# importing error codes, input parameter schemas, etc.
-#
-export RST_TEST_SPEC_VERSION=v2025.01
-
 all: diagrams spec
 
 tmpdir:
