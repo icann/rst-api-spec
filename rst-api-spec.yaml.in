@@ -937,7 +937,6 @@ components:
         - caseID
         - caseRef
         - result
-        - description
         - dateStarted
         - log
       properties:
@@ -972,10 +971,6 @@ components:
             - exception
             - skipped
             - aborted
-        description:
-          description: A short description of the outcome of the test.
-          type: string
-          example: All nameserver IP addresses are globally routable.
         dateStarted:
           description: date/time when the test case started.
           type: string
