@@ -281,7 +281,7 @@ paths:
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
-          description: A succesful result.
+          description: A successful result.
 
   /v1/test/{id}/run/{runID}:
     parameters:
@@ -346,7 +346,7 @@ paths:
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '204':
-          description: A succesful result.
+          description: A successful result.
 
   /v1/tests:
     get:
