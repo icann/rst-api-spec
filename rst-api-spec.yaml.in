@@ -36,6 +36,12 @@ info:
 
     ### Change Log
 
+    * v2025.04 (2025-08-14):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.05 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.05).
+        There are no other changes.
+
     * v2025.03 (2025-07-09):
       * This version incorporates the test plans, error codes and other
         information from [v2025.04 of the RST test
