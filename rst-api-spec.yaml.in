@@ -1178,6 +1178,7 @@ components:
             label may be allocated in.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: und-Arab
@@ -1220,6 +1221,7 @@ components:
             case the variant label MUST be blocked in all TLDs in the set.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: fa-Arab
