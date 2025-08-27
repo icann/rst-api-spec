@@ -57,7 +57,6 @@ permittedVariantPolicies:
     The variant policies supported for this table. This is an array of strings
     whose permitted values are:
 
-    * `novar` - no variants are supported/applicable
     * `allblockvar` - all variants are blocked
     * `mayallocatevar` - variants may be allocated
   type: array
