@@ -36,6 +36,20 @@ info:
 
     ### Change Log
 
+    * v2025.05 (2025-09-01):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.06 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.06).
+
+      * Add `x-constraints` properties to `idnTableRequest.tag`,
+        `idnTestLabel.variantTLDAllocatability` and
+        `idnVariantLabel.variantTLDAllocatability` to allow additional
+        validation of provided values (see
+        [#18](https://github.com/icann/rst-api-spec/issues/18)).
+
+      * Remove `novar` as permitted value for `variantPolicy` (see
+        [#20](https://github.com/icann/rst-api-spec/issues/20)).
+
     * v2025.04 (2025-08-14):
       * This version incorporates the test plans, error codes and other
         information from [v2025.05 of the RST test
