@@ -1244,7 +1244,6 @@ components:
       description: indicates the policy that should be applied to IDN variants.
       type: string
       enum:
-        - novar
         - allblockvar
         - mayallocatevar
 
