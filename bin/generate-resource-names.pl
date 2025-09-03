@@ -1,12 +1,11 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use URI;
 use File::Basename qw(dirname);
 use File::Spec;
 use Cwd qw(abs_path);
 use YAML::XS;
+use ICANN::RST;
 use List::Util qw(uniq);
-use Data::Mirror qw(mirror_yaml);
-use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.yaml';
 use feature qw(say);
 use strict;
 
@@ -15,13 +14,13 @@ my $apiSpec = YAML::XS::LoadFile(File::Spec->catfile(dirname(dirname(__FILE__)),
 my @servers = map { URI->new($_->{'url'}) } @{$apiSpec->{'servers'}};
 
 say STDERR 'mirroring test specs...';
-my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
+my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new);
 
 say STDERR 'extracting resource names...';
 my @names;
-RESOURCE: foreach my $resource (values(%{$spec->{'Resources'}})) {
+RESOURCE: foreach my $resource ($spec->resources) {
     if ($resource->{'URL'}) {
-        my $url = URI->new($resource->{'URL'});
+        my $url = $resource->url;
 
         foreach my $server (@servers) {
             if ($server->authority eq $url->authority) {

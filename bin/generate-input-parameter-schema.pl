@@ -1,30 +1,30 @@
-#!/usr/bin/perl
-use Data::Mirror qw(mirror_yaml);
-use constant SPEC_URL => 'https://icann.github.io/rst-test-specs/rst-test-specs.yaml';
+#!/usr/bin/env perl
+use ICANN::RST;
 use feature qw(say);
 use strict;
 
+$YAML::XS::Boolean = q{JSON::PP};
+
 say STDERR 'mirroring test specs...';
-my $spec = mirror_yaml($ENV{'RST_SPEC_URL'} || SPEC_URL) || die('mirror failed');
+my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new);
 
 say STDERR 'extracting input parameter schemas...';
 my $schema = {};
-while (my ($name, $ref) = each(%{$spec->{'Input-Parameters'}})) {
-    my %meta = %{$ref};
+foreach my $input ($spec->inputs) {
 
-    if (!exists($meta{'Schema'})) {
-        printf(STDERR "missing schema for '%s'\n", $name);
+    if (!exists($input->{Schema})) {
+        printf(STDERR "missing schema for '%s'\n", $input->id);
         exit(1);
 
     } else {
-        $schema->{$name} = $meta{'Schema'};
+        $schema->{$input->id} = $input->{Schema};
 
     }
 
-    $schema->{$name}->{'description'} = $meta{'Description'};
-    $schema->{$name}->{'example'} = $meta{'Example'} if (exists($meta{'Example'}));
+    $schema->{$input->id}->{'description'} = $input->{Description};
+    $schema->{$input->id}->{'example'} = $input->example if (exists($input->{'Example'}));
 
-    add_constraints($schema->{$name});
+    munge_schema($schema->{$input->id});
 }
 
 say STDERR 'generating YAML fragment for input parameter schemas...';
@@ -37,8 +37,12 @@ print $yaml;
 
 say STDERR 'done';
 
-sub add_constraints {
+sub munge_schema {
     my $schema = shift;
+
+    if (!exists($schema->{example}) && exists($schema->{default})) {
+        $schema->{example} = $schema->{default};
+    }
 
     if ('url' eq $schema->{format}) {
         $schema->{'x-constraints'} = '@ValidUrl';
@@ -51,13 +55,13 @@ sub add_constraints {
             $schema->{'x-constraints'} = '@ValidIpv6List';
 
         } else {
-            add_constraints($schema->{items}) if ($schema->{items});
+            munge_schema($schema->{items}) if ($schema->{items});
 
         }
 
     } elsif ('object' eq $schema->{type}) {
         foreach my $property (keys(%{$schema->{properties}})) {
-            add_constraints($schema->{properties}->{$property});
+            munge_schema($schema->{properties}->{$property});
         }
     }
 }

@@ -1,17 +1,8 @@
-active:
-  description: |
-    Indicates whether this table is available for use in testing. If
-    this property is `false`, this table cannot be used in tests.
-
-    In OT&E, this **MUST** be omitted when creating a new test request.
-  type: boolean
-  default: true
-
 rsp:
   description: |
     The RSP's unique ID.
 
-    In OT&E, this **MUST** be omitted when creating a new test request,
+    In OT&E, this **MUST** be omitted when creating a new IDN table,
     and will be populated using the FQDN of the first `TLSA` record
     which matches the certificate presented by the client.
   type: string
@@ -19,10 +10,11 @@ rsp:
 
 tag:
   description: |
-    The language tag, which must conform to the specification in RFC
-    5646.
+    The language tag, which **MUST** conform to the specification in [RFC
+    5646](https://www.rfc-editor.org/rfc/rfc5646.html).
   type: string
   example: ar-Arab
+  x-constraints: "@ValidLanguageTag"
 
 version:
   description: The version number.
@@ -31,19 +23,24 @@ version:
 
 eppSafeCodePoints:
   description: |
-    A list of code points that are "safe" for the purposes of pseudo-random
-    generate of domain names in TLDs that use this table.
+    A list of sequences that are "safe" for the purposes of pseudo-random
+    generation of domain names in TLDs that use this table.
 
     Some test cases require the generation and creation of domain names with
     pseudo-randomly generated names. In TLDs whose value of the `idnOnly`
-    property is `false`, ASCII letters and digits will be used. However, for
-    TLDs for which this value is `true`, this list provides a set of characters
-    that can be used to generate domain names.
+    property is `false`, ASCII letters and digits will be used.
+
+    However, for TLDs for which this value is `true`, this list provides a set
+    of characters that can be used to generate domain names.
+
+    Each item in the array is a string containing one or more code points,
+    separated by spaces.
   type: array
   minItems: 3
   items:
     type: string
-    pattern: ^U\\+[0-9a-f]{4}$
+    pattern: >-
+      ^U\\+[0-9a-fA-F]+(?: U\\+[0-9a-fA-F]+)*$
     example: U+0047
 
 isReferenceLGR:
@@ -61,7 +58,6 @@ permittedVariantPolicies:
     The variant policies supported for this table. This is an array of strings
     whose permitted values are:
 
-    * `novar` - no variants are supported/applicable
     * `allblockvar` - all variants are blocked
     * `mayallocatevar` - variants may be allocated
   type: array

@@ -23,7 +23,7 @@ tags:
     description: Test resources.
 
 info:
-  version: "1.#date %Y%j"
+  version: #include tmp/version.txt
 
   title: ICANN Registry System Testing (RST) API
   contact:
@@ -43,164 +43,51 @@ info:
     services](https://www.icann.org/resources/pages/rsep-2014-02-19-en)), and
     during [RSP evaluation](https://newgtldprogram.icann.org/en/application-rounds/round2/rsp).
 
-    _Last updated: #date %Y-%m-%d_.
-
     ### Change Log
 
-    * 2025-01-28:
-      * The `result` property of test objects is now nullable.
-    * 2024-12-11:
-      * Fixed the regular expression used to validate members of the
-        `eppSafeCodePoints` property of IDN table objects.
-    * 2024-11-27:
-      * Added the `files-needed` status to test requests to indicate that one or
-        more files that must be uploaded before a test run can be started.
-      * Added the `missingFiles` property to test objects to provide a list of
-        any files that must be uploaded before a test run can be started.
-    * 2024-11-13:
-      * The `eppSafeCodePoints` property has been added to the `idnTable` and
-        `idnTableRequest` object types, to faciliate EPP testing in TLDs which
-        have an `idnOnly` property of `true`.
-      * The requirement that the `isReferenceLGR` property of IDN table objects
-        **MUST** be `true` has been removed.
-    * 2024-09-17: The following endpoints responded with a `201` HTTP status,
-      when `204` should have been used:
-      * `GET /v1/heartbeat`
-      * `POST /v1/test/{id}/inputs`
-      * `POST /v1/test/{id}/files`
-      * `POST /v1/test/{id}/result`
-      * `PUT /v1/table/{id}`
-      * `DELETE /v1/table/{id}`
-    * 2024-09-12: Clarified access control rules for IDN table objects so users
-      can always access the objects they created.
-    * 2024-09-04:
-      * Full test run information is no longer in responses to `GET /v1/test/{id}`
-        requests, which will instead include a link to a `GET /v1/test/{id}/{runID}`
-        sub-resource.
-      * added `cancelled` to the `testResult` enum.
-      * allow administrators to change the status of a test to `cancelled`.
-      * added the `INFO` severity to the enum of allowed values for the
-        `severity` property of `testCaseLogMessage` objects.
-      * the `context` property of `testCaseLog` objects has been removed, the
-        information will be included in the `log` property instead.
-    * 2024-08-07:
-      * The response to `GET /v1/tests` and `GET /v1/tables` requests now
-        include summaries of the matching objects (`testRequestSearchResult`
-        and `idnTableSearchResult`), rather than the full objects.
-    * 2024-07-31:
-      * Fixed the JSON examples in the description of the `tlds` property of
-        `testRequest` and `testRequestSubmitted` objects.
-    * 2024-07-03:
-      * `x-constraints` properties have been added to input parameter schemas,
-        where appropriate, to facilitate automated validation in Java
-        applications.
-      * When creating tests in the OT&E environment, the `rsp` and `clientIDs`
-        **MUST** now be specified and **MUST** contain the FQDN at which a TLSA
-        record that validates the client certificate is published.
-    * 2024-06-26:
-      * added the `/v1/resource/{file}` endpoint.
-    * 2024-06-05:
-      * added the `errorCode` property to `rstError` objects.
-      * As per Public Comment feedback, clarified that for TLDs that are not
-        subject to rules relating to the allocatability of IDN variants, the
-        `variants` property of `idnTestLabel` objects **MUST** be empty.
-    * 2024-05-16:
-      * Significant overhaul of the structure of the `idnTableRef`,
-        `idnTableRequest` and `idnTable` schemas, based on internal discussions
-        regarding requirements for IDN variants. A reference implementation of
-        the algorithm for computing lists of test domains is also [available in
-        the GitHub repository](https://github.com/icann/rst-api-spec/blob/dev/etc/idn-test-reference.js).
-      * Added the `idnOnly` property to `tldInfo` objects.
-      * Defined a new `rstError` object type which describes the response body
-        used whenever there is an error.
-      * Clarified that input parameters can still be submitted when a test
-        has the `inputs-complete` status.
-      * Added the `heartbeat` operation to test that the service is up.
-      * Moved the `/v1` prefix from the `servers` part of the spec into the
-        individual `paths`.
-      * Extract the schema for files included in `testRequestSubmitted` into
-        `fileRef`.
-    * 2024-03-20:
-      * The `id` property of `testRequestSubmitted` objects is now a string, not
-        and integer.
-    * 2024-03-13:
-      * Variant labels in an IDN table may have exceptional allocation policies
-        when allocated in the same TLD as the primary label, or in a variant
-        TLD.
-    * 2024-03-06:
-      * the `caseId` property of the `testCaseLog` object, and the `code`
-        property of the `testCaseLogMessage` object are now enums, which are
-        generated from the test specs.
-    * 2024-02-28:
-      * As per the last release, only a single YAML file is now built from the
-        source file, that contains both "internal" and "external" endpoints. The
-        "internal" view is no longer published.
-      * To work better with code generators, the following changes have been
-        made:
-        * The specification now conforms to [v3.0.3](https://spec.openapis.org/oas/v3.0.3)
-          of the OpenAPI specification instead of v3.1.0. This means that many
-          aspects of the API specification and object schemas (including those
-          of input parameters) have been changed to avoid using features only
-          available in v3.1.0 of the OpenAPI spec. This includes the `examples`
-          property for all JSON types, which means that the examples shown in
-          the HTML representation of the API spec are now less useful than they
-          were previously.
-        * The following changes have been made to `testCaseLog` objects:
-          * The `code` and `codeRef` properties are now optional instead of
-            nullable.
-          * The `context` property has been changed so that property values are
-            always strings.
-        * The `securitySchemes` property has been removed, since code generators
-          don't seem to offer good support for mutual TLS. The requirement for
-          client TLS authentication has not changed, however.
-        * All usages of the `patternProperties`  feature of JSON Schema have
-          been changed to avoid their use. Some may still be present in the
-          input parameters.
-      * Changes to IDN table objects:
-        * The `variants` property of entries in the `validLabels` property of
-          `idnTable` objects has been changed to an array of objects, so the
-          corresponding language tag can be included.
-        * The `lgrXML` property of `idnTable` object has been removed.
-        * Renamed the `supportLevel` property to `variantSupportLevel`.
-        * The operation to create a new IDN table object uses `idnTableRequest`
-          as the request body payload, which does not allow for inclusion of
-          server-generated object properties.
-        * In OT&E, only Reference Second-Level LGRs can be used.
-      * `type` properties for `enum` types have been reinstated.
-    * 2024-02-21:
-      * Test properties (such as `applicationId` and `rsp`) that were previously
-        ignored in OT&E now **MUST** be omitted.
-      * When IDN table objects are created in OT&E, they **MUST** have a
-        `isReferenceLGR` property that is `true`.
-      * Simplified object schemas by marking properties as required (and others
-        as therefore optional) avoiding the need to have nullable properties.
-      * IDN tables are now referenced by a unique ID rather than the `{rsp, tag,
-        version}` triple.
-      * The internal and external views are now identical. The separate files
-        will be removed in the next release.
-      * Added the `supportLevel` property to the `idnTableRef` type.
-      * Some IDN table management endpoints are now accessible to external
-        clients.
-      * Make access control policies clearer and more consistent.
-      * Remove `DELETE /tests/{id}` endpoint.
-      * Fix schema definition for the `Location` header in `POST /test`
-        responses.
-      * Changes only relevant to internal users:
-        * Change the `client` parameter to `GET /tests` to `rsp`.
-        * Reinstate query parameters for `GET /tables`.
-        * The `PATCH /test/{id}` endpoint has been replaced with `POST
-          /test/{id}/run` and `POST /test/{id}/result`.
-        * Simplified IDN table management, so that test labels are provided when
-          the table object is created.
+    * v2025.05 (2025-09-01):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.06 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.06).
 
-    * 2024-02-14:
-      * Switch to a weekly release cycle.
-      * Use a date-based version number instead of a commit-based version, ahead
-        of switching to a weekly release cycle.
+      * Add `x-constraints` properties to `idnTableRequest.tag`,
+        `idnTestLabel.variantTLDAllocatability` and
+        `idnVariantLabel.variantTLDAllocatability` to allow additional
+        validation of provided values (see
+        [#18](https://github.com/icann/rst-api-spec/issues/18)).
 
-    * 2024-01-31:
-      * Add this change log.
-      * Minimise the delta between the internal and external view.
+      * Remove `novar` as permitted value for `variantPolicy` (see
+        [#20](https://github.com/icann/rst-api-spec/issues/20)).
+
+    * v2025.04 (2025-08-14):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.05 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.05).
+        There are no other changes.
+
+    * v2025.03 (2025-07-09):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.04 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.04)
+        (see [#7](https://github.com/icann/rst-api-spec/issues/7)).
+
+      * The `description` property has been removed from the `testCaseLog`
+        schema (see [#12](https://github.com/icann/rst-api-spec/issues/12)).
+
+      * Correct documentation of the `POST /v1/test` endpoint to confirm that
+        the `rsp` property **MUST** be omitted (see
+        [#10](https://github.com/icann/rst-api-spec/issues/10)).
+
+    * v2025.02 (2025-04-10):
+      * Update documentation for the `/v1/heartbeat` and `/v1/resource/{file}`
+        endpoints, as due to a technical limitation, they can only be accessed
+        by authenticated clients.
+
+    * v2025.01 (2025-03-27):
+      * This is the first stable release of the RST v2.0 API specification.
+        There are no changes to the spec other than the version number.
+      * To see the log of changes prior to this version, [click
+        here](https://github.com/icann/rst-api-spec/blob/main/etc/pre-v2025.01-changelog.md).
 
     ### Authentication
 
@@ -209,9 +96,9 @@ info:
     information, please consult [the RST v2.0 page on the ICANN
     website](https://www.icann.org/resources/registry-system-testing-v2.0/#authentication-and-access-control).
 
-    _Copyright #date %Y ICANN. All rights reserved._
+    ### License
 
-    _[RST-API Specification Home Page](https://icann.github.io/rst-api-spec/)_
+    #exec sed 's/^/    /' LICENSE
 
 servers:
   - url: https://rst-api.icann.org
@@ -226,6 +113,9 @@ paths:
         - serverStatus
       description: |
         This operation can be used to determine if the server is up.
+
+        Only authenticated clients can access this resource.
+
       operationId: heartbeat
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
@@ -420,7 +310,7 @@ paths:
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '201':
-          description: A succesful result.
+          description: A successful result.
 
   /v1/test/{id}/run/{runID}:
     parameters:
@@ -485,7 +375,7 @@ paths:
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '204':
-          description: A succesful result.
+          description: A successful result.
 
   /v1/tests:
     get:
@@ -691,7 +581,7 @@ paths:
         This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
         which may be useful in preparing registry systems for testing.
 
-        There is no authentication on this endpoint.
+        Only authenticated clients can access resources.
       parameters:
         - name: file
           description: The name of the resource.
@@ -786,10 +676,10 @@ components:
 
     testResult:
       description: |
-        A nullable string indicating the result of a test run.
+        A string indicating the result of a test run.
 
         1. If no test run has been requested for a test object, this property
-           will be `null`.
+           will be `not-started`.
         2. The `in-progress` value indicates that the test run has not yet
            finished.
         3. The `pass` value indicates that the test run completed with no
@@ -800,8 +690,8 @@ components:
         6. The `cancelled` value indicates that the test was cancelled by an
            administrator.
       type: string
-      nullable: true
       enum:
+        - not-started
         - in-progress
         - pass
         - fail
@@ -932,7 +822,7 @@ components:
             and follows the [Semantic Versioning](https://semver.org)
             convention.
           type: string
-          pattern: ^\\d+(\\.\\d+)+$
+          pattern: "^\\d+(\\.\\d+)+$"
           example: "3.1.2024096"
 
         dateRequested:
@@ -1089,9 +979,7 @@ components:
         - caseID
         - caseRef
         - result
-        - description
         - dateStarted
-        - dateCompleted
         - log
       properties:
         caseID:
@@ -1125,10 +1013,6 @@ components:
             - exception
             - skipped
             - aborted
-        description:
-          description: A short description of the outcome of the test.
-          type: string
-          example: All nameserver IP addresses are globally routable.
         dateStarted:
           description: date/time when the test case started.
           type: string
@@ -1188,15 +1072,13 @@ components:
       description: |
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
-
-        In OT&E, the `isReferenceLGR` property **MUST** be `true`, and the
-        `testLabels` property **MUST** be omitted.
       type: object
       required:
         - tag
         - version
         - isReferenceLGR
         - permittedVariantPolicies
+        - testLabels
       properties:
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
@@ -1213,11 +1095,20 @@ components:
         - version
         - isReferenceLGR
         - permittedVariantPolicies
+        - testLabels
       properties:
         tableID:
           description: A unique ID for this table.
           type: string
           example: 3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
+        active:
+          description: |
+            Indicates whether this table is available for use in testing. If
+            this property is `false`, this table cannot be used in tests.
+
+            In OT&E, this **MUST** be omitted when creating a new IDN table.
+          type: boolean
+          default: true
 
 #exec gpp -x inc/idn-table-request-base-properties.yaml | sed 's/^/        /'
 
@@ -1310,6 +1201,7 @@ components:
             label may be allocated in.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: und-Arab
@@ -1352,6 +1244,7 @@ components:
             case the variant label MUST be blocked in all TLDs in the set.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: fa-Arab
@@ -1360,7 +1253,6 @@ components:
       description: indicates the policy that should be applied to IDN variants.
       type: string
       enum:
-        - novar
         - allblockvar
         - mayallocatevar
 

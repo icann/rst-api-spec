@@ -1,7 +1,7 @@
 applicationID:
   description: |
     For RSP evaluation, the application ID, otherwise it should be
-    omitted. In OT&E, this **MUST** be omitted  when creating a new test
+    omitted. In OT&E, this **MUST** be omitted when creating a new test
     request.
   type: string
   example: a6e91182-5c63-415c-87dd-2d0902578cd5
@@ -10,8 +10,7 @@ rsp:
   description: |
     The RSP's unique ID.
 
-    In OT&E, this **MUST** contain the Fully-Qualified Domain Name where a TLSA
-    record that validates the client certificate is published.
+    In OT&E, this **MUST** be omitted when creating a new test request.
   type: string
   example: RSPI2404-M51
 
@@ -90,9 +89,7 @@ tlds:
     ```
 
     All the IDN tables referenced in this property **MUST** already
-    exist when the test object is created. In OT&E, users can create IDN table
-    obejcts, but these **MUST** correspond to Second-Level Reference LGRs:
-    custom IDN tables cannot be used.
+    exist when the test object is created.
 
     If a TLD offers registrations at the third or higher levels, then at
     least one second-level "registry-class" domain name(s) should be
