@@ -36,7 +36,27 @@ info:
 
     ### Change Log
 
-    * v2024.03 (2024-07-09):
+    * v2025.05 (2025-09-01):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.06 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.06).
+
+      * Add `x-constraints` properties to `idnTableRequest.tag`,
+        `idnTestLabel.variantTLDAllocatability` and
+        `idnVariantLabel.variantTLDAllocatability` to allow additional
+        validation of provided values (see
+        [#18](https://github.com/icann/rst-api-spec/issues/18)).
+
+      * Remove `novar` as permitted value for `variantPolicy` (see
+        [#20](https://github.com/icann/rst-api-spec/issues/20)).
+
+    * v2025.04 (2025-08-14):
+      * This version incorporates the test plans, error codes and other
+        information from [v2025.05 of the RST test
+        specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.05).
+        There are no other changes.
+
+    * v2025.03 (2025-07-09):
       * This version incorporates the test plans, error codes and other
         information from [v2025.04 of the RST test
         specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.04)
@@ -1189,6 +1209,7 @@ components:
             label may be allocated in.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: und-Arab
@@ -1231,6 +1252,7 @@ components:
             case the variant label MUST be blocked in all TLDs in the set.
           type: array
           minItems: 0
+          x-constraints: "@ValidLanguageTagList"
           items:
             type: string
             example: fa-Arab
@@ -1239,7 +1261,6 @@ components:
       description: indicates the policy that should be applied to IDN variants.
       type: string
       enum:
-        - novar
         - allblockvar
         - mayallocatevar
 
