@@ -36,6 +36,13 @@ info:
 
     ### Change Log
 
+    * v2025.06 (2025-10-02):
+      * Require at least one value in `permittedVariantPolicies`
+        ([#26](https://github.com/icann/rst-api-spec/pull/26))
+
+      * add the `DELETE /v1/test/{id}/run/{runID}` API endpoint
+        ([#15](https://github.com/icann/rst-api-spec/pull/15))
+
     * v2025.05 (2025-09-01):
       * This version incorporates the test plans, error codes and other
         information from [v2025.06 of the RST test
