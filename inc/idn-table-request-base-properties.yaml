@@ -61,7 +61,7 @@ permittedVariantPolicies:
     * `allblockvar` - all variants are blocked
     * `mayallocatevar` - variants may be allocated
   type: array
-  minItems: 0
+  minItems: 1
   items:
     $ref: "#/components/schemas/variantPolicy"
 
