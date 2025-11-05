@@ -564,6 +564,7 @@ paths:
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '204':
           description: A successful result.
 
