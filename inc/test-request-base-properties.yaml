@@ -10,7 +10,8 @@ rsp:
   description: |
     The RSP's unique ID.
 
-    In OT&E, this **MUST** be omitted when creating a new test request.
+    In OT&E, this **MUST** contain the Fully-Qualified Domain Name where a TLSA
+    record that validates the client certificate is published.
   type: string
   example: RSPI2404-M51
 
