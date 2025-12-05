@@ -181,6 +181,24 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/testRequestSubmitted"
+    delete:
+      tags:
+        - Test administration
+      operationId: deleteTest
+      description: |
+        This operation deletes a test object.
+
+        This operation is not available to external users in production, but may
+        be used in OT&E.
+
+        External users can only delete test objects that they created.
+
+        INTERNAL_USER_ACCESS_CONTROL_POLICY
+
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '204':
+          description: A successful result.
 
   /v1/test/{id}/inputs:
     post:
@@ -550,6 +568,7 @@ paths:
 
         INTERNAL_USER_ACCESS_CONTROL_POLICY
       responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '204':
           description: A successful result.
 
