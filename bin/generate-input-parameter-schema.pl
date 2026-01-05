@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use ICANN::RST;
 use feature qw(say);
+use constant SAFE_FILENAME_REGEXP => '^[A-Za-z0-9-_\.]+$';
 use strict;
 
 $YAML::XS::Boolean = q{JSON::PP};
@@ -23,6 +24,10 @@ foreach my $input ($spec->inputs) {
 
     $schema->{$input->id}->{'description'} = $input->{Description};
     $schema->{$input->id}->{'example'} = $input->example if (exists($input->{'Example'}));
+
+    if (!exists($schema->{$input->id}->{pattern}) && q{file} eq $input->type) {
+        $schema->{$input->id}->{pattern} = SAFE_FILENAME_REGEXP;
+    }
 
     munge_schema($schema->{$input->id});
 }
