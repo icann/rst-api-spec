@@ -36,6 +36,10 @@ info:
 
     ### Change Log
 
+    * v2026.01 (2026-01-05):
+      * Constrain permitted values for file names
+      ([#37](https://github.com/icann/rst-api-spec/issues/37))
+
     * v2025.08 (2025-12-05):
       * The `DELETE /v1/test/{id}` API endpoint has been added
         ([#28](https://github.com/icann/rst-api-spec/issues/28))
