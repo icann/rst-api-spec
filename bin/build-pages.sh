@@ -4,9 +4,10 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SITEDIR="_site"
+TMPDIR="tmp"
 
 rm -rf "$SITEDIR"
-mkdir -p "$SITEDIR"
+mkdir -p "$SITEDIR" "$TMPDIR"
 
 git config --global --add safe.directory /app
 
@@ -31,13 +32,13 @@ gpp -x "-DRELEASE=$CURRENT_RELEASE" etc/index.md | pandoc \
     --output="$SITEDIR/index.html"
 
 echo "Retrieving list of releases..."
-curl --fail --silent https://api.github.com/repos/icann/rst-api-spec/releases > tmp/releases.json
+curl --fail --silent https://api.github.com/repos/icann/rst-api-spec/releases > "$TMPDIR/releases.json"
 
 echo "Syncing historical releases..."
 
 pushd "$SITEDIR" > /dev/null
 
-jq -r '.[] | .assets[] | .browser_download_url' ../tmp/releases.json | \
+jq -r '.[] | .assets[] | .browser_download_url' "../$TMPDIR/releases.json" | \
     wget \
         --mirror \
         --quiet \
@@ -49,10 +50,10 @@ popd > /dev/null
 
 echo "Generating release list..."
 
-echo -n > tmp/releases.md
+echo -n > "$TMPDIR/releases.md"
 
 jq -r '.[] | "* [" + .name + "](/rst-api-spec.html?version=" + .name + ") (" + (.published_at | fromdate | strftime("%B %e, %Y")) + ")"' tmp/releases.json > tmp/releases.md
-printf "\n\n<< [Back](.)\n" >> tmp/releases.md
+printf "\n\n<< [Back](.)\n" >> "$TMPDIR/releases.md"
 
 pandoc \
     --from markdown \
@@ -62,11 +63,11 @@ pandoc \
     --metadata title="List of API Spec Releases" \
     --css=etc/style.css \
     --output="$SITEDIR/releases.html" \
-    tmp/releases.md
+    "$TMPDIR/releases.md"
 
 echo "Creating Swagger UI file..."
-gpp "-DRELEASE=$CURRENT_RELEASE" etc/rst-api-spec.html \
-    > "$SITEDIR/rst-api-spec.html"
+
+gpp "-DRELEASE=$CURRENT_RELEASE" etc/rst-api-spec.html > "$SITEDIR/rst-api-spec.html"
 
 echo "Installing Swagger UI libraries..."
 SWAGGER_TMPDIR="_swagger_ui_tmp"
