@@ -24,12 +24,12 @@
     <script src="./swagger-ui/swagger-ui-bundle.js"></script>
     <script src="./swagger-ui/swagger-ui-standalone-preset.js"></script>
     <script>
-      const version = new URL(document.location).searchParams.get("version") ?? "RELEASE";
+      const version = new URL(document.location).searchParams.get("version") ?? "vRELEASE";
 
       window.onload = function() {
 
         window.ui = SwaggerUIBundle({
-          url: new URL(`./rst-api-spec-${version}.yaml`, window.location).toString(),
+          url: new URL(`./${version}/rst-api-spec.yaml`, window.location).toString(),
           dom_id: '#swagger-ui',
           deepLinking: true,
         });
