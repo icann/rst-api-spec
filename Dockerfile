@@ -22,9 +22,10 @@ RUN apk add --quiet \
     perl-text-unidecode \
     perl-xml-libxml \
     perl-yaml \
-    perl-yaml-libyaml
+    perl-yaml-libyaml \
+    bash
 
-RUN cpanm --notest --quiet https://cpan.metacpan.org/authors/id/G/GB/GBROWN/ICANN-RST-0.03.tar.gz
+RUN cpanm --notest --quiet ICANN::RST
 
 RUN <<END
 wget -qO - https://github.com/logological/gpp/releases/download/2.28/gpp-2.28.tar.bz2 | tar xj
