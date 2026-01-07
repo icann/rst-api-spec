@@ -14,6 +14,7 @@ includes: tmpdir
 	@bin/generate-input-parameter-schema.pl > tmp/input-parameters.yaml
 	@bin/generate-test-cases.pl > tmp/test-cases.yaml
 	@bin/generate-error-codes.pl > tmp/error-codes.yaml
+	@bin/generate-ignore-error-codes.pl > tmp/ignore-error-codes.yaml
 
 spec: tmpdir includes
 	@echo Computing version...
