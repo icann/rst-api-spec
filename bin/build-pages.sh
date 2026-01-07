@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
 SITEDIR="_site"
 
 rm -rf "$SITEDIR"
@@ -26,12 +30,39 @@ gpp -x "-DRELEASE=$CURRENT_RELEASE" etc/index.md | pandoc \
     --css=etc/style.css \
     --output="$SITEDIR/index.html"
 
-echo "Syncing spec files..."
-git tag | grep "^v" | while read RELEASE ; do
-    for extn in yaml json ; do
-        curl --silent --fail --location --output "$SITEDIR/rst-api-spec-$RELEASE.$extn" "https://github.com/icann/rst-api-spec/releases/download/$CURRENT_RELEASE/rst-api-spec.$extn"
-    done
-done
+echo "Retrieving list of releases..."
+curl --fail --silent https://api.github.com/repos/icann/rst-api-spec/releases > tmp/releases.json
+
+echo "Syncing historical releases..."
+
+pushd "$SITEDIR" > /dev/null
+
+jq -r '.[] | .assets[] | .browser_download_url' ../tmp/releases.json | \
+    wget \
+        --mirror \
+        --quiet \
+        --input-file - \
+        --no-host-directories \
+        --cut-dirs 4
+
+popd > /dev/null
+
+echo "Generating release list..."
+
+echo -n > tmp/releases.md
+
+jq -r '.[] | "* [" + .name + "](/rst-api-spec.html?version=" + .name + ") (" + (.published_at | fromdate | strftime("%B %e, %Y")) + ")"' tmp/releases.json > tmp/releases.md
+printf "\n\n<< [Back](.)\n" >> tmp/releases.md
+
+pandoc \
+    --from markdown \
+    --to html \
+    --standalone \
+    --embed-resources=true \
+    --metadata title="List of API Spec Releases" \
+    --css=etc/style.css \
+    --output="$SITEDIR/releases.html" \
+    tmp/releases.md
 
 echo "Creating Swagger UI file..."
 gpp "-DRELEASE=$CURRENT_RELEASE" etc/rst-api-spec.html \

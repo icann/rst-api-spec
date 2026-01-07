@@ -5,12 +5,12 @@ This site hosts the specification for ICANN's [Registry System Testing
 
 Additional resources:
 
-* [YAML](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.yaml)
-  and
-  [JSON](https://github.com/icann/rst-api-spec/releases/download/RELEASE/rst-api-spec.json)
-  versions of the API spec, suitable for use with code generators.
-* [List of releases](https://github.com/icann/rst-api-spec/releases)
-* [GitHub repository](https://github.com/icann/rst-api-spec/)
+* [YAML](rst-api-spec.yaml) and [JSON](rst-api-spec.json) versions of the API
+  spec, suitable for use with code generators.
+* [List of releases](releases.html)
+* [GitHub repository](https://github.com/icann/rst-api-spec/), which includes:
+  * [Known issues](https://github.com/icann/rst-api-spec/issues)
+  * [Planned changes](https://github.com/icann/rst-api-spec/milestones)
 
 ## See Also
 
