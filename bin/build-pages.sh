@@ -52,7 +52,7 @@ echo "Generating release list..."
 
 echo -n > "$TMPDIR/releases.md"
 
-jq -r '.[] | "* [" + .name + "](/rst-api-spec.html?version=" + .name + ") (" + (.published_at | fromdate | strftime("%B %e, %Y")) + ")"' tmp/releases.json > tmp/releases.md
+jq -r '.[] | "* [" + .name + "](rst-api-spec.html?version=" + .name + ") (" + (.published_at | fromdate | strftime("%B %e, %Y")) + ")"' tmp/releases.json > tmp/releases.md
 printf "\n\n<< [Back](.)\n" >> "$TMPDIR/releases.md"
 
 pandoc \
