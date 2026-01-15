@@ -24,16 +24,25 @@
     <script src="./swagger-ui/swagger-ui-bundle.js"></script>
     <script src="./swagger-ui/swagger-ui-standalone-preset.js"></script>
     <script>
-      const version = new URL(document.location).searchParams.get("version") ?? "RELEASE";
+      const url               = new URL(document.location);
+      const latestVersion     = "RELEASE";
+      const requestedVersion  = url.searchParams.get("version");
+      const version           = requestedVersion ?? latestVersion;
+      const specFile          = `./${version}/rst-api-spec.yaml`;
 
       window.onload = function() {
-
         window.ui = SwaggerUIBundle({
-          url: new URL(`./${version}/rst-api-spec.yaml`, window.location).toString(),
+          url: new URL(specFile, window.location).toString(),
           dom_id: '#swagger-ui',
           deepLinking: true,
         });
       };
+
+      if (null == requestedVersion) {
+        url.searchParams.set("version", latestVersion);
+        window.history.replaceState({}, "", url);
+      }
+
     </script>
   </body>
 </html>
