@@ -282,6 +282,10 @@ paths:
                     format: binary
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '422':
+          description: |
+            This response indicates that the server was unable to process one or
+            more uploaded files.
         '204':
           description: A successful result.
 
