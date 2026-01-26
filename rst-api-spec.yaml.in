@@ -36,9 +36,13 @@ info:
 
     ### Change Log
 
+    * v2026.01.1 (2026-01-26):
+      * add 422 to the list of response codes for file uploads
+        ([#49](https://github.com/icann/rst-api-spec/issues/48))
+
     * v2026.01 (2026-01-05):
       * Constrain permitted values for file names
-      ([#37](https://github.com/icann/rst-api-spec/issues/37))
+        ([#37](https://github.com/icann/rst-api-spec/issues/37))
 
     * v2025.08 (2025-12-05):
       * The `DELETE /v1/test/{id}` API endpoint has been added
