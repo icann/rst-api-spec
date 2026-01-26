@@ -37,6 +37,15 @@
         schema:
           $ref: "#/components/schemas/rstError"
 
+'422':
+  description: |
+    This response indicates that the server was unable to process one or
+    more uploaded files.
+  content:
+    "application/json":
+      schema:
+        $ref: "#/components/schemas/rstError"
+
 '429':
     description: |
       This response indicates that the client has exceeded rate limits.
