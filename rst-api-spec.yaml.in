@@ -1328,3 +1328,12 @@ components:
           format: url
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/files/example.txt
           x-constraints: "@ValidUrl"
+
+    testPlan:
+      description: |
+        The test plan to be followed. A list of test plans and the permitted
+        values for this property may be found at
+        <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
+      type: string
+      enum:
+#exec sed 's/^/      /' tmp/test-plan-mnemonics.yaml
