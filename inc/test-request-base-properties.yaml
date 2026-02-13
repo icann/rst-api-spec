@@ -119,13 +119,7 @@ clientIDs:
     example: tlsa.rsp.tech
 
 testPlan:
-  description: |
-    The test plan to be followed. A list of test plans and the permitted
-    values for this property may be found at
-    <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
-  type: string
-  enum:
-#exec sed 's/^/    /' tmp/test-plan-mnemonics.yaml
+  $ref: "#/components/schemas/testPlan"
 
 dueDate:
   description: |
