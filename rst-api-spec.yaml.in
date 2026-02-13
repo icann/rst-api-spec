@@ -36,6 +36,11 @@ info:
 
     ### Change Log
 
+    * v2026.0 (2026-02-13):
+      * add the `skipTestCases` and `ignoreErrorCodes` properties to
+        the `testRequest` and `testRequestSubmitted` object types
+        ([#39](https://github.com/icann/rst-api-spec/issues/39))
+
     * v2026.01.1 (2026-01-26):
       * add 422 to the list of response codes for file uploads
         ([#49](https://github.com/icann/rst-api-spec/issues/48))
