@@ -36,7 +36,12 @@ info:
 
     ### Change Log
 
-    * v2026.0 (2026-02-13):
+    * v2026.3 (2026-02-23):
+      * the changes in v2026.02 (see below) have been temporarily reverted, as
+        the corresponding code changes are not yet finished
+        ([#54](https://github.com/icann/rst-api-spec/issues/54))
+
+    * v2026.2 (2026-02-13):
       * add the `skipTestCases` and `ignoreErrorCodes` properties to
         the `testRequest` and `testRequestSubmitted` object types
         ([#39](https://github.com/icann/rst-api-spec/issues/39))
