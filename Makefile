@@ -19,6 +19,8 @@ includes: tmpdir
 spec: tmpdir includes
 	@echo Computing version...
 	@bin/generate-version.sh > tmp/version.txt
+	@echo -n "Version: "
+	@cat tmp/version.txt
 
 	@echo Generating YAML file...
 	@gpp -x rst-api-spec.yaml.in > tmp/rst-api-spec.yaml
