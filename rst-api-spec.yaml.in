@@ -810,6 +810,8 @@ components:
       type: object
       required:
         - testID
+        - testPlan
+        - dateRequested
         - status
         - result
         - tlds
@@ -819,10 +821,24 @@ components:
           description: The unique ID for this test request object.
           type: string
           example: 3aebd167-c275-45b6-842a-2680ed80422b
+        testPlan:
+          $ref: "#/components/schemas/testPlan"
         rsp:
           description: The RSP's unique ID.
           type: string
           example: RSPI2404-M51
+        dateRequested:
+          description: date/time when this request was submitted.
+          type: string
+          format: date-time
+        dateStarted:
+          description: date/time when the test run (if any) started.
+          type: string
+          format: date-time
+        dateCompleted:
+          description: date/time when the test run (if any) completed.
+          type: string
+          format: date-time
         status:
           $ref: "#/components/schemas/testStatus"
         result:
@@ -1338,3 +1354,12 @@ components:
           format: url
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/files/example.txt
           x-constraints: "@ValidUrl"
+
+    testPlan:
+      description: |
+        The test plan to be followed. A list of test plans and the permitted
+        values for this property may be found at
+        <https://icann.github.io/rst-test-specs/rst-test-specs.html#test-plans>.
+      type: string
+      enum:
+#exec sed 's/^/      /' tmp/test-plan-mnemonics.yaml
