@@ -4,7 +4,7 @@ use feature qw(say);
 use strict;
 
 say STDERR 'mirroring test specs...';
-my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new);
+my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new($ENV{RST_TEST_SPEC_FILE}));
 
 say STDERR 'extracting test plan mnemonics...';
 my @plans = map { $_->id } sort { $a->{'Order'} <=> $b->{'Order'} } $spec->plans;

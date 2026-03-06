@@ -14,7 +14,7 @@ my $apiSpec = YAML::XS::LoadFile(File::Spec->catfile(dirname(dirname(__FILE__)),
 my @servers = map { URI->new($_->{'url'}) } @{$apiSpec->{'servers'}};
 
 say STDERR 'mirroring test specs...';
-my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new);
+my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new($ENV{RST_TEST_SPEC_FILE}));
 
 say STDERR 'extracting resource names...';
 my @names;
