@@ -5,13 +5,22 @@ openapi: 3.0.3
 #define INTERNAL_USER_ACCESS_CONTROL_POLICY Internal users can perform this operation on any object.
 
 tags:
-  - name: Checking that the server is up
-  - name: Creating test request objects
-  - name: Providing input parameters & files
-  - name: Retrieving test information
-  - name: Starting test runs
-  - name: Test administration
-  - name: IDN table management
+  - name: testCreation
+    description: Creating test request objects.
+  - name: testConfiguration
+    description: Providing input parameters and files.
+  - name: testInformation
+    description: Retrieving test information.
+  - name: testRuns
+    description: Starting and reviewing test runs.
+  - name: testAdministration
+    description: Test administration.
+  - name: idnTableManagement
+    description: IDN table management.
+  - name: serverStatus
+    description: Checking that the server is up.
+  - name: testResources
+    description: Test resources.
 
 info:
   version: #include tmp/version.txt
@@ -134,7 +143,7 @@ paths:
   /v1/heartbeat:
     get:
       tags:
-        - Checking that the server is up
+        - serverStatus
       description: |
         This operation can be used to determine if the server is up.
 
@@ -149,7 +158,7 @@ paths:
   /v1/test:
     post:
       tags:
-        - Creating test request objects
+        - testCreation
       description: |
         This operation creates a new test request object.
 
@@ -187,7 +196,7 @@ paths:
           type: string
     get:
       tags:
-        - Retrieving test information
+        - testInformation
       description: |
         This operation returns information about a specific test request object.
 
@@ -225,7 +234,7 @@ paths:
   /v1/test/{id}/inputs:
     post:
       tags:
-        - Providing input parameters & files
+        - testConfiguration
       description: |
         This operation submits test input parameters. Parameters in the payload
         will previously submitted values. Values that are present in the object
@@ -263,7 +272,7 @@ paths:
   /v1/test/{id}/files:
     post:
       tags:
-        - Providing input parameters & files
+        - testConfiguration
       description: |
         This resource may be used to upload files. Multiple files may
         be uploaded in a single request. If a filename matches a previously
@@ -302,7 +311,7 @@ paths:
   /v1/test/{id}/file/{file}:
     get:
       tags:
-        - Retrieving test information
+        - testInformation
       description: |
         This retrieves an uploaded file.
 
@@ -343,7 +352,7 @@ paths:
           type: string
     post:
       tags:
-        - Starting test runs
+        - testRuns
       operationId: startTestRun
       description: |
         This operation asks the test system to start a new test run. If test
@@ -370,7 +379,7 @@ paths:
           type: string
     get:
       tags:
-        - Retrieving test information
+        - testRuns
       operationId: getTestRun
       description: This operation retrieves details of a test run.
       responses:
@@ -409,7 +418,7 @@ paths:
           type: string
     post:
       tags:
-        - Test administration
+        - testAdministration
       operationId: setTestResult
       description: |
         **Internal users only**
@@ -439,7 +448,7 @@ paths:
   /v1/tests:
     get:
       tags:
-        - Retrieving test information
+        - testInformation
       description: |
         This operation performs a search on the database and returns all
         matching results.
@@ -497,7 +506,7 @@ paths:
   /v1/table:
     post:
       tags:
-        - IDN table management
+        - idnTableManagement
       operationId: createIDNTable
       description: |
         This operation creates a new IDN table object.
@@ -535,7 +544,7 @@ paths:
 
     get:
       tags:
-        - IDN table management
+        - idnTableManagement
       operationId: getIDNTable
       description: |
         This operation returns information about an IDN table object.
@@ -555,7 +564,7 @@ paths:
 
     put:
       tags:
-        - IDN table management
+        - idnTableManagement
       operationId: updateIDNTable
       description: |
         This operation updates an existing IDN table object.
@@ -577,7 +586,7 @@ paths:
 
     delete:
       tags:
-        - IDN table management
+        - idnTableManagement
       operationId: deleteIDNTable
       description: |
         This operation deletes an IDN table object.
@@ -597,7 +606,7 @@ paths:
   /v1/tables:
     get:
       tags:
-        - IDN table management
+        - idnTableManagement
       operationId: getIDNTables
       description: |
         This operation returns the IDN tables matching the provided query
@@ -635,7 +644,7 @@ paths:
   /v1/resource/{file}:
     get:
       tags:
-        - Providing input parameters & files
+        - testResources
       operationId: getResource
       description: |
         This endpoint allows users to download [resources](https://icann.github.io/rst-test-specs/rst-test-specs.html#resources)
