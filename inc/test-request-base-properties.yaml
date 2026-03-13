@@ -139,7 +139,7 @@ skipTestCases:
   items:
     type: string
     enum:
-# exec sed 's/^/      /' tmp/test-cases.yaml
+#exec sed 's/^/      /' tmp/test-cases.yaml
   example:
     - epp-99
 
@@ -151,7 +151,7 @@ ignoreErrorCodes:
   type: object
   additionalProperties: false
   properties:
-# exec sed 's/^/    /' tmp/ignore-error-codes.yaml
+#exec sed 's/^/    /' tmp/ignore-error-codes.yaml
   example:
     "epp-02":
       - EPP_GREETING_UNEXPECTED_EXTURI
