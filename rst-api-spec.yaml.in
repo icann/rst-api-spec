@@ -1006,6 +1006,7 @@ components:
       required:
         - runID
         - dateStarted
+        - testPlanVersion
         - result
         - log
       properties:
@@ -1023,6 +1024,12 @@ components:
             property will be omitted.
           type: string
           format: date-time
+        testPlanVersion:
+          description: |
+            The version of the Test Plan that was used for this test run.
+          type: string
+          pattern: "^\\d+(\\.\\d+)+$"
+          example: "3.1.2024096"
         result:
           $ref: "#/components/schemas/testResult"
         log:
