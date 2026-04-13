@@ -36,6 +36,14 @@ info:
 
     ### Change Log
 
+    * v2026.4 (2026-04-13):
+      * Added the `testPlan`, `dateRequested`, `dateStarted` and `dateCompleted`
+        properties to `testRequestSearchResult` objects
+        ([#16](https://github.com/icann/rst-api-spec/issues/16))
+
+      * The `skipTestCases` and `ignoreErrorCodes` properties have been
+        reinstated ([#57](https://github.com/icann/rst-api-spec/issues/57))
+
     * v2026.3 (2026-02-23):
       * the changes in v2026.02 (see below) have been temporarily reverted, as
         the corresponding code changes are not yet finished
