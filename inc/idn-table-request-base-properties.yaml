@@ -14,7 +14,7 @@ tag:
     5646](https://www.rfc-editor.org/rfc/rfc5646.html).
   type: string
   example: ar-Arab
-  x-constraints: "@ValidLanguageTag"
+  x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidLanguageTag"
 
 version:
   description: The version number.
