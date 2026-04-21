@@ -50,14 +50,14 @@ sub munge_schema {
     }
 
     if ('url' eq $schema->{format}) {
-        $schema->{'x-constraints'} = '@ValidUrl';
+        $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidUrl';
 
     } elsif ('array' eq $schema->{type}) {
         if ('ipv4' eq $schema->{items}->{format}) {
-            $schema->{'x-constraints'} = '@ValidIpv4List';
+            $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidIpv4List';
 
         } elsif ('ipv6' eq $schema->{items}->{format}) {
-            $schema->{'x-constraints'} = '@ValidIpv6List';
+            $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidIpv6List';
 
         } else {
             munge_schema($schema->{items}) if ($schema->{items});

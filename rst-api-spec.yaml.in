@@ -82,7 +82,7 @@ info:
         information from [v2025.06 of the RST test
         specifications](https://github.com/icann/rst-test-specs/releases/tag/v2025.06).
 
-      * Add `x-constraints` properties to `idnTableRequest.tag`,
+      * Add `x-field-extra-annotation` properties to `idnTableRequest.tag`,
         `idnTestLabel.variantTLDAllocatability` and
         `idnVariantLabel.variantTLDAllocatability` to allow additional
         validation of provided values (see
@@ -183,7 +183,7 @@ paths:
               schema:
                 type: string
                 format: url
-                x-constraints: "@ValidUrl"
+                x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
 
   /v1/test/{id}:
     parameters:
@@ -530,7 +530,7 @@ paths:
               schema:
                 type: string
                 format: url
-                x-constraints: "@ValidUrl"
+                x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
 
   /v1/table/{id}:
     parameters:
@@ -855,7 +855,7 @@ components:
           description: The URL for this test request object.
           type: string
           format: url
-          x-constraints: "@ValidUrl"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b
         tlds:
           description: A flat list of the TLD(s) for this test.
@@ -890,7 +890,7 @@ components:
           description: The ID of the client that created this object.
           type: string
           format: hostname
-          x-constraints: "@ValidHostname"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
           example: tlsa.rsp.example
 
         testID:
@@ -1010,7 +1010,7 @@ components:
                 description: The URL of the test run log.
                 type: string
                 format: url
-                x-constraints: "@ValidUrl"
+                x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
                 example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/run/3ed892dd-2b29-4f59-b024-653345067547
 
     inputParameters:
@@ -1076,7 +1076,7 @@ components:
           description: A link to the test case specification.
           type: string
           format: url
-          x-constraints: "@ValidUrl"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
           example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Test-Case-dns-address01
 
         result:
@@ -1130,7 +1130,7 @@ components:
           description: a link to a description for the error code (if any).
           type: string
           format: url
-          x-constraints: "@ValidUrl"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
           example: https://icann.github.io/rst-test-specs/rst-test-specs.html#Error-DNSSEC_DNS_QUERY_ERROR
 
         severity:
@@ -1215,7 +1215,7 @@ components:
           description: The URL for this object.
           type: string
           format: url
-          x-constraints: "@ValidUrl"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
           example: /v1/table/3f07afce-cc4c-4cd8-b1ca-391167b7c6f4
         rsp:
           description: The RSP ID.
@@ -1285,7 +1285,7 @@ components:
             label may be allocated in.
           type: array
           minItems: 0
-          x-constraints: "@ValidLanguageTagList"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidLanguageTagList"
           items:
             type: string
             example: und-Arab
@@ -1328,7 +1328,7 @@ components:
             case the variant label MUST be blocked in all TLDs in the set.
           type: array
           minItems: 0
-          x-constraints: "@ValidLanguageTagList"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidLanguageTagList"
           items:
             type: string
             example: fa-Arab
@@ -1361,7 +1361,7 @@ components:
           type: string
           format: url
           example: /v1/test/3aebd167-c275-45b6-842a-2680ed80422b/files/example.txt
-          x-constraints: "@ValidUrl"
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
 
     testPlan:
       description: |
