@@ -36,6 +36,10 @@ info:
 
     ### Change Log
 
+    * v2026.5 (2026-05-06):
+      * Use fully-qualified constraints in input parameter schemas
+        ([#64](https://github.com/icann/rst-api-spec/issues/64))
+
     * v2026.4 (2026-04-13):
       * Added the `testPlan`, `dateRequested`, `dateStarted` and `dateCompleted`
         properties to `testRequestSearchResult` objects
