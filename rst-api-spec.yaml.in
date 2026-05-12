@@ -300,6 +300,7 @@ paths:
           multipart/form-data:
             schema:
               type: object
+              additionalProperties: false
               properties:
                 file:
                   type: array
@@ -434,6 +435,7 @@ paths:
           'application/x-www-form-urlencoded':
             schema:
               type: object
+              additionalProperties: false
               required:
                 - result
               properties:
@@ -682,6 +684,7 @@ components:
         This object type represents error messages returned in responses to
         requests that could not be successfully completed.
       type: object
+      additionalProperties: false
       required:
         - status
         - message
@@ -705,6 +708,7 @@ components:
         This object type is used to define the properties of a new test request
         object. The `testRequestSubmitted` type inherits from it.
       type: object
+      additionalProperties: false
       required:
         - tlds
         - rsp
@@ -776,6 +780,7 @@ components:
         table objects must be created prior to being referenced in a test
         request.
       type: object
+      additionalProperties: false
       required:
         - id
         - variantPolicy
@@ -792,6 +797,7 @@ components:
         A top-level domain (or equivalent registry-class domain name) and its
         associated IDN tables.
       type: object
+      additionalProperties: false
       required:
         - name
         - idnTables
@@ -820,6 +826,7 @@ components:
         An abbreviated representation of a test object that is included in
         search result.
       type: object
+      additionalProperties: false
       required:
         - testID
         - testPlan
@@ -876,6 +883,7 @@ components:
         submitted. It inherits all the properties defined in the
         `testRequest` type.
       type: object
+      additionalProperties: false
       required:
         - tlds
         - rsp
@@ -987,6 +995,7 @@ components:
           minItems: 0
           items:
             type: object
+            additionalProperties: false
             description: |
              An abbreviated representation of a test run.
             required:
@@ -1024,6 +1033,7 @@ components:
         parameters after a test request object is created, and is also used when
         returning test request object information.
       type: object
+      additionalProperties: false
       properties:
 #exec sed 's/^/        /' tmp/input-parameters.yaml
       required: []
@@ -1031,6 +1041,7 @@ components:
     testRunLog:
       description: An object representing a discrete test run.
       type: object
+      additionalProperties: false
       required:
         - runID
         - dateStarted
@@ -1063,6 +1074,7 @@ components:
     testCaseLog:
       description: A detailed log of an individual test case.
       type: object
+      additionalProperties: false
       required:
         - caseID
         - caseRef
@@ -1119,6 +1131,7 @@ components:
     testCaseLogMessage:
       description: A log message.
       type: object
+      additionalProperties: false
       required:
         - severity
         - timestamp
@@ -1161,6 +1174,7 @@ components:
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
       type: object
+      additionalProperties: false
       required:
         - tag
         - version
@@ -1175,6 +1189,7 @@ components:
         This object describes an IDN table, or more specifically, an RSP's
         implementation of such a table.
       type: object
+      additionalProperties: false
       required:
         - tableID
         - active
@@ -1237,6 +1252,7 @@ components:
     idnTestLabels:
       description: An object containing IDN test labels.
       type: object
+      additionalProperties: false
       required:
         - allocatableLabels
         - unallocatableLabels
@@ -1265,6 +1281,7 @@ components:
       description: |
         An object describing an allocatable IDN test label and any variants.
       type: object
+      additionalProperties: false
       required:
         - label
         - variantTLDAllocatability
@@ -1308,6 +1325,7 @@ components:
     idnVariantLabel:
       description: A variant label.
       type: object
+      additionalProperties: false
       required:
         - label
         - variantTLDAllocatability
@@ -1347,6 +1365,7 @@ components:
     fileRef:
       description: An object providing a hyperlink to an uploaded file.
       type: object
+      additionalProperties: false
       properties:
         name:
           description: The file name.
