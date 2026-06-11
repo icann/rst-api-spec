@@ -1172,6 +1172,7 @@ components:
         - tag
         - version
         - isReferenceLGR
+        - eppSafeCodePoints
         - permittedVariantPolicies
         - testLabels
       properties:
