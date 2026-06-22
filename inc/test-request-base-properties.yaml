@@ -116,6 +116,7 @@ clientIDs:
   items:
     type: string
     format: hostname
+    x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
     example: tlsa.rsp.tech
 
 testPlan:

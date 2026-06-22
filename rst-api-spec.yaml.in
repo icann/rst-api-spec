@@ -816,6 +816,7 @@ components:
           description: The TLD (or equivalent registry-class domain name).
           type: string
           format: hostname
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
           example: example
         idnTables:
           description: The IDN tables(s) for the TLD.
@@ -885,6 +886,7 @@ components:
           items:
             type: string
             format: hostname
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
             example: example
 
     testRequestSubmitted:
