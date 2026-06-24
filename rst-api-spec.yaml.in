@@ -487,6 +487,8 @@ paths:
           required: false
           schema:
             type: string
+            format: hostname
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
         - name: applicationID
           description: |
             limit results to specific a application ID (internal users only).
