@@ -646,6 +646,7 @@ paths:
           required: false
           schema:
             type: string
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidLanguageTag"
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
