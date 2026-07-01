@@ -390,7 +390,8 @@ paths:
         in: path
         required: true
         schema:
-          type: string
+          type: integer
+          minimum: 1
     get:
       tags:
         - Retrieving test information
@@ -1022,8 +1023,8 @@ components:
             properties:
               runID:
                 description: unique ID for this test run.
-                type: string
-                example: 3ed892dd-2b29-4f59-b024-653345067547
+                type: integer
+                minimum: 1
               dateStarted:
                 description: The date and time the run started.
                 type: string
@@ -1066,8 +1067,8 @@ components:
       properties:
         runID:
           description: unique ID for this test run.
-          type: string
-          example: 3ed892dd-2b29-4f59-b024-653345067547
+          type: integer
+          minimum: 1
         dateStarted:
           description: The date and time the run started.
           type: string
