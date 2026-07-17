@@ -6,6 +6,7 @@ rsp:
     and will be populated using the FQDN of the first `TLSA` record
     which matches the certificate presented by the client.
   type: string
+  maxLength: 256
   example: RSPI2404-M51
 
 tag:
