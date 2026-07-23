@@ -49,8 +49,19 @@ sub munge_schema {
         $schema->{example} = $schema->{default};
     }
 
-    if ('url' eq $schema->{format}) {
-        $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidUrl';
+    if ('string' eq $schema->{type}) {
+        if ('url' eq $schema->{format}) {
+            $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidUrl';
+
+        } elsif ('hostname' eq $schema->{format}) {
+            $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidHostname';
+
+        }
+
+    } elsif ('object' eq $schema->{type}) {
+        foreach my $property (keys(%{$schema->{properties}})) {
+            munge_schema($schema->{properties}->{$property});
+        }
 
     } elsif ('array' eq $schema->{type}) {
         if ('ipv4' eq $schema->{items}->{format}) {
@@ -59,14 +70,12 @@ sub munge_schema {
         } elsif ('ipv6' eq $schema->{items}->{format}) {
             $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidIpv6List';
 
+        } elsif ('hostname' eq $schema->{items}->{format}) {
+            $schema->{'x-field-extra-annotation'} = '@org.icann.rst.commons.annotations.ValidHostnameList';
+
         } else {
             munge_schema($schema->{items}) if ($schema->{items});
 
-        }
-
-    } elsif ('object' eq $schema->{type}) {
-        foreach my $property (keys(%{$schema->{properties}})) {
-            munge_schema($schema->{properties}->{$property});
         }
     }
 }

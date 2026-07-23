@@ -13,6 +13,7 @@ rsp:
     In OT&E, this **MUST** contain the Fully-Qualified Domain Name where a TLSA
     record that validates the client certificate is published.
   type: string
+  maxLength: 256
   example: RSPI2404-M51
 
 tlds:
@@ -116,6 +117,7 @@ clientIDs:
   items:
     type: string
     format: hostname
+    x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
     example: tlsa.rsp.tech
 
 testPlan:
