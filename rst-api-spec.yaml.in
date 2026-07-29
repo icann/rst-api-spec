@@ -36,6 +36,9 @@ info:
 
     ### Change Log
 
+    * v2026.6 (2026-07-30):
+      * Add annotations and restrictions on various API parameters ([#71](https://github.com/icann/rst-api-spec/issues/71))
+
     * v2026.6 (2026-06-16):
       * Add `testPlanVersion` to test runs
         ([#62](https://github.com/icann/rst-api-spec/issues/62))
