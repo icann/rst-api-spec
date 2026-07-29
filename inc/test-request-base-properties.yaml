@@ -113,11 +113,11 @@ clientIDs:
     record that validates the client certificate is published, and **MAY**
     contain other IDs.
   type: array
+  x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostnameList"
   minItems: 1
   items:
     type: string
     format: hostname
-    x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
     example: tlsa.rsp.tech
 
 testPlan:
