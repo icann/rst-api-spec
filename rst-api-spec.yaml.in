@@ -36,6 +36,9 @@ info:
 
     ### Change Log
 
+    * v2026.6 (2026-07-30):
+      * Add annotations and restrictions on various API parameters ([#71](https://github.com/icann/rst-api-spec/issues/71))
+
     * v2026.6 (2026-06-16):
       * Add `testPlanVersion` to test runs
         ([#62](https://github.com/icann/rst-api-spec/issues/62))
@@ -390,7 +393,8 @@ paths:
         in: path
         required: true
         schema:
-          type: string
+          type: integer
+          minimum: 1
     get:
       tags:
         - Retrieving test information
@@ -487,6 +491,8 @@ paths:
           required: false
           schema:
             type: string
+            format: hostname
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
         - name: applicationID
           description: |
             limit results to specific a application ID (internal users only).
@@ -644,6 +650,7 @@ paths:
           required: false
           schema:
             type: string
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidLanguageTag"
       responses:
 #exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
         '200':
@@ -816,6 +823,7 @@ components:
           description: The TLD (or equivalent registry-class domain name).
           type: string
           format: hostname
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
           example: example
         idnTables:
           description: The IDN tables(s) for the TLD.
@@ -885,6 +893,7 @@ components:
           items:
             type: string
             format: hostname
+            x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
             example: example
 
     testRequestSubmitted:
@@ -1017,8 +1026,8 @@ components:
             properties:
               runID:
                 description: unique ID for this test run.
-                type: string
-                example: 3ed892dd-2b29-4f59-b024-653345067547
+                type: integer
+                minimum: 1
               dateStarted:
                 description: The date and time the run started.
                 type: string
@@ -1061,8 +1070,8 @@ components:
       properties:
         runID:
           description: unique ID for this test run.
-          type: string
-          example: 3ed892dd-2b29-4f59-b024-653345067547
+          type: integer
+          minimum: 1
         dateStarted:
           description: The date and time the run started.
           type: string
