@@ -11,7 +11,7 @@ mkdir -p "$SITEDIR" "$TMPDIR"
 
 git config --global --add safe.directory /app
 
-CURRENT_RELEASE="$(git tag | tail -1)"
+CURRENT_RELEASE="$(git for-each-ref --sort=-creatordate --count=1 --format '%(refname)' refs/tags | cut -d / -f 3-)"
 
 if [ -z "$CURRENT_RELEASE" ] ; then
     echo "No release tag found! Tag list follows..."
