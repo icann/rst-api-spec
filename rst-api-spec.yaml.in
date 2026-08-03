@@ -493,6 +493,18 @@ paths:
             type: string
             format: hostname
             x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
+        - name: page
+          description: the page number.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testRequestSearchPageNumber"
+        - name: limit
+          description: the page size.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testRequestSearchPageLimit"
         - name: applicationID
           description: |
             limit results to specific a application ID (internal users only).
@@ -838,6 +850,21 @@ components:
             only use the ASCII range are also permitted.
           type: boolean
           default: false
+
+    testRequestSearchPageNumber:
+      description:
+        the page number.
+      type: integer
+      default: 1
+      minimum: 1
+
+    testRequestSearchPageLimit:
+      description:
+        the page size.
+      type: integer
+      default: 1
+      minimum: 10
+      maximum: 100
 
     testRequestSearchResultItem:
       description: |
