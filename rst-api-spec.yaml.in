@@ -522,7 +522,7 @@ paths:
                 type: array
                 minItems: 0
                 items:
-                  $ref: "#/components/schemas/testRequestSearchResult"
+                  $ref: "#/components/schemas/testRequestSearchResultItem"
 
   /v1/table:
     post:
@@ -839,7 +839,7 @@ components:
           type: boolean
           default: false
 
-    testRequestSearchResult:
+    testRequestSearchResultItem:
       description: |
         An abbreviated representation of a test object that is included in
         search result.
