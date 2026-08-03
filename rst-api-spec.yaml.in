@@ -531,10 +531,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: array
-                minItems: 0
-                items:
-                  $ref: "#/components/schemas/testRequestSearchResultItem"
+                $ref: "#/components/schemas/testRequestSearchResults"
 
   /v1/table:
     post:
@@ -865,6 +862,38 @@ components:
       default: 1
       minimum: 10
       maximum: 100
+
+    testRequestSearchResults:
+      description: |
+        The results of a search.
+      type: object
+      additionalProperties: false
+      required:
+        - page
+        - limit
+        - results
+      properties:
+        page:
+          $ref: "#/components/schemas/testRequestSearchPageNumber"
+        limit:
+          $ref: "#/components/schemas/testRequestSearchPageLimit"
+        next_page:
+          description: URL of the next page of results (if any).
+          type: string
+          format: url
+          nullable: true
+        prev_page:
+          description: URL of the previous page of results (if any).
+          type: string
+          format: url
+          nullable: true
+        results:
+          description: the search results.
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/testRequestSearchResultItem"
 
     testRequestSearchResultItem:
       description: |
