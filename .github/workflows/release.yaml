@@ -29,3 +29,4 @@ jobs:
           files: |
             tmp/rst-api-spec.yaml
             tmp/rst-api-spec.json
+            tmp/rst-api-spec-unannotated.json
