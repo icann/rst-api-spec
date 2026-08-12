@@ -728,6 +728,7 @@ components:
       additionalProperties: false
       required:
         - tlds
+        - dataModel
         - rsp
         - clientIDs
         - testPlan
@@ -905,6 +906,7 @@ components:
       additionalProperties: false
       required:
         - tlds
+        - dataModel
         - rsp
         - createdBy
         - clientIDs
