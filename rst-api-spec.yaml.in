@@ -692,6 +692,50 @@ paths:
                 type: string
                 format: binary
 
+  /v1/user/{id}:
+    parameters:
+      - name: id
+        description: The user's TLSA hostname.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: hostname
+    put:
+      operationId: createOTEUser
+      description: |
+        Create a new user, specified by the TLSA hostname. Only internal users
+        have access to this endpoint, and only in OT&E.
+      responses:
+        '400':
+          description: The specified TLSA hostname is invalid.
+        '409':
+          description: The user already exists.
+        '504':
+          description: No TLSA record(s) were found for the specified hostname.
+        '204':
+          description: A successful result.
+    delete:
+      operationId: deleteOTEUser
+      description: |
+        Delete the user specified by the TLSA hostname. Only internal users
+        have access to this endpoint, and only in OT&E.
+      responses:
+        '404':
+          description: The user does not exist.
+        '204':
+          description: A successful result.
+    head:
+      operationId: checkOTEUser
+      description: |
+        Check whether the user specified by the TLSA hostname exists. Only
+        internal users have access to this endpoint, and only in OT&E.
+      responses:
+        '404':
+          description: The user does not exist.
+        '200':
+          description: The user exists.
+
 components:
 
   schemas:
