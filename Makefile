@@ -28,6 +28,9 @@ spec: tmpdir includes
 	@echo Generating JSON file...
 	@yq -o=json eval tmp/rst-api-spec.yaml > tmp/rst-api-spec.json
 
+	@echo Generating unannotated JSON file...
+	@bin/unannotate.pl tmp/rst-api-spec.json > tmp/rst-api-spec-unannotated.json
+
 static-html:
 	@echo Generating static HTML file...
 	@openapi-generator generate -g html -i tmp/rst-api-spec.yaml >/dev/null
