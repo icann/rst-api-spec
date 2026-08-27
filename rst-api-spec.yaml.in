@@ -859,7 +859,7 @@ components:
       description:
         the page size.
       type: integer
-      default: 1
+      default: 10
       minimum: 10
       maximum: 100
 
