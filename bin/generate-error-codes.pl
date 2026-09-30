@@ -1,13 +1,20 @@
 #!/usr/bin/env perl
 use ICANN::RST;
+use Getopt::Long;
 use feature qw(say);
 use strict;
+
+my $warnings;
+die("Invalid argument") unless (GetOptions(warnings => \$warnings));
 
 say STDERR 'mirroring test specs...';
 my $spec = (exists($ENV{RST_TEST_SPEC_VERSION}) ? ICANN::RST::Spec->new_from_version($ENV{RST_TEST_SPEC_VERSION}) : ICANN::RST::Spec->new($ENV{RST_TEST_SPEC_FILE}));
 
 say STDERR 'extracting error codes...';
-my @errors = sort map { $_->id } $spec->errors;
+my @errors =    sort
+                map { $_->id }
+                grep { !$warnings || q{WARNING} eq $_->severity }
+                $spec->errors;
 
 say STDERR 'generating YAML fragment for error codes...';
 my $yaml = YAML::XS::Dump(\@errors);
