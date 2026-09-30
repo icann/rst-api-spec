@@ -496,6 +496,18 @@ paths:
             type: string
             format: hostname
             x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
+        - name: page
+          description: the page number.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testRequestSearchPageNumber"
+        - name: limit
+          description: the page size.
+          in: query
+          required: false
+          schema:
+            $ref: "#/components/schemas/testRequestSearchPageLimit"
         - name: applicationID
           description: |
             limit results to specific a application ID (internal users only).
@@ -522,10 +534,7 @@ paths:
           content:
             "application/json":
               schema:
-                type: array
-                minItems: 0
-                items:
-                  $ref: "#/components/schemas/testRequestSearchResult"
+                $ref: "#/components/schemas/testRequestSearchResults"
 
   /v1/table:
     post:
@@ -842,7 +851,54 @@ components:
           type: boolean
           default: false
 
-    testRequestSearchResult:
+    testRequestSearchPageNumber:
+      description:
+        the page number.
+      type: integer
+      default: 1
+      minimum: 1
+
+    testRequestSearchPageLimit:
+      description:
+        the page size.
+      type: integer
+      default: 10
+      minimum: 10
+      maximum: 100
+
+    testRequestSearchResults:
+      description: |
+        The results of a search.
+      type: object
+      additionalProperties: false
+      required:
+        - page
+        - limit
+        - results
+      properties:
+        page:
+          $ref: "#/components/schemas/testRequestSearchPageNumber"
+        limit:
+          $ref: "#/components/schemas/testRequestSearchPageLimit"
+        next_page:
+          description: URL of the next page of results (if any).
+          type: string
+          format: url
+          nullable: true
+        prev_page:
+          description: URL of the previous page of results (if any).
+          type: string
+          format: url
+          nullable: true
+        results:
+          description: the search results.
+          type: array
+          minItems: 0
+          maxItems: 100
+          items:
+            $ref: "#/components/schemas/testRequestSearchResultItem"
+
+    testRequestSearchResultItem:
       description: |
         An abbreviated representation of a test object that is included in
         search result.
