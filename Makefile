@@ -14,6 +14,7 @@ includes: tmpdir
 	@bin/generate-input-parameter-schema.pl > tmp/input-parameters.yaml
 	@bin/generate-test-cases.pl > tmp/test-cases.yaml
 	@bin/generate-error-codes.pl > tmp/error-codes.yaml
+	@bin/generate-error-codes.pl --warnings > tmp/warning-codes.yaml
 	@bin/generate-ignore-error-codes.pl > tmp/ignore-error-codes.yaml
 
 spec: tmpdir includes
@@ -27,6 +28,9 @@ spec: tmpdir includes
 
 	@echo Generating JSON file...
 	@yq -o=json eval tmp/rst-api-spec.yaml > tmp/rst-api-spec.json
+
+	@echo Generating unannotated JSON file...
+	@bin/unannotate.pl tmp/rst-api-spec.json > tmp/rst-api-spec-unannotated.json
 
 static-html:
 	@echo Generating static HTML file...
