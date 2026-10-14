@@ -104,6 +104,35 @@ tlds:
     items:
       $ref: "#/components/schemas/tldInfo"
 
+dataModel:
+  description: |
+    This property describes the data model(s) supported by the registry,
+    determined in accordance with Section 7 of the Registration Data Policy. The
+    possible values are:
+
+    * `minimum`: the registry does not collect registrant contact information
+      from registrars. This policy applies to all registrars.
+    * `maximum`: the registry requires the transmission of registrant contact
+      information from registrars for all registrations. This policy applies to
+      all registrars.
+    * `per-registrar`: the registry may or may not require transmission of
+      registrant contact information, depending on whether there is an
+      appropriate legal basis, and a data processing agreement is in place
+      between the registry operator and the registrar. Therefore, the data model
+      is determined per-registrar rather than globally.
+
+    If the value of this property is `per-registrar`, then one of the registrar
+    accounts specified by the `epp.clid01` and `epp.clid02` input parameters
+    **MUST** be configured to use the minimum data model, and one **MUST** be
+    configured to use the maximum data model. The `epp.clid01DataModel` and
+    `epp.clid02DataModel` input parameters are used to identify the data model
+    configured for each account.
+  type: string
+  enum:
+    - minimum
+    - maximum
+    - per-registrar
+
 clientIDs:
   description: |
     An array of FQDNs at which one or more `TLSA` records may be found
