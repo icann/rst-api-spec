@@ -712,6 +712,87 @@ paths:
                 type: string
                 format: binary
 
+  /v1/user:
+    post:
+      operationId: createOTEUser
+      description: |
+        Create a new user, specified by the TLSA hostname. Only internal users
+        have access to this endpoint, and only in OT&E.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/oteUserRequest"
+
+      responses:
+        '400':
+          description: The specified TLSA hostname is invalid.
+        '409':
+          description: The user already exists.
+        '504':
+          description: No TLSA record(s) were found for the specified hostname.
+        '201':
+          description: A successful result.
+          headers:
+            location:
+              description: The URL of the newly created OT&E user.
+              schema:
+                type: string
+                format: url
+                x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidUrl"
+
+  /v1/user/{id}:
+    parameters:
+      - name: id
+        description: The user's TLSA hostname.
+        in: path
+        required: true
+        schema:
+          type: string
+          format: hostname
+
+    put:
+      operationId: updateOTEUser
+      description: |
+        Update the user specified by the TLSA hostname. Only internal users
+        have access to this endpoint, and only in OT&E.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/oteUserUpdateRequest"
+
+      responses:
+        '400':
+          description: |
+            This response indicates that the server received a malformed
+            request.
+        '404':
+          description: The user does not exist.
+        '204':
+          description: A successful result.
+
+    delete:
+      operationId: deleteOTEUser
+      description: |
+        Delete the user specified by the TLSA hostname. Only internal users
+        have access to this endpoint, and only in OT&E.
+      responses:
+        '404':
+          description: The user does not exist.
+        '204':
+          description: A successful result.
+    head:
+      operationId: checkOTEUser
+      description: |
+        Check whether the user specified by the TLSA hostname exists. Only
+        internal users have access to this endpoint, and only in OT&E.
+      responses:
+        '404':
+          description: The user does not exist.
+        '200':
+          description: The user exists.
+
 components:
 
   schemas:
@@ -1499,3 +1580,28 @@ components:
       type: string
       enum:
 #exec sed 's/^/      /' tmp/test-plan-mnemonics.yaml
+
+    oteUserRequest:
+      description: An object representing a request to create an OT&E user.
+      type: object
+      additionalProperties: false
+      required:
+        - hostname
+      properties:
+        hostname:
+          description: The user's TLSA hostname.
+          type: string
+          format: hostname
+          x-field-extra-annotation: "@org.icann.rst.commons.annotations.ValidHostname"
+          example: tlsa.rsp.example
+
+    oteUserUpdateRequest:
+      description: a request to update an OT&E user.
+      type: object
+      additionalProperties: false
+      required:
+        - active
+      properties:
+        active:
+          description: The active/inactive status of the user.
+          type: boolean
