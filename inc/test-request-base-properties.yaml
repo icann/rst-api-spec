@@ -125,7 +125,7 @@ testPlan:
 dueDate:
   description: |
     The date/time before which the test must be passed. If not provided, the
-    test remains open indefinitely (unless the `completed` status is reached).
+    test remains open indefinitely (unless the `pass` result is achieved).
 
     In OT&E, this **MUST** be omitted when creating a new test request.
   type: string
