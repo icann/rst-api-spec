@@ -258,6 +258,43 @@ paths:
         '204':
           description: A successful result.
 
+    patch:
+      tags:
+        - Test administration
+      operationId: updateTest
+      description: |
+        This operation updates a test object.
+
+        This operation is not available to external users in production, but may
+        be used in OT&E.
+
+        External users can only update test objects that they created.
+
+        INTERNAL_USER_ACCESS_CONTROL_POLICY
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dueDate
+              properties:
+                dueDate:
+                  description: |
+                    The new date/time before which the test must be passed. The
+                    date and time specified must be in the future. If set to
+                    `NULL` the test remains open indefinitely (unless a `pass`
+                    result is achieved).
+
+                  type: string
+                  format: date-time
+                  nullable:true
+
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '204':
+          description: A successful result.
+
   /v1/test/{id}/inputs:
     post:
       tags:
