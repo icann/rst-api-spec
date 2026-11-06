@@ -258,6 +258,30 @@ paths:
         '204':
           description: A successful result.
 
+    patch:
+      tags:
+        - Test administration
+      operationId: updateTest
+      description: |
+        This operation updates a test object.
+
+        This operation is not available to external users in production, but may
+        be used in OT&E.
+
+        External users can only update test objects that they created.
+
+        INTERNAL_USER_ACCESS_CONTROL_POLICY
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/testUpdateRequest"
+
+      responses:
+#exec gpp -x inc/http-errors.yaml | sed 's/^/        /'
+        '204':
+          description: A successful result.
+
   /v1/test/{id}/inputs:
     post:
       tags:
@@ -1499,3 +1523,17 @@ components:
       type: string
       enum:
 #exec sed 's/^/      /' tmp/test-plan-mnemonics.yaml
+
+    testUpdateRequest:
+      description: A request to update a test.
+      type: object
+      additionalProperties: false
+      properties:
+        clientIDs:
+          description: The new TLSA FQDN(s) for the test.
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: hostname
+            example: tlsa.rsp.tech
